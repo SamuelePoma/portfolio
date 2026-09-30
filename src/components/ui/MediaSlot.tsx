@@ -15,6 +15,8 @@ interface MediaSlotProps {
   sizes: string;
   /** Only for the LCP image of a page. */
   preload?: boolean;
+  /** `top` keeps the top of UI screenshots (navigation, header) when cropping. */
+  position?: "center" | "top";
 }
 
 /**
@@ -22,7 +24,12 @@ interface MediaSlotProps {
  * placeholder. Checked at build time: pages are static, so there is no runtime cost.
  * Place it inside a `MediaFrame`, which provides the positioned, ratio-locked box.
  */
-export function MediaSlot({ id, sizes, preload = false }: MediaSlotProps) {
+export function MediaSlot({
+  id,
+  sizes,
+  preload = false,
+  position = "center",
+}: Readonly<MediaSlotProps>) {
   const slot = getMediaSlot(id);
   const exists = existsSync(path.join(process.cwd(), "public", "images", slot.file));
 
@@ -37,7 +44,7 @@ export function MediaSlot({ id, sizes, preload = false }: MediaSlotProps) {
       fill
       sizes={sizes}
       preload={preload}
-      className="object-cover"
+      className={position === "top" ? "object-cover object-top" : "object-cover"}
     />
   );
 }

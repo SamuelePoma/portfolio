@@ -1,0 +1,98 @@
+import { z } from "zod";
+
+import { mediaSlots } from "./media";
+
+/**
+ * Schemas for the site content. `tests/unit/content.test.ts` parses every content
+ * file with them, so invalid content fails CI instead of reaching the page.
+ */
+
+/** Visible copy: trimmed, non-empty, and free of the dashes DESIGN.md §12 bans. */
+export const visibleText = z
+  .string()
+  .trim()
+  .min(1)
+  .refine((text) => !/[\u2013\u2014]/.test(text), {
+    message: "Visible text must not contain em or en dashes (DESIGN.md §12)",
+  });
+
+/** A year ("2020") or a year and month ("2024-09"). */
+const yearOrMonth = z.string().regex(/^\d{4}(-(0[1-9]|1[0-2]))?$/, "Use YYYY or YYYY-MM");
+
+export const periodSchema = z
+  .object({ start: yearOrMonth, end: yearOrMonth.optional() })
+  .refine((period) => period.end === undefined || period.end >= period.start, {
+    message: "A period cannot end before it starts",
+  });
+
+const mediaSlotIds = mediaSlots.map((slot) => slot.id) as [
+  (typeof mediaSlots)[number]["id"],
+  ...(typeof mediaSlots)[number]["id"][],
+];
+const mediaSlotId = z.enum(mediaSlotIds);
+
+/** What a project card shows in its media area. */
+export const cardVisualSchema = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("screenshot"), slot: mediaSlotId }),
+  z.object({ type: z.literal("diagram") }),
+  z.object({ type: z.literal("terminal") }),
+]);
+
+export const projectSchema = z.object({
+  slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Slugs are lowercase and hyphenated"),
+  title: visibleText,
+  /** Company or client, when there is one (shown in the card's mono row). */
+  organisation: visibleText.optional(),
+  /** Kind of project, e.g. "Internship" or "University project". */
+  category: visibleText,
+  period: periodSchema.optional(),
+  status: z.enum(["completed", "in-progress"]),
+  /** One or two sentences for cards and the featured band. */
+  tagline: visibleText.max(180),
+  role: visibleText,
+  team: z.number().int().min(2).optional(),
+  stack: z.array(visibleText).min(1).max(5),
+  /** A real distinction, e.g. an award. Shown as the accent label. */
+  highlight: visibleText.optional(),
+  featured: z.boolean().default(false),
+  card: cardVisualSchema,
+  media: z.object({
+    hero: mediaSlotId.optional(),
+    secondary: mediaSlotId.optional(),
+  }),
+});
+
+export const timelineEntrySchema = z.object({
+  period: periodSchema,
+  title: visibleText,
+  organisation: visibleText,
+  summary: visibleText.max(120),
+});
+
+export const skillGroupSchema = z.object({
+  label: visibleText,
+  items: z.array(visibleText).min(1),
+});
+
+const httpsUrl = z.url({ protocol: /^https$/ });
+
+export const siteSchema = z.object({
+  name: visibleText,
+  role: visibleText,
+  location: visibleText,
+  email: z.email(),
+  github: httpsUrl,
+  linkedin: httpsUrl,
+  cvPath: z.string().startsWith("/"),
+  heroEyebrow: visibleText,
+  heroLead: visibleText,
+  about: z.array(visibleText).min(1).max(4),
+  languages: visibleText,
+});
+
+export type Period = z.infer<typeof periodSchema>;
+export type Project = z.input<typeof projectSchema>;
+export type CardVisual = z.infer<typeof cardVisualSchema>;
+export type TimelineEntry = z.infer<typeof timelineEntrySchema>;
+export type SkillGroup = z.infer<typeof skillGroupSchema>;
+export type Site = z.infer<typeof siteSchema>;

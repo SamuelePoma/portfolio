@@ -18,7 +18,7 @@ describe("media slots", () => {
 
   it("never uses em or en dashes in visible text", () => {
     for (const slot of mediaSlots) {
-      expect(`${slot.alt} ${slot.placeholder}`).not.toMatch(/[–—]/);
+      expect(`${slot.alt} ${slot.placeholder}`).not.toMatch(/[\u2013\u2014]/);
     }
   });
 

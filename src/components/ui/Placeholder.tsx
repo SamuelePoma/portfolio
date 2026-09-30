@@ -12,7 +12,7 @@ interface PlaceholderProps {
  * Stand-in for a missing image (DESIGN.md §8.6). Fills its positioned parent and says
  * exactly what belongs there, so it reads as intentional rather than broken.
  */
-export function Placeholder({ slotId, ratio, description, className }: PlaceholderProps) {
+export function Placeholder({ slotId, ratio, description, className }: Readonly<PlaceholderProps>) {
   return (
     <div
       role="img"
