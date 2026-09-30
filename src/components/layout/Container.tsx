@@ -13,6 +13,6 @@ interface ContainerProps extends ComponentPropsWithoutRef<"div"> {
   width?: keyof typeof widths;
 }
 
-export function Container({ width = "page", className, ...props }: ContainerProps) {
+export function Container({ width = "page", className, ...props }: Readonly<ContainerProps>) {
   return <div className={cn("mx-auto w-full px-4 md:px-6", widths[width], className)} {...props} />;
 }

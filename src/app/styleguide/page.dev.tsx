@@ -75,9 +75,13 @@ const swatchClass: Record<(typeof colorTokens)[number], string> = {
   danger: "bg-danger",
 };
 
-function Block({ id, title, children }: { id: string; title: string; children: ReactNode }) {
+function Block({
+  id,
+  title,
+  children,
+}: Readonly<{ id: string; title: string; children: ReactNode }>) {
   return (
-    <div className="grid gap-8 border-t border-hairline pt-10 md:grid-cols-12">
+    <div className="grid grid-cols-1 gap-8 border-t border-hairline pt-10 md:grid-cols-12">
       <h2 id={id} className="text-h3 md:col-span-3">
         {title}
       </h2>
@@ -121,7 +125,7 @@ function Buttons() {
 
 export default function StyleguidePage() {
   return (
-    <main>
+    <>
       <Section aria-labelledby="styleguide-title">
         <Container className="grid gap-16">
           <header className="grid gap-4">
@@ -161,7 +165,7 @@ export default function StyleguidePage() {
           </Block>
 
           <Block id="sg-media" title="Media">
-            <div className="grid items-start gap-6 md:grid-cols-12">
+            <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-12">
               <MediaFrame ratio="16:10" url="dashboard.conneqtech.com" className="md:col-span-8">
                 <MediaSlot id="IMG-CONNEQTECH-01" sizes="(min-width: 768px) 60vw, 100vw" />
               </MediaFrame>
@@ -172,7 +176,7 @@ export default function StyleguidePage() {
           </Block>
 
           <Block id="sg-elevation" title="Elevation">
-            <div className="grid gap-6 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div className="rounded-lg bg-surface p-8 shadow-card">
                 <MonoLabel as="p">shadow-card</MonoLabel>
               </div>
@@ -215,6 +219,6 @@ export default function StyleguidePage() {
           </Block>
         </Container>
       </Section>
-    </main>
+    </>
   );
 }

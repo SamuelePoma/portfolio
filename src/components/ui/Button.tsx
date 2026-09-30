@@ -41,7 +41,7 @@ const isFileHref = (href: string) => /\.[a-z0-9]{2,5}$/i.test(href.split(/[?#]/)
  * anchor for external or file links, and a `<button>` when there's no `href`.
  * Colors come from tokens, so it inverts automatically inside a `.tone-night` band.
  */
-export function Button(props: ButtonProps) {
+export function Button(props: Readonly<ButtonProps>) {
   const { variant = "primary", icon, children, className, ...rest } = props;
 
   const classes = cn(
