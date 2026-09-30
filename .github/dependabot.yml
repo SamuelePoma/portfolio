@@ -12,6 +12,15 @@ updates:
     groups:
       minor-and-patch:
         update-types: [minor, patch]
+    ignore:
+      # Majors pinned on purpose (docs/adr/0001): TypeScript 5 and ESLint 9 match the
+      # Next.js 16 template; @types/node follows the Node 24 runtime in .nvmrc.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+      - dependency-name: eslint
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /
