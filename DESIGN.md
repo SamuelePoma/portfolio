@@ -48,8 +48,8 @@
   --surface:         #ffffff;  /* cards, media frames */
   --surface-sunken:  #f2f2f2;  /* placeholders, code blocks on light */
   --ink:             #171717;  /* primary text, primary buttons */
-  --ink-secondary:   #666666;  /* body copy that isn't primary (5.4:1 on canvas) */
-  --ink-tertiary:    #8f8f8f;  /* metadata only, never body text */
+  --ink-secondary:   #525252;  /* body copy that isn't primary (7.8:1 on canvas) */
+  --ink-tertiary:    #6b6b6b;  /* metadata only, never body text (5.2:1 on canvas, 4.8:1 on sunken) */
   --hairline:        #eaeaea;  /* borders, dividers */
   --hairline-strong: #d4d4d4;  /* hovered borders */
 
@@ -58,11 +58,12 @@
   --night-surface:      #111111;
   --night-ink:          #ededed;
   --night-ink-secondary:#a1a1a1;
+  --night-ink-tertiary: #8a8a8a;
   --night-hairline:     rgba(255,255,255,0.10);
 
   /* The single accent */
-  --accent:        #0070f3;  /* links, focus, signals on light */
-  --accent-night:  #3291ff;  /* same role on dark bands */
+  --accent:        #0062d1;  /* links, focus, signals on light (5.5:1 on canvas) */
+  --accent-night:  #3291ff;  /* same role on dark bands (6.3:1 on night) */
 
   /* Hero mesh gradient: hero only, never elsewhere */
   --mesh-1: #00dfd8;  /* cyan    */
@@ -78,7 +79,7 @@
 - `--ink-tertiary` is for metadata (dates, file labels) at small sizes. Never for sentences.
 - The mesh gradient is **heavily blurred** (≥120px), low opacity (0.25–0.4 on light), sits behind the hero headline, and drifts slowly. It must never appear on buttons, text, cards or anywhere below the hero.
 - No other colors. Project screenshots bring their own color, and that is enough.
-- All text meets WCAG AA (4.5:1 body, 3:1 large text).
+- All text meets WCAG AA (4.5:1 body, 3:1 large text). Metadata is text too: the small mono labels need 4.5:1, which is why `--ink-tertiary` is `#6b6b6b` and not a lighter gray.
 
 ### 3.3 Theme
 
@@ -238,7 +239,7 @@ Sticky, 64px tall. Left: the **"SP"** monogram in Geist Mono (links to top). Rig
 - Minimum touch target 44×44px. A visible focus ring: `2px solid var(--accent)`, `outline-offset: 2px`.
 
 ### 8.3 Mono label / eyebrow
-`mono-label`, uppercase, `--ink-tertiary`. Sits above section titles, for example `01 — SELECTED WORK`. Numbered sections give the page an engineered, indexed feel.
+`mono-label`, uppercase, `--ink-tertiary`. Used **sparingly**: at most one eyebrow per three sections (the hero has one; regular sections open with their headline alone). Never numbered (`01 / …`), never a decorative index. Mono labels that carry real metadata (dates, context, tags) are not eyebrows and are fine.
 
 ### 8.4 Tech tag
 Geist Mono 12px, `--ink-secondary`, 1px `--hairline` ring, `radius-sm`, 4px × 8px padding. No fill colors, no per-technology colors.
@@ -267,13 +268,13 @@ Top: the media (browser frame or image), aspect-ratio locked. Bottom (24–32px 
 The whole card is one link (it opens the case study), with the card spotlight on hover (§7.3.4).
 
 ### 8.8 Terminal block
-For ChessGame, and anywhere code is the product. `--night-surface`, `radius-md`, Geist Mono 14px, `--night-ink`. A 32px top bar with gray dots and a title such as `chess — java`. Content is a real board render in ASCII/Unicode with a prompt (`> e2 e4`). Optionally it types itself out once when it enters the viewport (respecting reduced motion).
+For ChessGame, and anywhere code is the product. `--night-surface`, `radius-md`, Geist Mono 14px, `--night-ink`. A 32px top bar with gray dots and a title such as `chess.java`. Content is a real board render in ASCII/Unicode with a prompt (`> e2 e4`). Optionally it types itself out once when it enters the viewport (respecting reduced motion).
 
 ### 8.9 Diagram
 For Progmatic (research, no UI yet). An inline SVG, drawn in `--ink` and `--hairline` with 1.5px strokes, mono labels and at most one accent-colored path (the "happy path"). Boxes use `radius-sm`. Example flow: `Docs / FileMaker → Ingestion → Vector index → Retrieval + access control → LLM → Answer`. Paths draw in on scroll (`stroke-dashoffset`).
 
 ### 8.10 Timeline row
-For the background/experience list. A 3-column row: mono date (`2024 — 25`) · role and company (`h3` + `small`) · a one-line outcome. Rows are separated by 1px `--hairline`. On hover the row background shifts to `--surface`.
+For the background/experience list. A 3-column row: mono date (`2024-25`) · role and company (`h3` + `small`) · a one-line outcome. Rows are separated by 1px `--hairline`. On hover the row background shifts to `--surface`.
 
 ### 8.11 Toast
 Bottom center, `--ink` background, white 14px text, `radius-pill`, `--shadow-card-hover`. Enters from `translateY(16px) opacity 0`, 300ms `--ease-drawer`, and auto-dismisses after 2s.
@@ -302,14 +303,13 @@ One long page plus a case-study view per project. Sections are numbered with mon
 - `display-xl`: **Samuele Poma.** (two lines on mobile: *Samuele* / *Poma.*)
 - `lead`, `--ink-secondary`, max 32ch: *"I build full-stack software, from Go services to React interfaces, and take projects from the first requirement to the final release."*
 - CTAs: **Primary** `View work ↓` · **Secondary** `GitHub ↗` (github.com/SamuelePoma).
-- Bottom edge: a mono row of the stack in `--ink-tertiary`: `GO · TYPESCRIPT · REACT · SVELTEKIT · JAVA · DOCKER`.
 
-### 9.2 `01 — Selected work`
+### 9.2 Selected work
 Section opener: `display`, *"Things I've built."*
 
 **a) Featured: MuseTrail (a full-bleed `--night` band)**
 - Two columns on desktop (text 5 cols, media 7 cols); stacked on mobile.
-- A mono label with the award signal: `★ GRAND PRIZE — DRAGONS' DEN` in `--accent-night`. This is one of the two places the accent appears as a "signal".
+- A mono label with the award signal: `GRAND PRIZE · DRAGONS' DEN` in `--accent-night`. This is one of the two places the accent appears as a "signal".
 - Title `display`: *MuseTrail*. Description: a web app encouraging sustainable digital habits in young adults. Role: full-stack development and team lead.
 - Tags: `SvelteKit` `Docker`.
 - Media: a large browser frame with the app design (`IMG-MUSETRAIL-01`), plus an overlapping plain-frame photo of the award ceremony (`IMG-MUSETRAIL-02`), offset and slightly lower, with a parallax difference of ≤ 40px.
@@ -324,10 +324,10 @@ Section opener: `display`, *"Things I've built."*
 On mobile each card spans full width, in the same order.
 
 Card content:
-- **Conneqtech**: `2024 — 25 · INTERNSHIP`. *GPS monitoring dashboard.* A dashboard for tracking cars and bicycles, with live GPS data and vehicle info in one place. Built end to end, from problem analysis to delivery. Tags: `Go` `Frontend` `Backend`.
+- **Conneqtech**: `2024-25 · INTERNSHIP`. *GPS monitoring dashboard.* A dashboard for tracking cars and bicycles, with live GPS data and vehicle info in one place. Built end to end, from problem analysis to delivery. Tags: `Go` `Frontend` `Backend`.
 - **Stedin**: `UNIVERSITY PROJECT · TEAM`. *Grid monitoring.* Visualising regional power usage and detecting faulty transformers across the Netherlands. Tags: `Laravel` `PHP` `MySQL`.
-- **Progmatic**: `2026 — NOW · RESEARCH · TEAM OF 5` plus a small pulsing `IN PROGRESS` dot (accent). *AI knowledge assistant.* Researching an internal assistant for technical and organisational knowledge: retrieval, FileMaker integration, access control, confidentiality. Tags: `AI` `RAG` `Research`.
-- **ChessGame**: `2024 — 25 · SOLO`. *Chess, in the terminal.* A text-based chess engine built around object-oriented design and design patterns. Tags: `Java` `OOP` `Design patterns`.
+- **Progmatic**: `SINCE 2026 · RESEARCH` plus a small pulsing `IN PROGRESS` dot (accent; it signals real status). The team size goes in the case study. *AI knowledge assistant.* Researching an internal assistant for technical and organisational knowledge: retrieval, FileMaker integration, access control, confidentiality. Tags: `AI` `RAG` `Research`.
+- **ChessGame**: `2024-25 · JAVA`. *Chess, in the terminal.* A text-based chess engine built around object-oriented design and design patterns. Tags: `Java` `OOP` `Design patterns`.
 
 ### 9.3 Case-study view (one per project)
 Opened from the cards (§7.3.5). The structure is always the same:
@@ -340,7 +340,7 @@ Opened from the cards (§7.3.5). The structure is always the same:
 7. Gallery: 1–3 extra images (slots in §10).
 8. A next-project link at the bottom (a large `h1`, with an arrow that nudges on hover).
 
-### 9.4 `02 — Stack`
+### 9.4 Stack
 Section opener: `display`, *"Tools I reach for."*
 Four columns (2 on tablet, 1 on mobile), each a group with a mono label and a plain list:
 - **Languages**: Go, TypeScript, JavaScript, Java, PHP, SQL
@@ -350,17 +350,17 @@ Four columns (2 on tablet, 1 on mobile), each a group with a mono label and a pl
 
 No logos wall, no progress bars.
 
-### 9.5 `03 — About`
+### 9.5 About
 Two columns: a short paragraph (3–4 sentences, first person, `lead` size) on the left, and a **timeline** (§8.10) on the right:
-- `2023 — 27` · HZ University of Applied Sciences · BSc ICT, Software Engineering
-- `2024 — 25` · Conneqtech · Software engineering intern
-- `2020 — 22` · Rondinella & Partners · Web development & marketing
+- `2023-27` · HZ University of Applied Sciences · BSc ICT, Software Engineering
+- `2024-25` · Conneqtech · Software engineering intern
+- `2020-22` · Rondinella & Partners · Web development & marketing
 
-Plus a small line of languages: `ITALIAN — NATIVE · ENGLISH — C1`.
+Plus a small line of languages: `ITALIAN (NATIVE), ENGLISH (C1)`.
 Below the timeline: a secondary button `Résumé (PDF) ↓` that downloads `/cv/samuele-poma-cv.pdf`.
 Optional portrait: `IMG-PORTRAIT`, 4:5, grayscale, `radius-lg`.
 
-### 9.6 `04 — Contact` (a `--night` band that merges into the footer)
+### 9.6 Contact (a `--night` band that merges into the footer)
 - `display`, `--night-ink`: *"Let's talk."*
 - Two columns on desktop, stacked on mobile:
   - **Left:** the email as a large `h2` button (click to copy, with a toast per §7.3.6, and a `mailto:` fallback), then links: GitHub ↗ (`github.com/SamuelePoma`) · LinkedIn ↗ (`linkedin.com/in/samuele-poma-547120242`) · Résumé (PDF) ↓.
@@ -369,8 +369,8 @@ Optional portrait: `IMG-PORTRAIT`, 4:5, grayscale, `radius-lg`.
 
 ### 9.7 Footer (continues the `--night` band)
 - A hairline on top (`--night-hairline`), 32px padding, mono 12px `--night-ink-secondary`.
-- Left: `© {current year} Samuele Poma`. Center: `Privacy` · `Legal`. Right: `Middelburg {HH:MM}` (live local time, `Europe/Amsterdam`).
-- On mobile the three groups stack, centered.
+- Left: `© {current year} Samuele Poma`. Right: `Privacy` and `Legal` links.
+- On mobile the two groups stack.
 
 ### 9.8 Utility pages
 All utility pages use the nav and footer, the light canvas, and a single reading column (`65ch`).
@@ -432,3 +432,11 @@ ChessGame needs no images: the terminal block is the visual.
 - ❌ Use single drop-shadows, or heavy blurred shadows.
 - ❌ Use CV language: "seeking", "hire me", "looking for an internship", phone numbers. (Listing a past internship as experience is fine.)
 - ❌ Center-align long text. Only short hero or contact lines may be centered.
+
+**Template tells (never on the site)**
+- ❌ Em dashes (—) or en dashes (–) anywhere in visible text, alt text or metadata. Ranges use a hyphen (`2024-25`); pauses use a period, comma or colon.
+- ❌ Numbered section eyebrows (`01 — Selected work`, `02 / Stack`) or an eyebrow above every section (max one per three sections).
+- ❌ Decorative mono strips (a row of technologies at the bottom of the hero, `DESIGN · BUILD · SHIP`-style lines).
+- ❌ Locale or clock strips (`Middelburg 14:32`), scroll cues (`Scroll ↓`), version stamps.
+- ❌ More than one middle dot (`·`) per line of metadata.
+- ❌ Decorative status dots. The only dot on the site is Progmatic's `IN PROGRESS`, because it reports real status.
