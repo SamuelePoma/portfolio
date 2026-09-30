@@ -4,7 +4,7 @@
 
 ## Why
 
-<!-- The problem it solves or the phase of BUILD_PROMPT.md it belongs to. -->
+<!-- The problem it solves. -->
 
 ## Screenshots
 

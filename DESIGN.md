@@ -179,7 +179,7 @@ No heavy blur shadows, no colored glows.
 
 ## 7. Motion
 
-Motion follows **Emil Kowalski's design-engineering principles**. Use the `emil-design-eng` / `animate` skills when writing it and `review-animations` to audit it.
+Motion follows **Emil Kowalski's design-engineering principles**: animate with purpose, keep UI feedback fast, use custom easing and restrained springs.
 
 ### 7.1 Tokens
 

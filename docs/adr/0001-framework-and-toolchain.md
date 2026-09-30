@@ -18,5 +18,4 @@ The site is a React portfolio that needs per-page SEO (unique titles, canonical 
 ## Consequences
 
 - Hosting on Vercel is the natural fit (preview deployments, image optimisation, instant rollback).
-- Next.js ships an `AGENTS.md` that points agents to the version-matched docs in `node_modules/next/dist/docs/`. We keep it and import it from `CLAUDE.md`.
 - The production build validates server secrets in `next.config.ts` (only when `VERCEL_ENV=production`), so a misconfigured deployment fails before going live.

@@ -4,11 +4,6 @@ build
 coverage
 playwright-report
 test-results
-.claude
-.playwright-mcp
 pnpm-lock.yaml
-skills-lock.json
 next-env.d.ts
-AGENTS.md
 DESIGN.md
-BUILD_PROMPT.md

@@ -2,7 +2,7 @@
 
 Source code of the personal portfolio of **Samuele Poma**, a software engineer based in Middelburg, Netherlands. The site presents his projects as case studies and is built to production standards: static rendering, strict TypeScript, accessibility (WCAG 2.2 AA), security headers, and automated tests across five browsers.
 
-> 🚧 Work in progress. See [BUILD_PROMPT.md](BUILD_PROMPT.md) §14 for the phase plan.
+> 🚧 Work in progress.
 
 ## Tech stack
 
@@ -61,7 +61,6 @@ docs/
 ## Documentation
 
 - [DESIGN.md](DESIGN.md): design system (color, type, motion, components)
-- [BUILD_PROMPT.md](BUILD_PROMPT.md): technical brief and phase plan
 - [docs/adr/](docs/adr/): architecture decisions
 
 ## Contributing workflow

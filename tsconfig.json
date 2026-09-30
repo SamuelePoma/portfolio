@@ -36,5 +36,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", ".claude", "coverage", "playwright-report", "test-results"]
+  "exclude": ["node_modules", "coverage", "playwright-report", "test-results"]
 }

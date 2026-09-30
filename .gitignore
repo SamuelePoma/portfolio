@@ -23,10 +23,6 @@ next-env.d.ts
 # Vercel
 .vercel
 
-# Local agent state
-.claude/settings.local.json
-.playwright-mcp/
-
 # Misc
 *.pem
 .DS_Store
