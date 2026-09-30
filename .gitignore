@@ -1,10 +1,33 @@
-# Local Claude Code settings (per machine)
-.claude/settings.local.json
+# Dependencies
+/node_modules
+.pnpm-debug.log*
 
-# Environment
+# Next.js
+/.next/
+/out/
+/build
+next-env.d.ts
+*.tsbuildinfo
+
+# Testing
+/coverage
+/playwright-report/
+/test-results/
+/blob-report/
+/playwright/.cache/
+
+# Environment (only the example is committed)
 .env*
 !.env.example
 
-# OS
+# Vercel
+.vercel
+
+# Local agent state
+.claude/settings.local.json
+.playwright-mcp/
+
+# Misc
+*.pem
 .DS_Store
 Thumbs.db
