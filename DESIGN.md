@@ -230,7 +230,9 @@ These are the only "wow" animations. Don't add more.
 ## 8. Components
 
 ### 8.1 Navigation
-Sticky, 64px tall. Left: the **"SP"** monogram in Geist Mono (links to top). Right: `Work` · `About` · `Contact` in 14px ink-secondary (turning ink on hover), then a GitHub icon button (32px, `radius-sm`). On mobile the links collapse into a minimal full-screen menu (animated with `--ease-drawer`).
+Sticky, 64px tall. Left: the **"SP"** monogram in Geist Mono (links to top). Right: `Work` · `About` · `Contact` in 15px ink-secondary (turning ink on hover), then a GitHub icon button (44px hit area, 18px mark from Simple Icons). **No collapsed mobile menu:** the three short links fit on one line down to 320px, so they stay visible (no extra tap, no JavaScript). Every link has a 44px tall hit area.
+- **Surface:** transparent over the hero; the frosted surface (canvas 80% + `blur(12px)`) fades in over the first 24px of scroll with a CSS scroll-driven animation. Browsers without support and reduced-motion users get the frosted surface from the start.
+- **Tone:** over a dark band the nav switches to the night tokens (an IntersectionObserver on a line under the nav), so it never shows a grey bar over black.
 
 ### 8.2 Buttons
 - **Primary:** `--ink` background, white text, `radius-pill`, 44px tall, 20px horizontal padding, 15px/500. Hover: background `#383838`.
@@ -260,21 +262,21 @@ Used until the real image exists. It must look intentional, not broken:
 
 ### 8.7 Project card
 `--surface`, `--shadow-card`, `radius-lg`, overflow hidden.
-Top: the media (browser frame or image), aspect-ratio locked. Bottom (24–32px padding):
-- Mono row: `2024 · TEAM OF 5` (dates and context).
+Top: a **sunken tray** (`--surface-sunken`) with the visual. Windows (browser frame, terminal) rise from the tray's bottom edge, inset 20px (32px from md) on the other sides, with their bottom corners hidden. From md up all trays share one height (288px md, 352px lg), so titles line up across a row. Bottom (24–32px padding):
+- Mono row: who, then when: `CONNEQTECH · 2024-25`, `STEDIN · UNIVERSITY PROJECT`, `JAVA · 2024-25`.
 - `h3` title, plus a 1–2 line `small` description in `--ink-secondary`.
 - A row of tech tags.
 - An arrow icon at the top right that nudges on hover.
 The whole card is one link (it opens the case study), with the card spotlight on hover (§7.3.4).
 
 ### 8.8 Terminal block
-For ChessGame, and anywhere code is the product. `--night-surface`, `radius-md`, Geist Mono 14px, `--night-ink`. A 32px top bar with gray dots and a title such as `chess.java`. Content is a real board render in ASCII/Unicode with a prompt (`> e2 e4`). Optionally it types itself out once when it enters the viewport (respecting reduced motion).
+For ChessGame, and anywhere code is the product. `--night-surface`, `radius-md`, Geist Mono 14px, `--night-ink`. A 32px top bar with gray dots and a title such as `chess.java`. Content is a board in classic text notation (uppercase white, lowercase black, dots for empty squares; plain ASCII, because Unicode chess glyphs render as emoji on some phones), after `white> e2 e4`, with the moved rank highlighted. It stands in for the game's real output until Samuele provides it. Exposed to screen readers as one image with a description. Optionally it types itself out once when it enters the viewport (respecting reduced motion).
 
 ### 8.9 Diagram
-For Progmatic (research, no UI yet). An inline SVG, drawn in `--ink` and `--hairline` with 1.5px strokes, mono labels and at most one accent-colored path (the "happy path"). Boxes use `radius-sm`. Example flow: `Docs / FileMaker → Ingestion → Vector index → Retrieval + access control → LLM → Answer`. Paths draw in on scroll (`stroke-dashoffset`).
+For Progmatic (research, no UI yet). A **research map, not an architecture**: no architecture has been chosen, so the diagram shows the four areas under investigation (document retrieval, FileMaker integration, access control, data confidentiality) connected to a central ink node, "Knowledge assistant". Mono labels in `radius-sm` boxes, 1.5px `--hairline-strong` lines drawn behind them. Exposed to screen readers as one image listing the areas. Lines draw in on scroll (`stroke-dashoffset`) in the motion pass.
 
 ### 8.10 Timeline row
-For the background/experience list. A 3-column row: mono date (`2024-25`) · role and company (`h3` + `small`) · a one-line outcome. Rows are separated by 1px `--hairline`. On hover the row background shifts to `--surface`.
+For the background/experience list. A 3-column row: mono date (`2024-25`) · role and company (`h3` + `small`) · a one-line outcome. Rows are separated by 1px `--hairline`. No hover state: the rows aren't interactive, and a hover would suggest they are.
 
 ### 8.11 Toast
 Bottom center, `--ink` background, white 14px text, `radius-pill`, `--shadow-card-hover`. Enters from `translateY(16px) opacity 0`, 300ms `--ease-drawer`, and auto-dismisses after 2s.
@@ -293,7 +295,7 @@ Bottom center, `--ink` background, white 14px text, `radius-pill`, `--shadow-car
 
 ## 9. Page structure
 
-One long page plus a case-study view per project. Sections are numbered with mono eyebrows.
+One long page plus a case-study view per project. Sections open with a `display` headline; only the hero has an eyebrow (§8.3). Spacing is one section unit between consecutive sections (top padding only), and top and bottom for dark bands and the section before one.
 
 ### 9.0 Nav (see §8.1)
 
@@ -303,6 +305,7 @@ One long page plus a case-study view per project. Sections are numbered with mon
 - `display-xl`: **Samuele Poma.** (two lines on mobile: *Samuele* / *Poma.*)
 - `lead`, `--ink-secondary`, max 32ch: *"I build full-stack software, from Go services to React interfaces, and take projects from the first requirement to the final release."*
 - CTAs: **Primary** `View work ↓` · **Secondary** `GitHub ↗` (github.com/SamuelePoma).
+- The mesh sits top-right. Below 768px, where the text is under it, it is masked to fade out by 40% of the hero height, so the small grey eyebrow never sits on a tint.
 
 ### 9.2 Selected work
 Section opener: `display`, *"Things I've built."*
@@ -323,11 +326,13 @@ Section opener: `display`, *"Things I've built."*
 
 On mobile each card spans full width, in the same order.
 
-Card content:
-- **Conneqtech**: `2024-25 · INTERNSHIP`. *GPS monitoring dashboard.* A dashboard for tracking cars and bicycles, with live GPS data and vehicle info in one place. Built end to end, from problem analysis to delivery. Tags: `Go` `Frontend` `Backend`.
-- **Stedin**: `UNIVERSITY PROJECT · TEAM`. *Grid monitoring.* Visualising regional power usage and detecting faulty transformers across the Netherlands. Tags: `Laravel` `PHP` `MySQL`.
-- **Progmatic**: `SINCE 2026 · RESEARCH` plus a small pulsing `IN PROGRESS` dot (accent; it signals real status). The team size goes in the case study. *AI knowledge assistant.* Researching an internal assistant for technical and organisational knowledge: retrieval, FileMaker integration, access control, confidentiality. Tags: `AI` `RAG` `Research`.
-- **ChessGame**: `2024-25 · JAVA`. *Chess, in the terminal.* A text-based chess engine built around object-oriented design and design patterns. Tags: `Java` `OOP` `Design patterns`.
+Card content (every fact from the résumé; the copy lives in `src/content/projects.ts`):
+- **Conneqtech**: `CONNEQTECH · 2024-25`. *GPS monitoring dashboard.* A dashboard to track cars and bicycles and see their GPS data and vehicle details in one place. Built end to end during the internship. Tags: `Go` `Frontend` `Backend`.
+- **Stedin**: `STEDIN · UNIVERSITY PROJECT`. *Grid monitoring.* Software for visualising power usage and monitoring faulty transformers across regions of the Netherlands. Tags: `Laravel` `PHP` `MySQL`.
+- **Progmatic**: `PROGMATIC · SINCE 2026` plus an accent `IN PROGRESS` status with a small dot (it signals real status; the pulse comes with the motion pass). The team size goes in the case study. *AI knowledge assistant.* Researching an internal assistant for technical and organisational knowledge: document retrieval, FileMaker integration, access control and confidentiality. Tags: `AI` `Document retrieval` `FileMaker`.
+- **ChessGame**: `JAVA · 2024-25`. *Chess in the terminal.* A text-based chess game built with object-oriented programming and design patterns. Tags: `Java` `OOP` `Design patterns`.
+
+Why not the earlier wording: "live" GPS data, "detecting" transformers, a `RAG` tag and "chess engine" all claimed more than the résumé says.
 
 ### 9.3 Case-study view (one per project)
 Opened from the cards (§7.3.5). The structure is always the same:
@@ -351,20 +356,20 @@ Four columns (2 on tablet, 1 on mobile), each a group with a mono label and a pl
 No logos wall, no progress bars.
 
 ### 9.5 About
-Two columns: a short paragraph (3–4 sentences, first person, `lead` size) on the left, and a **timeline** (§8.10) on the right:
+Section opener: `display`, *"About me."* Two columns: a short paragraph (3–4 sentences, first person, `lead` size) on the left, and a **timeline** (§8.10) on the right:
 - `2023-27` · HZ University of Applied Sciences · BSc ICT, Software Engineering
 - `2024-25` · Conneqtech · Software engineering intern
 - `2020-22` · Rondinella & Partners · Web development & marketing
 
 Plus a small line of languages: `ITALIAN (NATIVE), ENGLISH (C1)`.
-Below the timeline: a secondary button `Résumé (PDF) ↓` that downloads `/cv/samuele-poma-cv.pdf`.
-Optional portrait: `IMG-PORTRAIT`, 4:5, grayscale, `radius-lg`.
+Below the timeline: a secondary button `Résumé (PDF) ↓` that downloads `/cv/samuele-poma-cv.pdf`. It renders **only when the file exists** (checked at build time), so there is never a broken link. This is the only résumé link on the page.
+Optional portrait: `IMG-PORTRAIT`, 4:5, grayscale, `radius-lg`. Not shown until Samuele provides one (an optional image never gets a placeholder).
 
 ### 9.6 Contact (a `--night` band that merges into the footer)
 - `display`, `--night-ink`: *"Let's talk."*
 - Two columns on desktop, stacked on mobile:
-  - **Left:** the email as a large `h2` button (click to copy, with a toast per §7.3.6, and a `mailto:` fallback), then links: GitHub ↗ (`github.com/SamuelePoma`) · LinkedIn ↗ (`linkedin.com/in/samuele-poma-547120242`) · Résumé (PDF) ↓.
-  - **Right:** the contact form (§8.12).
+  - **Left:** the email at `h2` size: a real `mailto:` link that copies on click and confirms with a toast (§7.3.6); without JavaScript or clipboard access it opens the email app. On narrow screens it wraps after the `@`. Then secondary buttons: GitHub ↗ (`github.com/SamuelePoma`) · LinkedIn ↗ (`linkedin.com/in/samuele-poma-547120242`). The résumé stays in About, so no intent is repeated.
+  - **Right:** the contact form (§8.12). It posts to `/api/contact` (never a GET, so a message can't end up in a URL), uses uncontrolled inputs so text typed before hydration survives, and shows a `<noscript>` note offering email.
 - **No phone number.**
 
 ### 9.7 Footer (continues the `--night` band)
