@@ -48,8 +48,8 @@
   --surface:         #ffffff;  /* cards, media frames */
   --surface-sunken:  #f2f2f2;  /* placeholders, code blocks on light */
   --ink:             #171717;  /* primary text, primary buttons */
-  --ink-secondary:   #666666;  /* body copy that isn't primary (5.4:1 on canvas) */
-  --ink-tertiary:    #8f8f8f;  /* metadata only, never body text */
+  --ink-secondary:   #525252;  /* body copy that isn't primary (7.8:1 on canvas) */
+  --ink-tertiary:    #6b6b6b;  /* metadata only, never body text (5.2:1 on canvas, 4.8:1 on sunken) */
   --hairline:        #eaeaea;  /* borders, dividers */
   --hairline-strong: #d4d4d4;  /* hovered borders */
 
@@ -58,11 +58,12 @@
   --night-surface:      #111111;
   --night-ink:          #ededed;
   --night-ink-secondary:#a1a1a1;
+  --night-ink-tertiary: #8a8a8a;
   --night-hairline:     rgba(255,255,255,0.10);
 
   /* The single accent */
-  --accent:        #0070f3;  /* links, focus, signals on light */
-  --accent-night:  #3291ff;  /* same role on dark bands */
+  --accent:        #0062d1;  /* links, focus, signals on light (5.5:1 on canvas) */
+  --accent-night:  #3291ff;  /* same role on dark bands (6.3:1 on night) */
 
   /* Hero mesh gradient: hero only, never elsewhere */
   --mesh-1: #00dfd8;  /* cyan    */
@@ -78,7 +79,7 @@
 - `--ink-tertiary` is for metadata (dates, file labels) at small sizes. Never for sentences.
 - The mesh gradient is **heavily blurred** (≥120px), low opacity (0.25–0.4 on light), sits behind the hero headline, and drifts slowly. It must never appear on buttons, text, cards or anywhere below the hero.
 - No other colors. Project screenshots bring their own color, and that is enough.
-- All text meets WCAG AA (4.5:1 body, 3:1 large text).
+- All text meets WCAG AA (4.5:1 body, 3:1 large text). Metadata is text too: the small mono labels need 4.5:1, which is why `--ink-tertiary` is `#6b6b6b` and not a lighter gray.
 
 ### 3.3 Theme
 

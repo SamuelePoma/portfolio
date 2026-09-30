@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 
 import { parseServerEnv } from "./src/lib/env/schema";
 
@@ -8,9 +9,16 @@ if (process.env.VERCEL_ENV === "production") {
   parseServerEnv(process.env);
 }
 
-const nextConfig: NextConfig = {
-  poweredByHeader: false,
-  reactStrictMode: true,
-};
+const defaultPageExtensions = ["tsx", "ts", "jsx", "js"];
 
-export default nextConfig;
+export default function config(phase: string): NextConfig {
+  const isDevServer = phase === PHASE_DEVELOPMENT_SERVER;
+
+  return {
+    poweredByHeader: false,
+    reactStrictMode: true,
+    // `*.dev.tsx` routes (the styleguide) exist only on the dev server and are
+    // left out of production builds entirely.
+    pageExtensions: isDevServer ? ["dev.tsx", ...defaultPageExtensions] : defaultPageExtensions,
+  };
+}
