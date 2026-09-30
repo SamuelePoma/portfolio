@@ -1,0 +1,434 @@
+# DESIGN.md — Samuele Poma Portfolio
+
+> Design system for a personal project showcase. Read this before writing any UI.
+> Direction: **Vercel precision + Apple rhythm**. Monochrome, engineered, generous whitespace, with a few carefully placed moments of motion.
+
+---
+
+## 1. Overview
+
+**What the site is:** a showcase of the software projects Samuele Poma has built, meant to show what he can do. It is not a CV page. A résumé PDF is available to download, but there is no "hire me" or "looking for an internship" copy. The work does the talking.
+
+**Audience:** engineers, tech leads and recruiters who spend 30–90 seconds on the page. They should come away thinking *"this person builds real things and cares about details."*
+
+**Personality:** serious, precise, quietly confident. Cool in the way good engineering is cool: nothing extra, but every detail is considered.
+
+**The blend:**
+
+| Taken from Vercel | Taken from Apple |
+|---|---|
+| Near-black ink on near-white canvas, no decorative color | Huge whitespace, one idea per screen |
+| Geist + Geist Mono, tight display tracking | Full-bleed bands alternating light / dark; the color change *is* the divider |
+| Stacked hairline shadows ("card sits on the page") | Media presented like gallery pieces |
+| Mesh gradient as the hero's only decoration | Pill CTAs, subtle press feedback |
+| Mono for metadata (dates, stack, labels) | 17px body with a calm reading rhythm |
+
+**Language:** English only. Sentence case everywhere. Headlines may end with a period.
+
+---
+
+## 2. Design principles
+
+1. **Work first, chrome last.** The interface steps back so the projects stand out. When unsure, remove.
+2. **One accent, used rarely.** The palette is grayscale. Blue appears only on links, focus rings and one or two small signals.
+3. **Precision over decoration.** Hairlines, exact alignment, consistent spacing. No blobs, no glassmorphism panels, no emoji, no stock illustrations.
+4. **Motion explains, never performs.** Every animation shows where something came from, what changed, or what can be clicked. Nothing moves just to be noticed.
+5. **Show, don't claim.** No skill bars, no percentages, no "passionate developer". Real screenshots, real diagrams, real outcomes (for example *"Won the Dragons' Den grand prize"*).
+
+---
+
+## 3. Color
+
+### 3.1 Tokens
+
+```css
+:root {
+  /* Light surfaces (default) */
+  --canvas:          #fafafa;  /* page background */
+  --surface:         #ffffff;  /* cards, media frames */
+  --surface-sunken:  #f2f2f2;  /* placeholders, code blocks on light */
+  --ink:             #171717;  /* primary text, primary buttons */
+  --ink-secondary:   #666666;  /* body copy that isn't primary (5.4:1 on canvas) */
+  --ink-tertiary:    #8f8f8f;  /* metadata only, never body text */
+  --hairline:        #eaeaea;  /* borders, dividers */
+  --hairline-strong: #d4d4d4;  /* hovered borders */
+
+  /* Dark bands (featured sections, footer) */
+  --night:              #0a0a0a;
+  --night-surface:      #111111;
+  --night-ink:          #ededed;
+  --night-ink-secondary:#a1a1a1;
+  --night-hairline:     rgba(255,255,255,0.10);
+
+  /* The single accent */
+  --accent:        #0070f3;  /* links, focus, signals on light */
+  --accent-night:  #3291ff;  /* same role on dark bands */
+
+  /* Hero mesh gradient: hero only, never elsewhere */
+  --mesh-1: #00dfd8;  /* cyan    */
+  --mesh-2: #007cf0;  /* blue    */
+  --mesh-3: #ff0080;  /* magenta */
+  --mesh-4: #f9cb28;  /* amber   */
+}
+```
+
+### 3.2 Rules
+
+- Most of the page is `--canvas` with `--ink`. Dark bands (`--night`) are used **only** for: the featured project (MuseTrail), and the contact/footer. That gives two dark moments, bookending the work.
+- `--ink-tertiary` is for metadata (dates, file labels) at small sizes. Never for sentences.
+- The mesh gradient is **heavily blurred** (≥120px), low opacity (0.25–0.4 on light), sits behind the hero headline, and drifts slowly. It must never appear on buttons, text, cards or anywhere below the hero.
+- No other colors. Project screenshots bring their own color, and that is enough.
+- All text meets WCAG AA (4.5:1 body, 3:1 large text).
+
+### 3.3 Theme
+
+v1 is **light-first with dark bands** (the Apple alternation). There is no global dark-mode toggle, because a toggle would break the deliberate light/dark rhythm. The browser UI color (`<meta name="theme-color">`) is `#fafafa`.
+
+---
+
+## 4. Typography
+
+### 4.1 Families
+
+- **Geist** (variable, OFL): headlines, body, UI.
+- **Geist Mono** (variable, OFL): metadata, tags, dates, labels, code, terminal.
+- Self-hosted via the `geist` npm package or `@fontsource-variable/geist*`. No Google Fonts request, no SF Pro.
+
+### 4.2 Scale
+
+Fluid sizes use `clamp(min, preferred, max)`. Tracking is negative at display sizes (the "tight" signature of both Vercel and Apple).
+
+| Token | Size | Weight | Line-height | Tracking | Use |
+|---|---|---|---|---|---|
+| `display-xl` | clamp(48px, 9vw, 120px) | 600 | 0.95 | -0.045em | Hero name only |
+| `display` | clamp(40px, 6vw, 72px) | 600 | 1.0 | -0.04em | Section openers, featured project title |
+| `h1` | clamp(32px, 4vw, 48px) | 600 | 1.1 | -0.03em | Project titles |
+| `h2` | clamp(24px, 2.6vw, 32px) | 600 | 1.2 | -0.02em | Sub-sections |
+| `h3` | 20px | 600 | 1.3 | -0.01em | Card titles |
+| `lead` | clamp(19px, 1.6vw, 22px) | 400 | 1.45 | -0.01em | Hero subline, section intros |
+| `body` | 17px | 400 | 1.55 | 0 | Default text |
+| `small` | 15px | 400 | 1.5 | 0 | Card descriptions |
+| `mono-label` | 12px | 500 | 1.4 | 0.02em | UPPERCASE eyebrows, tags, dates |
+| `mono` | 14px | 400 | 1.6 | 0 | Code, terminal, inline tech |
+
+### 4.3 Rules
+
+- Maximum weight is **600**. Never 700+.
+- Headlines are sentence case, never all-caps. Only `mono-label` may be uppercase.
+- Body copy never uses mono.
+- Reading width is at most `65ch`.
+- Use `font-feature-settings: "ss01"` for Geist, and `tabular-nums` for dates and numbers.
+- `text-wrap: balance` on headlines, `text-wrap: pretty` on paragraphs.
+
+---
+
+## 5. Layout & spacing
+
+### 5.1 Spacing scale (4px base)
+
+`4 · 8 · 12 · 16 · 24 · 32 · 48 · 64 · 96 · 128 · 160`
+
+- **Section padding (vertical):** `clamp(96px, 12vw, 160px)`.
+- **Inside cards:** 24px (mobile) / 32px (desktop).
+- **Headline → paragraph:** 12–16px. **Paragraph → CTA group:** 32px.
+- Rule of thumb: space *between* groups ≥ 2× space *within* groups.
+
+### 5.2 Grid
+
+- Container: `max-width: 1200px`, side gutter `24px` (≥ 768px) / `16px` (mobile).
+- 12-column grid, 24px gap (16px on mobile).
+- Wide media may break out to `1400px` or full-bleed.
+- Breakpoints: `sm 640` · `md 768` · `lg 1024` · `xl 1280`.
+- Mobile-first. No horizontal scroll at 360px width.
+
+---
+
+## 6. Shape & elevation
+
+### 6.1 Radius
+
+| Token | Value | Use |
+|---|---|---|
+| `radius-sm` | 6px | Nav buttons, tags, inputs |
+| `radius-md` | 12px | Small cards, code blocks |
+| `radius-lg` | 16px | Project cards, media frames |
+| `radius-xl` | 24px | Featured media |
+| `radius-pill` | 9999px | Marketing CTAs, chips |
+
+Nested radii: inner radius = outer radius − padding.
+
+### 6.2 Shadows: stacked, never single
+
+```css
+--shadow-card:
+  0 0 0 1px rgba(0,0,0,0.08),
+  0 2px 2px rgba(0,0,0,0.04),
+  0 8px 16px -4px rgba(0,0,0,0.04);
+
+--shadow-card-hover:
+  0 0 0 1px rgba(0,0,0,0.10),
+  0 4px 8px rgba(0,0,0,0.04),
+  0 24px 48px -12px rgba(0,0,0,0.10);
+
+--shadow-night: 0 0 0 1px rgba(255,255,255,0.10);  /* dark bands: ring only */
+```
+
+No heavy blur shadows, no colored glows.
+
+---
+
+## 7. Motion
+
+Motion follows **Emil Kowalski's design-engineering principles**. Use the `emil-design-eng` / `animate` skills when writing it and `review-animations` to audit it.
+
+### 7.1 Tokens
+
+```css
+--ease-out:      cubic-bezier(0.23, 1, 0.32, 1);    /* default for entering / responding */
+--ease-in-out:   cubic-bezier(0.77, 0, 0.175, 1);   /* things moving on-screen A → B */
+--ease-drawer:   cubic-bezier(0.32, 0.72, 0, 1);    /* overlays, sheets */
+
+--dur-instant: 120ms;  /* press, color */
+--dur-fast:    200ms;  /* hover, small UI */
+--dur-base:    300ms;  /* overlays, menus */
+--dur-reveal:  700ms;  /* scroll reveals, hero */
+```
+
+Springs (Motion library) for interactive/physical things: `{ type: "spring", duration: 0.5, bounce: 0.15 }`. Never bouncy above 0.2.
+
+### 7.2 Rules
+
+- Animate only `transform`, `opacity`, `filter` (and `clip-path` for reveals). Never layout properties.
+- Never animate from `scale(0)`. Enter from `scale(0.96)` plus opacity.
+- UI responses (hover, press, menu) finish in **≤ 300ms**. Only scroll/hero reveals may be longer.
+- Anything seen often (nav, buttons) gets **less** motion than things seen once (hero).
+- Hover effects only under `@media (hover: hover) and (pointer: fine)`.
+- **`prefers-reduced-motion: reduce`** turns all movement off: content appears with a simple opacity fade of ≤ 150ms, the mesh stops drifting, and there is no parallax.
+- Scroll reveals run **once**, trigger at ~15% visibility, and never hide content from no-JS users or crawlers.
+
+### 7.3 Signature moments
+
+These are the only "wow" animations. Don't add more.
+
+1. **Hero entrance.** The name reveals line by line: each line slides up 24px, from `opacity 0, blur(8px)` to sharp, 700ms `--ease-out`, 80ms stagger. The subline and CTAs follow 150ms later. The mesh gradient fades in over 1.2s.
+2. **Living mesh.** The hero gradient drifts slowly (a 20–30s loop of translate/rotate on the blurred blobs) and reacts subtly to the pointer (≤ 20px offset, spring-smoothed). It pauses when off-screen.
+3. **Media reveal.** Project screenshots enter with a `clip-path: inset()` wipe from the bottom plus a 1.04 → 1 scale, 900ms `--ease-out`.
+4. **Card spotlight.** On hover, project cards show a soft radial highlight that follows the cursor (Linear/Vercel style), lift by 2px and switch to `--shadow-card-hover`. 200ms.
+5. **Case study transition.** Opening a project animates the card's image into the case-study header (a shared-element / `layoutId` transition, 500ms spring). Closing reverses it.
+6. **Copy email.** Clicking the email copies it and shows a small toast ("Email copied") in Sonner style, sliding up from the bottom.
+
+### 7.4 Micro-interactions
+
+- Buttons: `:active` → `scale(0.97)`, 120ms.
+- Links: an underline that grows from the left on hover (`scaleX` 0 → 1, 200ms).
+- Arrow icons in CTAs nudge 2px right on hover.
+- Nav: transparent at the top. After 24px of scroll it gains a `backdrop-blur(12px)`, a canvas background at 80% opacity and a bottom hairline (200ms).
+
+---
+
+## 8. Components
+
+### 8.1 Navigation
+Sticky, 64px tall. Left: the **"SP"** monogram in Geist Mono (links to top). Right: `Work` · `About` · `Contact` in 14px ink-secondary (turning ink on hover), then a GitHub icon button (32px, `radius-sm`). On mobile the links collapse into a minimal full-screen menu (animated with `--ease-drawer`).
+
+### 8.2 Buttons
+- **Primary:** `--ink` background, white text, `radius-pill`, 44px tall, 20px horizontal padding, 15px/500. Hover: background `#383838`.
+- **Secondary:** `--surface` background, `--ink` text, a 1px `--hairline` ring, `radius-pill`. Hover: `--hairline-strong` ring.
+- **On dark bands:** primary becomes white-on-ink inverted; secondary gets a `--night-hairline` ring.
+- Minimum touch target 44×44px. A visible focus ring: `2px solid var(--accent)`, `outline-offset: 2px`.
+
+### 8.3 Mono label / eyebrow
+`mono-label`, uppercase, `--ink-tertiary`. Sits above section titles, for example `01 — SELECTED WORK`. Numbered sections give the page an engineered, indexed feel.
+
+### 8.4 Tech tag
+Geist Mono 12px, `--ink-secondary`, 1px `--hairline` ring, `radius-sm`, 4px × 8px padding. No fill colors, no per-technology colors.
+
+### 8.5 Media frame
+Every screenshot sits inside a frame, never loose:
+- **Browser frame** (for web apps): `--surface` with `--shadow-card`, `radius-lg`, and a 36px top bar with three 8px gray dots (`--hairline-strong`, *not* traffic-light colors) plus an optional mono URL pill.
+- **Plain frame** (for photos, such as the award ceremony): `radius-lg`, 1px inner ring `rgba(0,0,0,0.06)`.
+- Images use `object-fit: cover` and are lazy-loaded (except the hero), in AVIF/WebP format with explicit width and height.
+
+### 8.6 Image placeholder
+Used until the real image exists. It must look intentional, not broken:
+- Same size and radius as the final media (aspect-ratio locked).
+- `--surface-sunken` background with a subtle 45° hatch pattern (1px lines, 4% ink, 12px apart).
+- Centered in Geist Mono 12px `--ink-tertiary`: the **slot ID**, the **aspect ratio**, and a one-line description of what goes there. Example:
+  `IMG-CONNEQTECH-01 · 16:10 · Dashboard main view with map`
+- Every slot is listed in §10 so it can be swapped by dropping a file into `/public/images/`.
+
+### 8.7 Project card
+`--surface`, `--shadow-card`, `radius-lg`, overflow hidden.
+Top: the media (browser frame or image), aspect-ratio locked. Bottom (24–32px padding):
+- Mono row: `2024 · TEAM OF 5` (dates and context).
+- `h3` title, plus a 1–2 line `small` description in `--ink-secondary`.
+- A row of tech tags.
+- An arrow icon at the top right that nudges on hover.
+The whole card is one link (it opens the case study), with the card spotlight on hover (§7.3.4).
+
+### 8.8 Terminal block
+For ChessGame, and anywhere code is the product. `--night-surface`, `radius-md`, Geist Mono 14px, `--night-ink`. A 32px top bar with gray dots and a title such as `chess — java`. Content is a real board render in ASCII/Unicode with a prompt (`> e2 e4`). Optionally it types itself out once when it enters the viewport (respecting reduced motion).
+
+### 8.9 Diagram
+For Progmatic (research, no UI yet). An inline SVG, drawn in `--ink` and `--hairline` with 1.5px strokes, mono labels and at most one accent-colored path (the "happy path"). Boxes use `radius-sm`. Example flow: `Docs / FileMaker → Ingestion → Vector index → Retrieval + access control → LLM → Answer`. Paths draw in on scroll (`stroke-dashoffset`).
+
+### 8.10 Timeline row
+For the background/experience list. A 3-column row: mono date (`2024 — 25`) · role and company (`h3` + `small`) · a one-line outcome. Rows are separated by 1px `--hairline`. On hover the row background shifts to `--surface`.
+
+### 8.11 Toast
+Bottom center, `--ink` background, white 14px text, `radius-pill`, `--shadow-card-hover`. Enters from `translateY(16px) opacity 0`, 300ms `--ease-drawer`, and auto-dismisses after 2s.
+
+### 8.12 Contact form (on the dark band)
+- Fields: **Name**, **Email**, **Message** (textarea, 5 rows). All are required, with visible `<label>`s above the inputs (never placeholder-only labels).
+- Inputs: `--night-surface` background, `--night-hairline` ring, `radius-md`, 44px minimum height, 16px text (this prevents iOS zoom). Focus: a 2px `--accent-night` ring.
+- Errors: 13px text in `#ff6b6b` (the only non-token color, used for errors only) under the field, linked with `aria-describedby`, and the icon `⚠` in mono. Validate on blur and on submit, never on every keystroke.
+- A character counter on Message in mono `--night-ink-secondary` (`0 / 2000`).
+- Privacy note under the button, 13px: *"Your message is only used to reply to you. See the privacy policy."*
+- Submit: the primary inverted pill `Send message →`. While sending it shows a small spinner and the label `Sending…`, and is disabled.
+- Success: the form is replaced (a 300ms crossfade) by a check icon, *"Message sent. I'll get back to you soon."*, and a `Send another` link. Failure: an inline alert above the button with a friendly message and a suggestion to use email instead.
+- The anti-spam widget (Turnstile) is rendered in its compact form, dark theme, under the Message field.
+
+---
+
+## 9. Page structure
+
+One long page plus a case-study view per project. Sections are numbered with mono eyebrows.
+
+### 9.0 Nav (see §8.1)
+
+### 9.1 Hero: light canvas with the mesh gradient
+- Takes about 90svh. Content is left-aligned on desktop, bottom-weighted like an editorial cover.
+- Eyebrow: `SOFTWARE ENGINEER · MIDDELBURG, NL`
+- `display-xl`: **Samuele Poma.** (two lines on mobile: *Samuele* / *Poma.*)
+- `lead`, `--ink-secondary`, max 32ch: *"I build full-stack software, from Go services to React interfaces, and take projects from the first requirement to the final release."*
+- CTAs: **Primary** `View work ↓` · **Secondary** `GitHub ↗` (github.com/SamuelePoma).
+- Bottom edge: a mono row of the stack in `--ink-tertiary`: `GO · TYPESCRIPT · REACT · SVELTEKIT · JAVA · DOCKER`.
+
+### 9.2 `01 — Selected work`
+Section opener: `display`, *"Things I've built."*
+
+**a) Featured: MuseTrail (a full-bleed `--night` band)**
+- Two columns on desktop (text 5 cols, media 7 cols); stacked on mobile.
+- A mono label with the award signal: `★ GRAND PRIZE — DRAGONS' DEN` in `--accent-night`. This is one of the two places the accent appears as a "signal".
+- Title `display`: *MuseTrail*. Description: a web app encouraging sustainable digital habits in young adults. Role: full-stack development and team lead.
+- Tags: `SvelteKit` `Docker`.
+- Media: a large browser frame with the app design (`IMG-MUSETRAIL-01`), plus an overlapping plain-frame photo of the award ceremony (`IMG-MUSETRAIL-02`), offset and slightly lower, with a parallax difference of ≤ 40px.
+
+**b) Bento grid (light canvas), 12 columns**
+
+| Row | Left | Right |
+|---|---|---|
+| 1 | **Conneqtech**: span 7, browser frame | **Stedin**: span 5, browser frame |
+| 2 | **Progmatic**: span 5, diagram (§8.9) | **ChessGame**: span 7, terminal (§8.8) |
+
+On mobile each card spans full width, in the same order.
+
+Card content:
+- **Conneqtech**: `2024 — 25 · INTERNSHIP`. *GPS monitoring dashboard.* A dashboard for tracking cars and bicycles, with live GPS data and vehicle info in one place. Built end to end, from problem analysis to delivery. Tags: `Go` `Frontend` `Backend`.
+- **Stedin**: `UNIVERSITY PROJECT · TEAM`. *Grid monitoring.* Visualising regional power usage and detecting faulty transformers across the Netherlands. Tags: `Laravel` `PHP` `MySQL`.
+- **Progmatic**: `2026 — NOW · RESEARCH · TEAM OF 5` plus a small pulsing `IN PROGRESS` dot (accent). *AI knowledge assistant.* Researching an internal assistant for technical and organisational knowledge: retrieval, FileMaker integration, access control, confidentiality. Tags: `AI` `RAG` `Research`.
+- **ChessGame**: `2024 — 25 · SOLO`. *Chess, in the terminal.* A text-based chess engine built around object-oriented design and design patterns. Tags: `Java` `OOP` `Design patterns`.
+
+### 9.3 Case-study view (one per project)
+Opened from the cards (§7.3.5). The structure is always the same:
+1. Back link (`← All work`), eyebrow with the dates, `display` title, `lead` one-liner.
+2. A meta row of 4 columns in mono: **Role** · **Team** · **Timeline** · **Stack**.
+3. Hero media (the shared element from the card).
+4. **Problem**: 1 paragraph.
+5. **Approach**: 2–3 paragraphs, plus a diagram or secondary media.
+6. **Outcome**: 1 paragraph plus highlights (for example the award).
+7. Gallery: 1–3 extra images (slots in §10).
+8. A next-project link at the bottom (a large `h1`, with an arrow that nudges on hover).
+
+### 9.4 `02 — Stack`
+Section opener: `display`, *"Tools I reach for."*
+Four columns (2 on tablet, 1 on mobile), each a group with a mono label and a plain list:
+- **Languages**: Go, TypeScript, JavaScript, Java, PHP, SQL
+- **Frameworks**: React, SvelteKit, Laravel, Tailwind CSS
+- **Tools**: Git, GitHub, Docker, MySQL
+- **Practices**: Domain-driven design, Design patterns, OOP, Agile teamwork
+
+No logos wall, no progress bars.
+
+### 9.5 `03 — About`
+Two columns: a short paragraph (3–4 sentences, first person, `lead` size) on the left, and a **timeline** (§8.10) on the right:
+- `2023 — 27` · HZ University of Applied Sciences · BSc ICT, Software Engineering
+- `2024 — 25` · Conneqtech · Software engineering intern
+- `2020 — 22` · Rondinella & Partners · Web development & marketing
+
+Plus a small line of languages: `ITALIAN — NATIVE · ENGLISH — C1`.
+Below the timeline: a secondary button `Résumé (PDF) ↓` that downloads `/cv/samuele-poma-cv.pdf`.
+Optional portrait: `IMG-PORTRAIT`, 4:5, grayscale, `radius-lg`.
+
+### 9.6 `04 — Contact` (a `--night` band that merges into the footer)
+- `display`, `--night-ink`: *"Let's talk."*
+- Two columns on desktop, stacked on mobile:
+  - **Left:** the email as a large `h2` button (click to copy, with a toast per §7.3.6, and a `mailto:` fallback), then links: GitHub ↗ (`github.com/SamuelePoma`) · LinkedIn ↗ (`linkedin.com/in/samuele-poma-547120242`) · Résumé (PDF) ↓.
+  - **Right:** the contact form (§8.12).
+- **No phone number.**
+
+### 9.7 Footer (continues the `--night` band)
+- A hairline on top (`--night-hairline`), 32px padding, mono 12px `--night-ink-secondary`.
+- Left: `© {current year} Samuele Poma`. Center: `Privacy` · `Legal`. Right: `Middelburg {HH:MM}` (live local time, `Europe/Amsterdam`).
+- On mobile the three groups stack, centered.
+
+### 9.8 Utility pages
+All utility pages use the nav and footer, the light canvas, and a single reading column (`65ch`).
+- **404:** a mono eyebrow `ERROR 404`, the `display` text *"This page doesn't exist."*, a `lead` line, a primary button `Back home` and a secondary `View work`. A faint mesh gradient at 15% opacity is the only exception to the hero-only rule.
+- **Error (500 / runtime):** the same layout, *"Something broke."*, plus a `Try again` button (resets the error boundary) and `Back home`. Never show a stack trace or error message.
+- **Privacy / Legal:** a breadcrumb, a `h1`, a mono `LAST UPDATED 2026-10-01` label, and long-form text styled as `body`, with `h2` sections and anchor links on the headings.
+
+---
+
+## 10. Image slots
+
+Put files in `/public/images/`. Format: **WebP or AVIF**, sRGB, long edge 2400px for 16:10 media and 1600px for the others. Until a file exists, the component renders the placeholder from §8.6 using the text below.
+
+| Slot ID | Where | Ratio | What to put there | Status |
+|---|---|---|---|---|
+| `IMG-MUSETRAIL-01` | Featured band plus case-study hero | 16:10 | The main MuseTrail screen (home or trail view), a clean desktop screenshot | Samuele has it (design) |
+| `IMG-MUSETRAIL-02` | Featured band overlap | 4:5 | A photo of the Dragons' Den award ceremony / the team with the prize | Samuele has it |
+| `IMG-MUSETRAIL-03` | Case-study gallery | 16:10 | A second design screen or a mobile view | Optional |
+| `IMG-CONNEQTECH-01` | Card plus case-study hero | 16:10 | The dashboard main view, ideally with the map and vehicles visible. **Blur any customer data or plates.** | Samuele has images |
+| `IMG-CONNEQTECH-02` | Case-study gallery | 16:10 | Vehicle detail / GPS history view | Samuele has images |
+| `IMG-STEDIN-01` | Card plus case-study hero | 16:10 | The product screen: the power-usage map or transformer overview | Samuele has it |
+| `IMG-STEDIN-02` | Case-study gallery | 16:10 | A detail or alert view for a faulty transformer | Optional |
+| `IMG-PROGMATIC-01` | Case-study gallery | 16:10 | Optional: a research board, a whiteboard photo, or an early prototype. The card itself uses the SVG diagram. | Optional |
+| `IMG-PORTRAIT` | About | 4:5 | A professional portrait on a neutral background, shown in grayscale | Optional |
+| `OG-IMAGE` | Social share preview | 1200×630 | Generated from the hero (name plus mesh), not a photo | Built in code |
+| `CV-PDF` | `/public/cv/samuele-poma-cv.pdf` | A4 PDF | The résumé **without the phone number** (it's public) | Samuele to export |
+
+ChessGame needs no images: the terminal block is the visual.
+
+---
+
+## 11. Accessibility & quality bar
+
+- WCAG 2.2 AA. Every interactive element is reachable by keyboard and has a visible focus ring.
+- Semantic landmarks (`header`, `main`, `section[aria-labelledby]`, `footer`) and one `h1` per view.
+- Every image has meaningful `alt` text; decorative elements use `aria-hidden`.
+- `prefers-reduced-motion` is respected everywhere (§7.2).
+- Lighthouse targets: **Performance ≥ 95, Accessibility 100, Best Practices 100, SEO 100**.
+- LCP < 2.0s, CLS < 0.05. Fonts use `font-display: swap` and the Geist variable font is preloaded.
+- Verified visually with Playwright at 375 / 768 / 1280 / 1920 widths before each release.
+
+---
+
+## 12. Do / Don't
+
+**Do**
+- Leave more whitespace than feels comfortable.
+- Put every screenshot in a frame.
+- Use mono for every date, tag and label.
+- Write short, concrete copy: what it is, what you did, what happened.
+- Keep the accent to links, focus, the award label and the "in progress" dot.
+
+**Don't**
+- ❌ Add colors, gradients (outside the hero), glows or colored shadows.
+- ❌ Use weight 700+, all-caps headlines, or mono body text.
+- ❌ Use skill bars, percentages, logo walls, emoji, or stock illustrations.
+- ❌ Use typewriter hero text, cursor trails, particle backgrounds, or scroll-jacking.
+- ❌ Use bounce easing, `scale(0)` entrances, or animations over 300ms on UI that is used repeatedly.
+- ❌ Use single drop-shadows, or heavy blurred shadows.
+- ❌ Use CV language: "seeking", "hire me", "looking for an internship", phone numbers. (Listing a past internship as experience is fine.)
+- ❌ Center-align long text. Only short hero or contact lines may be centered.
