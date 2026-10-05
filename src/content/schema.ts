@@ -49,9 +49,11 @@ export const projectSchema = z.object({
   status: z.enum(["completed", "in-progress"]),
   /** One or two sentences for cards and the featured band. */
   tagline: visibleText.max(180),
-  role: visibleText,
+  /** Samuele's role. Optional: left out until he confirms it, never guessed. */
+  role: visibleText.optional(),
   team: z.number().int().min(2).optional(),
-  stack: z.array(visibleText).min(1).max(5),
+  /** Empty until the stack is confirmed; the card then simply shows no tags. */
+  stack: z.array(visibleText).max(5),
   /** A real distinction, e.g. an award. Shown as the accent label. */
   highlight: visibleText.optional(),
   featured: z.boolean().default(false),
@@ -59,6 +61,8 @@ export const projectSchema = z.object({
   media: z.object({
     hero: mediaSlotId.optional(),
     secondary: mediaSlotId.optional(),
+    /** Phone screens for the featured band, front first. */
+    screens: z.array(mediaSlotId).min(2).max(2).optional(),
   }),
 });
 

@@ -5,7 +5,9 @@ import { cn } from "@/lib/utils/cn";
 
 const aspect: Record<MediaRatio, string> = {
   "16:10": "aspect-[16/10]",
+  "16:9": "aspect-video",
   "4:5": "aspect-[4/5]",
+  "9:19.5": "aspect-[1170/2532]",
 };
 
 interface MediaFrameProps {

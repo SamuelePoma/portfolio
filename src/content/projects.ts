@@ -1,8 +1,9 @@
 import type { Project } from "./schema";
 
 /**
- * Projects in display order. Facts come from the résumé only; anything unknown is
- * left out and listed as a question in the local content to-do list.
+ * Projects in display order: the featured one, then the most recent first. Facts come
+ * from the résumé and from Samuele; anything unknown is left out and listed as a
+ * question in the local content to-do list.
  */
 export const projects = [
   {
@@ -13,11 +14,44 @@ export const projects = [
     status: "completed",
     tagline: "A web app that promotes sustainable digital habits among young adults.",
     role: "Frontend and backend development, team lead",
+    team: 5,
     stack: ["SvelteKit", "Docker"],
     highlight: "Grand prize · Dragons' Den",
     featured: true,
     card: { type: "screenshot", slot: "IMG-MUSETRAIL-01" },
-    media: { hero: "IMG-MUSETRAIL-01", secondary: "IMG-MUSETRAIL-02" },
+    media: {
+      hero: "IMG-MUSETRAIL-01",
+      secondary: "IMG-MUSETRAIL-02",
+      screens: ["IMG-MUSETRAIL-01", "IMG-MUSETRAIL-03"],
+    },
+  },
+  {
+    slug: "progmatic-ai-knowledge-assistant",
+    title: "AI knowledge assistant",
+    organisation: "Progmatic",
+    category: "Research",
+    period: { start: "2026-09" },
+    status: "in-progress",
+    tagline:
+      "A local AI chatbot for Progmatic that will answer questions about the company database, find information, write emails and code, and prepare quotations and budget calculations.",
+    role: "Researcher",
+    team: 5,
+    stack: ["AI", "Document retrieval", "FileMaker"],
+    card: { type: "screenshot", slot: "IMG-PROGMATIC-01" },
+    media: { hero: "IMG-PROGMATIC-01" },
+  },
+  {
+    slug: "young-dcc-platform",
+    title: "Youth climate events platform",
+    organisation: "Delta Climate Center",
+    category: "Web platform",
+    period: { start: "2026-06", end: "2026-06" },
+    status: "completed",
+    tagline:
+      "An online platform, built with the Delta Climate Center, to promote and organise events on environmental themes for young people in Zeeland.",
+    stack: [],
+    card: { type: "screenshot", slot: "IMG-YOUNGDCC-01" },
+    media: { hero: "IMG-YOUNGDCC-01" },
   },
   {
     slug: "conneqtech-gps-dashboard",
@@ -47,21 +81,6 @@ export const projects = [
     media: { hero: "IMG-STEDIN-01", secondary: "IMG-STEDIN-02" },
   },
   {
-    slug: "progmatic-ai-knowledge-assistant",
-    title: "AI knowledge assistant",
-    organisation: "Progmatic",
-    category: "Research",
-    period: { start: "2026-09" },
-    status: "in-progress",
-    tagline:
-      "Researching an internal assistant for technical and organisational knowledge: document retrieval, FileMaker integration, access control and confidentiality.",
-    role: "Researcher",
-    team: 5,
-    stack: ["AI", "Document retrieval", "FileMaker"],
-    card: { type: "diagram" },
-    media: {},
-  },
-  {
     slug: "chess-game-java",
     title: "Chess in the terminal",
     category: "Java",
@@ -72,6 +91,16 @@ export const projects = [
     stack: ["Java", "OOP", "Design patterns"],
     card: { type: "terminal" },
     media: {},
+  },
+  {
+    slug: "tower-defense-typescript",
+    title: "Tower defense game",
+    category: "TypeScript",
+    status: "completed",
+    tagline: "A tower defense game built with object-oriented TypeScript.",
+    stack: ["TypeScript", "OOP"],
+    card: { type: "screenshot", slot: "IMG-TOWERDEFENSE-01" },
+    media: { hero: "IMG-TOWERDEFENSE-01" },
   },
 ] as const satisfies readonly Project[];
 

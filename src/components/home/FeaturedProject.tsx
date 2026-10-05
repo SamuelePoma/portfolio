@@ -3,24 +3,49 @@ import { Button } from "@/components/ui/Button";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import { MediaSlot } from "@/components/ui/MediaSlot";
 import { MonoLabel } from "@/components/ui/MonoLabel";
+import { PhoneFrame } from "@/components/ui/PhoneFrame";
 import { TagList } from "@/components/ui/Tag";
-import type { MediaSlotId } from "@/content/media";
+import { getMediaSlot, type MediaSlotId } from "@/content/media";
 import { formatPeriod } from "@/lib/format/period";
 
 interface FeaturedProjectProps {
   slug: string;
   title: string;
   tagline: string;
-  role: string;
+  role?: string;
   period?: { start: string; end?: string };
   stack: readonly string[];
   highlight?: string;
-  media: { hero?: MediaSlotId; secondary?: MediaSlotId };
+  media: {
+    hero?: MediaSlotId;
+    secondary?: MediaSlotId;
+    screens?: readonly MediaSlotId[];
+  };
+}
+
+/** Two phones side by side, the second set back and lower, like a product shot. */
+function PhoneStage({ front, back }: Readonly<{ front: MediaSlotId; back: MediaSlotId }>) {
+  const sizes = "(min-width: 640px) 260px, 40vw";
+  return (
+    <div className="relative mx-auto aspect-square w-full max-w-xl sm:aspect-[5/4] lg:col-span-7">
+      <div className="absolute top-[8%] left-1/2 h-[88%] -translate-x-[8%]">
+        <PhoneFrame className="h-full">
+          <MediaSlot id={back} sizes={sizes} position="top" />
+        </PhoneFrame>
+      </div>
+      <div className="absolute top-0 left-1/2 h-[94%] -translate-x-[92%]">
+        <PhoneFrame className="h-full">
+          <MediaSlot id={front} sizes={sizes} position="top" />
+        </PhoneFrame>
+      </div>
+    </div>
+  );
 }
 
 /**
- * The featured project as a full-bleed dark band (DESIGN.md §9.2a): text on the left,
- * the product in a browser frame on the right, and a photo overlapping its corner.
+ * The featured project as a full-bleed dark band (DESIGN.md §9.2a): text on the left
+ * and the product on the right (phones for a mobile app, a browser frame otherwise),
+ * then a photo that backs up the highlight.
  */
 export function FeaturedProject({
   slug,
@@ -33,6 +58,8 @@ export function FeaturedProject({
   media,
 }: Readonly<FeaturedProjectProps>) {
   const titleId = `project-${slug}`;
+  const [front, back] = media.screens ?? [];
+  const photo = media.secondary ? getMediaSlot(media.secondary) : undefined;
 
   return (
     <article aria-labelledby={titleId} data-tone="night" className="tone-night py-20 md:py-28">
@@ -48,22 +75,26 @@ export function FeaturedProject({
           </h3>
           <p className="max-w-[36ch] text-lead text-ink-secondary">{tagline}</p>
 
-          <dl className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-10 gap-y-6 border-t border-hairline pt-6">
-            <div className="flex flex-col gap-2">
-              <dt>
-                <MonoLabel>Role</MonoLabel>
-              </dt>
-              <dd className="text-small text-ink-secondary">{role}</dd>
-            </div>
-            {period && (
-              <div className="flex flex-col gap-2">
-                <dt>
-                  <MonoLabel>Timeline</MonoLabel>
-                </dt>
-                <dd className="text-small text-ink-secondary tabular">{formatPeriod(period)}</dd>
-              </div>
-            )}
-          </dl>
+          {(role ?? period) && (
+            <dl className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-10 gap-y-6 border-t border-hairline pt-6">
+              {role && (
+                <div className="flex flex-col gap-2">
+                  <dt>
+                    <MonoLabel>Role</MonoLabel>
+                  </dt>
+                  <dd className="text-small text-ink-secondary">{role}</dd>
+                </div>
+              )}
+              {period && (
+                <div className="flex flex-col gap-2">
+                  <dt>
+                    <MonoLabel>Timeline</MonoLabel>
+                  </dt>
+                  <dd className="text-small text-ink-secondary tabular">{formatPeriod(period)}</dd>
+                </div>
+              )}
+            </dl>
+          )}
 
           <TagList tags={stack} />
           <div className="pt-2">
@@ -73,27 +104,46 @@ export function FeaturedProject({
           </div>
         </div>
 
-        {media.hero && (
-          <div className="relative pb-12 lg:col-span-7 lg:pb-16">
-            <MediaFrame ratio="16:10" radius="xl">
-              <MediaSlot
-                id={media.hero}
-                sizes="(min-width: 1280px) 700px, (min-width: 1024px) 58vw, 100vw"
-                position="top"
-              />
-            </MediaFrame>
-            {media.secondary && (
-              // Positioned by a wrapper: the frame is `relative` itself, and components
-              // never have their classes overridden (see `cn`).
-              <div className="absolute right-3 bottom-0 w-[38%] sm:right-6 lg:right-auto lg:-left-10 lg:w-[34%]">
-                <MediaFrame variant="plain" ratio="4:5" className="shadow-card-hover">
-                  <MediaSlot id={media.secondary} sizes="(min-width: 1024px) 240px, 38vw" />
-                </MediaFrame>
-              </div>
-            )}
-          </div>
+        {front && back ? (
+          <PhoneStage front={front} back={back} />
+        ) : (
+          media.hero && (
+            <div className="lg:col-span-7">
+              <MediaFrame ratio="16:10" radius="xl">
+                <MediaSlot
+                  id={media.hero}
+                  sizes="(min-width: 1280px) 700px, (min-width: 1024px) 58vw, 100vw"
+                  position="top"
+                />
+              </MediaFrame>
+            </div>
+          )
         )}
       </Container>
+
+      {photo && media.secondary && (
+        <Container className="mt-20 md:mt-28">
+          {/* From lg the caption sits in the text column, level with the photo's bottom edge. */}
+          <figure className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-12">
+            <MediaFrame
+              variant="plain"
+              ratio={photo.ratio}
+              radius="xl"
+              className="lg:col-span-7 lg:col-start-6 lg:row-start-1"
+            >
+              <MediaSlot
+                id={media.secondary}
+                sizes="(min-width: 1280px) 700px, (min-width: 1024px) 58vw, 100vw"
+              />
+            </MediaFrame>
+            {photo.caption && (
+              <figcaption className="text-small text-ink-secondary lg:col-span-4 lg:row-start-1 lg:self-end">
+                {photo.caption}
+              </figcaption>
+            )}
+          </figure>
+        </Container>
+      )}
     </article>
   );
 }

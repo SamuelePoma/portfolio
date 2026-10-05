@@ -3,7 +3,8 @@
  * when the file exists, and a designed placeholder when it doesn't.
  */
 
-export const mediaRatios = ["16:10", "4:5"] as const;
+/** `9:19.5` is a phone screen (1170 × 2532), shown inside a `PhoneFrame`. */
+export const mediaRatios = ["16:10", "16:9", "4:5", "9:19.5"] as const;
 export type MediaRatio = (typeof mediaRatios)[number];
 
 export interface MediaSlotDefinition {
@@ -15,29 +16,32 @@ export interface MediaSlotDefinition {
   alt: string;
   /** What belongs in the slot, shown while the image is missing. */
   placeholder: string;
+  /** Visible caption, for photos that need context (who, where, when). */
+  caption?: string;
 }
 
 export const mediaSlots = [
   {
     id: "IMG-MUSETRAIL-01",
     file: "musetrail-01.webp",
-    ratio: "16:10",
-    alt: "MuseTrail web app, main screen",
-    placeholder: "Main MuseTrail screen, desktop",
+    ratio: "9:19.5",
+    alt: "MuseTrail on a phone: the My Museum screen, with the user's artworks, likes and collections",
+    placeholder: "My Museum screen, phone",
   },
   {
     id: "IMG-MUSETRAIL-02",
     file: "musetrail-02.webp",
-    ratio: "4:5",
-    alt: "The MuseTrail team at the Dragons' Den award ceremony",
-    placeholder: "Dragons' Den award ceremony",
+    ratio: "16:9",
+    alt: "The MuseTrail team presenting four app screens on a projector in a lecture hall",
+    placeholder: "The team pitching MuseTrail",
+    caption: "Pitching MuseTrail to professors and investors.",
   },
   {
     id: "IMG-MUSETRAIL-03",
     file: "musetrail-03.webp",
-    ratio: "16:10",
-    alt: "MuseTrail, secondary screen",
-    placeholder: "Second design screen or mobile view",
+    ratio: "9:19.5",
+    alt: "MuseTrail on a phone: progress screen comparing the CO2 a user saved with the average user",
+    placeholder: "Progress screen, phone",
   },
   {
     id: "IMG-CONNEQTECH-01",
@@ -57,22 +61,37 @@ export const mediaSlots = [
     id: "IMG-STEDIN-01",
     file: "stedin-01.webp",
     ratio: "16:10",
-    alt: "Grid monitoring app showing regional power usage",
-    placeholder: "Power usage map or transformer overview",
+    alt: "Grid monitoring app: a chart of one transformer's maximum voltages over two weeks",
+    placeholder: "Transformer voltage chart",
   },
   {
     id: "IMG-STEDIN-02",
     file: "stedin-02.webp",
-    ratio: "16:10",
-    alt: "Alert view for a faulty transformer",
-    placeholder: "Faulty transformer detail or alert",
+    ratio: "16:9",
+    alt: "Seven students around a meeting table, most of them giving a thumbs up",
+    placeholder: "The project group at work",
+    caption: "Working on the Stedin project with my group.",
   },
   {
     id: "IMG-PROGMATIC-01",
     file: "progmatic-01.webp",
+    ratio: "16:9",
+    alt: "The assistant's overview screen: a sidebar with chat, files, search, email and FileMaker, and a field to generate a brief on an engineering subject",
+    placeholder: "Assistant overview screen",
+  },
+  {
+    id: "IMG-YOUNGDCC-01",
+    file: "young-dcc-01.webp",
     ratio: "16:10",
-    alt: "Research material from the AI knowledge assistant project",
-    placeholder: "Research board or early prototype",
+    alt: "Young DCC home page: the headline Activate community energy for climate action, with buttons to browse events and learn more",
+    placeholder: "Platform home page",
+  },
+  {
+    id: "IMG-TOWERDEFENSE-01",
+    file: "tower-defense-01.webp",
+    ratio: "16:9",
+    alt: "Tower defense game won: a trophy over a winding dirt path, with the text No virus detected, You win, and a score of 525",
+    placeholder: "Game screen",
   },
   {
     id: "IMG-PORTRAIT",

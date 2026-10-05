@@ -4,7 +4,7 @@ import { projects } from "@/content/projects";
 import { FeaturedProject } from "./FeaturedProject";
 import { ProjectCard } from "./ProjectCard";
 
-/** Bento rhythm on large screens: 7 + 5, then 5 + 7 (DESIGN.md §9.2b). */
+/** Bento rhythm on large screens: 7 + 5, then 5 + 7, repeating (DESIGN.md §9.2b). */
 const bentoSpans = ["lg:col-span-7", "lg:col-span-5", "lg:col-span-5", "lg:col-span-7"] as const;
 
 export function SelectedWork() {

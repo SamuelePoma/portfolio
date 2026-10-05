@@ -46,10 +46,12 @@ test.describe("home page", () => {
     expect(new Set(hrefs)).toEqual(
       new Set([
         "/work/musetrail",
+        "/work/progmatic-ai-knowledge-assistant",
+        "/work/young-dcc-platform",
         "/work/conneqtech-gps-dashboard",
         "/work/stedin-grid-monitoring",
-        "/work/progmatic-ai-knowledge-assistant",
         "/work/chess-game-java",
+        "/work/tower-defense-typescript",
       ]),
     );
   });

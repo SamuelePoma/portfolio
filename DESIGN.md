@@ -249,7 +249,8 @@ Geist Mono 12px, `--ink-secondary`, 1px `--hairline` ring, `radius-sm`, 4px × 8
 ### 8.5 Media frame
 Every screenshot sits inside a frame, never loose:
 - **Browser frame** (for web apps): `--surface` with `--shadow-card`, `radius-lg`, and a 36px top bar with three 8px gray dots (`--hairline-strong`, *not* traffic-light colors) plus an optional mono URL pill.
-- **Plain frame** (for photos, such as the award ceremony): `radius-lg`, 1px inner ring `rgba(0,0,0,0.06)`.
+- **Plain frame** (for photos, such as the MuseTrail pitch): `radius-lg`, 1px inner ring `rgba(0,0,0,0.06)`.
+- **Phone frame** (for mobile apps, such as MuseTrail): a dark body drawn in CSS around a 1170 × 2532 screen, with a bezel and corner radii in percentages so it scales from its parent's height, a hairline-strong ring for the edge and a dark island at the top. Always dark, even on a light section. Phones never rotate: two phones stand side by side, the second set back (smaller and lower), like a product shot.
 - Images use `object-fit: cover` and are lazy-loaded (except the hero), in AVIF/WebP format with explicit width and height.
 
 ### 8.6 Image placeholder
@@ -270,7 +271,7 @@ Top: a **sunken tray** (`--surface-sunken`) with the visual. Windows (browser fr
 The whole card is one link (it opens the case study), with the card spotlight on hover (§7.3.4).
 
 ### 8.8 Terminal block
-For ChessGame, and anywhere code is the product. `--night-surface`, `radius-md`, Geist Mono 14px, `--night-ink`. A 32px top bar with gray dots and a title such as `chess.java`. Content is a board in classic text notation (uppercase white, lowercase black, dots for empty squares; plain ASCII, because Unicode chess glyphs render as emoji on some phones), after `white> e2 e4`, with the moved rank highlighted. It stands in for the game's real output until Samuele provides it. Exposed to screen readers as one image with a description. Optionally it types itself out once when it enters the viewport (respecting reduced motion).
+For ChessGame, and anywhere code is the product. `--night-surface`, `radius-md`, Geist Mono 14px, `--night-ink`. A 32px top bar with gray dots and a title such as `chess.java`. Content is the game's **real output**, copied from Samuele's terminal: the prompts, the `[LOG]` line, the board and the move history after 1. a4 b5 (a debug line in Italian is left out). The game prints Unicode pieces; each square is a fixed 2ch cell so the board stays aligned whatever font draws them, and every piece carries the text variation selector (U+FE0E) so phones don't turn the black pawn into an emoji. The square the last move landed on and the player's typed input are set in `--night-ink`, the rest in `--night-ink-secondary`. The card shows the last move and the board; the case study shows the whole turn. Exposed to screen readers as one image with a description. Optionally it types itself out once when it enters the viewport (respecting reduced motion).
 
 ### 8.9 Diagram
 For Progmatic (research, no UI yet). A **research map, not an architecture**: no architecture has been chosen, so the diagram shows the four areas under investigation (document retrieval, FileMaker integration, access control, data confidentiality) connected to a central ink node, "Knowledge assistant". Mono labels in `radius-sm` boxes, 1.5px `--hairline-strong` lines drawn behind them. Exposed to screen readers as one image listing the areas. Lines draw in on scroll (`stroke-dashoffset`) in the motion pass.
@@ -315,22 +316,26 @@ Section opener: `display`, *"Things I've built."*
 - A mono label with the award signal: `GRAND PRIZE · DRAGONS' DEN` in `--accent-night`. This is one of the two places the accent appears as a "signal".
 - Title `display`: *MuseTrail*. Description: a web app encouraging sustainable digital habits in young adults. Role: full-stack development and team lead.
 - Tags: `SvelteKit` `Docker`.
-- Media: a large browser frame with the app design (`IMG-MUSETRAIL-01`), plus an overlapping plain-frame photo of the award ceremony (`IMG-MUSETRAIL-02`), offset and slightly lower, with a parallax difference of ≤ 40px.
+- Media: MuseTrail is designed for phones, so the product is shown on **two phone frames** (§8.5): *My Museum* (`IMG-MUSETRAIL-01`) in front, the progress screen (`IMG-MUSETRAIL-03`) set back to its right. The stage is square on phones and 5:4 from `sm`.
+- Below, a plain-frame photo of the team pitching MuseTrail to professors and investors (`IMG-MUSETRAIL-02`, 16:9) in the media columns, with its caption in the text column, level with the photo's bottom edge (under it on mobile). The caption says what the photo shows; it does not claim it is the Dragons' Den.
 
 **b) Bento grid (light canvas), 12 columns**
 
 | Row | Left | Right |
 |---|---|---|
-| 1 | **Conneqtech**: span 7, browser frame | **Stedin**: span 5, browser frame |
-| 2 | **Progmatic**: span 5, diagram (§8.9) | **ChessGame**: span 7, terminal (§8.8) |
+| 1 | **Progmatic**: span 7, browser frame | **Young DCC**: span 5, browser frame |
+| 2 | **Conneqtech**: span 5, browser frame | **Stedin**: span 7, browser frame |
+| 3 | **ChessGame**: span 7, terminal (§8.8) | **Tower defense**: span 5, browser frame |
 
-On mobile each card spans full width, in the same order.
+On mobile each card spans full width, in the same order. The order is the featured project, then the most recent work first.
 
-Card content (every fact from the résumé; the copy lives in `src/content/projects.ts`):
+Card content (facts from the résumé and from Samuele; the copy lives in `src/content/projects.ts`):
+- **Progmatic**: `PROGMATIC · SINCE 2026` plus an accent `IN PROGRESS` status with a small dot (it signals real status; the pulse comes with the motion pass). *AI knowledge assistant.* A local AI chatbot for Progmatic that will answer questions about the company database, find information, write emails and code, and prepare quotations and budget calculations. Tags: `AI` `Document retrieval` `FileMaker`. The research map (§8.9) moves to the case study.
+- **Young DCC**: `DELTA CLIMATE CENTER · 2026`. *Youth climate events platform.* An online platform, built with the Delta Climate Center, to promote and organise events on environmental themes for young people in Zeeland. No tags until the stack is confirmed.
 - **Conneqtech**: `CONNEQTECH · 2024-25`. *GPS monitoring dashboard.* A dashboard to track cars and bicycles and see their GPS data and vehicle details in one place. Built end to end during the internship. Tags: `Go` `Frontend` `Backend`.
 - **Stedin**: `STEDIN · UNIVERSITY PROJECT`. *Grid monitoring.* Software for visualising power usage and monitoring faulty transformers across regions of the Netherlands. Tags: `Laravel` `PHP` `MySQL`.
-- **Progmatic**: `PROGMATIC · SINCE 2026` plus an accent `IN PROGRESS` status with a small dot (it signals real status; the pulse comes with the motion pass). The team size goes in the case study. *AI knowledge assistant.* Researching an internal assistant for technical and organisational knowledge: document retrieval, FileMaker integration, access control and confidentiality. Tags: `AI` `Document retrieval` `FileMaker`.
 - **ChessGame**: `JAVA · 2024-25`. *Chess in the terminal.* A text-based chess game built with object-oriented programming and design patterns. Tags: `Java` `OOP` `Design patterns`.
+- **Tower defense**: `TYPESCRIPT`. *Tower defense game.* A tower defense game built with object-oriented TypeScript. Tags: `TypeScript` `OOP`.
 
 Why not the earlier wording: "live" GPS data, "detecting" transformers, a `RAG` tag and "chess engine" all claimed more than the résumé says.
 
@@ -391,19 +396,21 @@ Put files in `/public/images/`. Format: **WebP or AVIF**, sRGB, long edge 2400px
 
 | Slot ID | Where | Ratio | What to put there | Status |
 |---|---|---|---|---|
-| `IMG-MUSETRAIL-01` | Featured band plus case-study hero | 16:10 | The main MuseTrail screen (home or trail view), a clean desktop screenshot | Samuele has it (design) |
-| `IMG-MUSETRAIL-02` | Featured band overlap | 4:5 | A photo of the Dragons' Den award ceremony / the team with the prize | Samuele has it |
-| `IMG-MUSETRAIL-03` | Case-study gallery | 16:10 | A second design screen or a mobile view | Optional |
-| `IMG-CONNEQTECH-01` | Card plus case-study hero | 16:10 | The dashboard main view, ideally with the map and vehicles visible. **Blur any customer data or plates.** | Samuele has images |
-| `IMG-CONNEQTECH-02` | Case-study gallery | 16:10 | Vehicle detail / GPS history view | Samuele has images |
-| `IMG-STEDIN-01` | Card plus case-study hero | 16:10 | The product screen: the power-usage map or transformer overview | Samuele has it |
-| `IMG-STEDIN-02` | Case-study gallery | 16:10 | A detail or alert view for a faulty transformer | Optional |
-| `IMG-PROGMATIC-01` | Case-study gallery | 16:10 | Optional: a research board, a whiteboard photo, or an early prototype. The card itself uses the SVG diagram. | Optional |
+| `IMG-MUSETRAIL-01` | Featured band (front phone) plus case-study hero | 9:19.5 | The *My Museum* screen. Straightened from the team's poster | ✅ In place |
+| `IMG-MUSETRAIL-02` | Featured band photo | 16:9 | The team pitching MuseTrail to professors and investors | ✅ In place |
+| `IMG-MUSETRAIL-03` | Featured band (back phone) plus case-study gallery | 9:19.5 | The progress screen (CO2 saved compared with the average user). Cropped from the poster | ✅ In place |
+| `IMG-CONNEQTECH-01` | Card plus case-study hero | 16:10 | The dashboard main view, ideally with the map and vehicles visible. **Blur any customer data or plates.** | Needed |
+| `IMG-CONNEQTECH-02` | Case-study gallery | 16:10 | Vehicle detail / GPS history view | Optional |
+| `IMG-STEDIN-01` | Card plus case-study hero | 16:10 | The voltage chart of one transformer over two weeks, on a white page | ✅ In place |
+| `IMG-STEDIN-02` | Case-study gallery | 16:9 | Samuele's project group at work | ✅ In place |
+| `IMG-PROGMATIC-01` | Card plus case-study hero | 16:9 | The assistant's overview screen. The signed-in user's name and avatar are blurred | ✅ In place |
+| `IMG-YOUNGDCC-01` | Card plus case-study hero | 16:10 | The platform's home page | ✅ In place |
+| `IMG-TOWERDEFENSE-01` | Card plus case-study hero | 16:9 | The game's win screen | ✅ In place |
 | `IMG-PORTRAIT` | About | 4:5 | A professional portrait on a neutral background, shown in grayscale | Optional |
 | `OG-IMAGE` | Social share preview | 1200×630 | Generated from the hero (name plus mesh), not a photo | Built in code |
 | `CV-PDF` | `/public/cv/samuele-poma-cv.pdf` | A4 PDF | The résumé **without the phone number** (it's public) | Samuele to export |
 
-ChessGame needs no images: the terminal block is the visual.
+ChessGame needs no images: the terminal block is the visual. The source files Samuele sent are kept untracked in `assets-src/`; the exported WebP files are what ships.
 
 ---
 
