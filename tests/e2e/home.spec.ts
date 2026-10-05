@@ -20,6 +20,23 @@ async function scrollPast(page: Page, selector: string, offset: number) {
   );
 }
 
+/**
+ * Stands in for Cloudflare's Turnstile script: the widget "passes" at once with a fixed
+ * token, so the tests never depend on a third party being reachable.
+ */
+async function fakeTurnstile(page: Page) {
+  await page.route("https://challenges.cloudflare.com/turnstile/v0/api.js*", (route) =>
+    route.fulfill({
+      contentType: "text/javascript",
+      body: `window.turnstile = {
+        render: function (el, options) { setTimeout(function () { options.callback("e2e-token"); }, 0); return "widget"; },
+        reset: function () {},
+        remove: function () {},
+      };`,
+    }),
+  );
+}
+
 /** Phone-like: 8+ digits with at most one separator between them (a chess board is not). */
 const PHONE_PATTERN = /\+?\d(?:[\s.-]?\d){7,}/;
 
@@ -136,6 +153,7 @@ test.describe("home page", () => {
 
 test.describe("contact form", () => {
   test.beforeEach(async ({ page }) => {
+    await fakeTurnstile(page);
     await page.goto("/#contact");
   });
 
@@ -171,6 +189,9 @@ test.describe("contact form", () => {
       name: "Ada Lovelace",
       email: "ada@example.com",
       message: "I'd like to talk about a project.",
+      turnstileToken: "e2e-token",
+      company: "",
+      elapsedMs: expect.any(Number),
     });
   });
 
@@ -204,5 +225,28 @@ test.describe("copy email", () => {
 
     await expect(page.getByText("Email copied")).toBeVisible();
     expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(EMAIL);
+  });
+});
+
+test.describe("contact API", () => {
+  test("only accepts POST", async ({ request }) => {
+    const response = await request.get("/api/contact");
+    expect(response.status()).toBe(405);
+  });
+
+  test("tells a visitor who is rate limited to try later", async ({ page }) => {
+    await fakeTurnstile(page);
+    await page.route("**/api/contact", (route) =>
+      route.fulfill({ status: 429, json: { ok: false, error: "rate_limited" } }),
+    );
+    await page.goto("/#contact");
+    await page.getByLabel("Name").fill("Ada Lovelace");
+    await page.getByLabel("Email").fill("ada@example.com");
+    await page.getByLabel("Message").fill("I'd like to talk about a project.");
+    await page.getByRole("button", { name: "Send message" }).click();
+
+    await expect(
+      page.getByRole("alert").filter({ hasText: "several messages in a short time" }),
+    ).toBeVisible();
   });
 });

@@ -15,6 +15,7 @@ import {
 
 import { Button } from "@/components/ui/Button";
 import {
+  type ContactErrorCode,
   type ContactFieldErrors,
   type ContactFieldName,
   contactFieldNames,
@@ -25,7 +26,11 @@ import {
   validateContactFields,
 } from "@/lib/contact/schema";
 
+import { Turnstile, type TurnstileHandle } from "./Turnstile";
+
 type Status = "idle" | "sending" | "sent" | "failed";
+/** Why sending failed, as far as the visitor needs to know. */
+type Failure = "rate_limited" | "captcha_failed" | "other";
 type FieldElement = HTMLInputElement | HTMLTextAreaElement;
 
 const inputClass =
@@ -59,7 +64,13 @@ function Field({ id, label, error, children, aside }: Readonly<FieldProps>) {
   );
 }
 
-function readField(form: HTMLFormElement, field: ContactFieldName): string {
+const failureText: Record<Failure, string> = {
+  rate_limited: "You've sent several messages in a short time. Please try again later.",
+  captcha_failed: "The spam check didn't go through. Please try again.",
+  other: "Your message couldn't be sent. Please try again.",
+};
+
+function readField(form: HTMLFormElement, field: ContactFieldName | "company"): string {
   const value = new FormData(form).get(field);
   return typeof value === "string" ? value : "";
 }
@@ -67,6 +78,18 @@ function readField(form: HTMLFormElement, field: ContactFieldName): string {
 interface ContactFormProps {
   /** Offered as the alternative when sending fails. */
   email: string;
+  /** Cloudflare Turnstile site key. Without one the widget isn't shown. */
+  turnstileSiteKey?: string | undefined;
+}
+
+/** The API's answer: an error code to explain, or nothing when it doesn't say. */
+async function readFailure(response: Response): Promise<ContactErrorCode | undefined> {
+  const body = (await response.json().catch(() => null)) as {
+    ok?: unknown;
+    error?: unknown;
+  } | null;
+  if (response.ok && body?.ok === true) return undefined;
+  return typeof body?.error === "string" ? (body.error as ContactErrorCode) : "server_error";
 }
 
 /**
@@ -77,11 +100,15 @@ interface ContactFormProps {
  * Inputs are uncontrolled: the value lives in the DOM, so text typed before React
  * hydrates is never wiped, and everything is read with FormData on submit.
  */
-export function ContactForm({ email }: Readonly<ContactFormProps>) {
+export function ContactForm({ email, turnstileSiteKey }: Readonly<ContactFormProps>) {
   const id = useId();
   const fieldId = (field: ContactFieldName) => `${id}-${field}`;
   const [errors, setErrors] = useState<ContactFieldErrors>({});
   const [status, setStatus] = useState<Status>("idle");
+  const [failure, setFailure] = useState<Failure>("other");
+  const [captchaPending, setCaptchaPending] = useState(false);
+  const captchaToken = useRef<string | undefined>(undefined);
+  const turnstile = useRef<TurnstileHandle>(null);
   const [messageLength, setMessageLength] = useState(0);
   const messageRef = useRef<HTMLTextAreaElement>(null);
   const successHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -129,20 +156,40 @@ export function ContactForm({ email }: Readonly<ContactFormProps>) {
       return;
     }
 
+    // The widget is still checking: sending now would only be refused.
+    if (turnstileSiteKey !== undefined && captchaToken.current === undefined) {
+      setCaptchaPending(true);
+      return;
+    }
+
     setStatus("sending");
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(result.data),
+        body: JSON.stringify({
+          ...result.data,
+          turnstileToken: captchaToken.current ?? "",
+          company: readField(form, "company"),
+          // Time since the page started loading, by the browser's own clock.
+          elapsedMs: Math.round(performance.now()),
+        }),
       });
-      const body = (await response.json().catch(() => null)) as { ok?: unknown } | null;
-      if (!response.ok || body?.ok !== true) throw new Error("Contact request failed");
-      setErrors({});
-      setMessageLength(0);
-      setStatus("sent");
-    } catch {
+      const error = await readFailure(response);
+      if (error === undefined) {
+        setErrors({});
+        setMessageLength(0);
+        setStatus("sent");
+        return;
+      }
+      setFailure(error === "rate_limited" || error === "captcha_failed" ? error : "other");
       setStatus("failed");
+    } catch {
+      setFailure("other");
+      setStatus("failed");
+    } finally {
+      // A token can be verified only once, whatever the outcome.
+      turnstile.current?.reset();
     }
   }
 
@@ -251,6 +298,32 @@ export function ContactForm({ email }: Readonly<ContactFormProps>) {
         />
       </Field>
 
+      {/* The honeypot: hidden from people and assistive tech, irresistible to form-filling bots. */}
+      <div aria-hidden className="absolute -left-[10000px] size-px overflow-hidden">
+        <label>
+          Company
+          <input type="text" name="company" tabIndex={-1} autoComplete="off" defaultValue="" />
+        </label>
+      </div>
+
+      {turnstileSiteKey !== undefined && (
+        <div className="flex flex-col gap-2">
+          <Turnstile
+            ref={turnstile}
+            siteKey={turnstileSiteKey}
+            onToken={(token) => {
+              captchaToken.current = token;
+              if (token !== undefined) setCaptchaPending(false);
+            }}
+          />
+          <p aria-live="polite" className="text-caption text-ink-secondary">
+            {captchaPending
+              ? "One moment: the spam check is still running. Send again once it shows a tick."
+              : ""}
+          </p>
+        </div>
+      )}
+
       {status === "failed" && (
         <div
           role="alert"
@@ -263,7 +336,7 @@ export function ContactForm({ email }: Readonly<ContactFormProps>) {
             className="mt-0.5 shrink-0 text-danger"
           />
           <p>
-            Your message couldn&apos;t be sent. Please try again, or email me directly at{" "}
+            {failureText[failure]} You can also email me directly at{" "}
             <a href={`mailto:${email}`} className="underline underline-offset-4">
               {email}
             </a>

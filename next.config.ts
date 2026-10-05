@@ -1,12 +1,12 @@
 import type { NextConfig } from "next";
 import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 
-import { parseServerEnv } from "./src/lib/env/schema";
+import { assertProductionEnv } from "./src/lib/env/schema";
 
-// Fail the production build early if a secret is missing, instead of failing
-// at runtime when the first visitor submits the contact form.
+// Fail the production build early if a secret is missing (or is a test key), instead
+// of failing at runtime when the first visitor submits the contact form.
 if (process.env.VERCEL_ENV === "production") {
-  parseServerEnv(process.env);
+  assertProductionEnv(process.env);
 }
 
 const defaultPageExtensions = ["tsx", "ts", "jsx", "js"];

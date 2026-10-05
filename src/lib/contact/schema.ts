@@ -31,6 +31,34 @@ export const contactFieldsSchema = z.object({
     .max(MESSAGE_MAX_LENGTH, `Please keep your message under ${MESSAGE_MAX_LENGTH} characters.`),
 });
 
+/** Turnstile tokens are at most 2048 characters (Cloudflare's documented limit). */
+export const TURNSTILE_TOKEN_MAX_LENGTH = 2048;
+
+/**
+ * What the form posts: the fields plus the anti-spam signals. `company` is the
+ * honeypot (people never see it, so it stays empty); `elapsedMs` is how long the page
+ * had been open, measured by the browser itself, so a visitor's clock being off can
+ * never turn a real message into "spam".
+ */
+export const contactRequestSchema = contactFieldsSchema.extend({
+  turnstileToken: z.string().max(TURNSTILE_TOKEN_MAX_LENGTH),
+  company: z.string().max(200),
+  elapsedMs: z.number().int().nonnegative(),
+});
+
+export type ContactRequest = z.infer<typeof contactRequestSchema>;
+
+/** The only error codes the API ever returns; details stay in the server logs. */
+export const contactErrorCodes = [
+  "invalid_input",
+  "rate_limited",
+  "captcha_failed",
+  "server_error",
+] as const;
+export type ContactErrorCode = (typeof contactErrorCodes)[number];
+
+export type ContactResponse = { ok: true } | { ok: false; error: ContactErrorCode };
+
 export type ContactFields = z.infer<typeof contactFieldsSchema>;
 export type ContactFieldName = keyof ContactFields;
 export type ContactFieldErrors = Partial<Record<ContactFieldName, string>>;

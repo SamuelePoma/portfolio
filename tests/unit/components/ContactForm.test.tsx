@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { ContactForm } from "@/components/contact/ContactForm";
+import type { TurnstileRenderOptions } from "@/components/contact/Turnstile";
 
 const EMAIL = "hello@example.com";
 
@@ -106,14 +107,17 @@ describe("ContactForm", () => {
     await waitFor(() => {
       expect(heading).toHaveFocus();
     });
-    expect(fetchMock).toHaveBeenCalledWith("/api/contact", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: "Ada Lovelace",
-        email: "ada@example.com",
-        message: "I'd like to talk about a project.",
-      }),
+    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    expect(url).toBe("/api/contact");
+    expect(init.method).toBe("POST");
+    expect(init.headers).toEqual({ "Content-Type": "application/json" });
+    expect(JSON.parse(init.body as string)).toEqual({
+      name: "Ada Lovelace",
+      email: "ada@example.com",
+      message: "I'd like to talk about a project.",
+      turnstileToken: "",
+      company: "",
+      elapsedMs: expect.any(Number) as number,
     });
 
     await user.click(screen.getByRole("button", { name: "Send another message" }));
@@ -145,6 +149,31 @@ describe("ContactForm", () => {
     expect(await screen.findByRole("alert")).toBeInTheDocument();
   });
 
+  it.each([
+    ["rate_limited", 429, "several messages in a short time"],
+    ["captcha_failed", 400, "spam check didn't go through"],
+    ["invalid_input", 400, "couldn't be sent"],
+  ])("explains a %s answer and offers email", async (error, status, text) => {
+    const user = userEvent.setup();
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(jsonResponse({ ok: false, error }, status)));
+    render(<ContactForm email={EMAIL} />);
+
+    await fillValidForm(user);
+    await user.click(screen.getByRole("button", { name: "Send message" }));
+
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveTextContent(text);
+    expect(alert).toHaveTextContent(EMAIL);
+  });
+
+  it("hides the honeypot from people and keyboards", () => {
+    const { container } = render(<ContactForm email={EMAIL} />);
+    const honeypot = container.querySelector<HTMLInputElement>('input[name="company"]');
+    expect(honeypot).toHaveAttribute("tabindex", "-1");
+    expect(honeypot?.closest("[aria-hidden]")).not.toBeNull();
+    expect(screen.queryByRole("textbox", { name: "Company" })).not.toBeInTheDocument();
+  });
+
   it("disables the button while sending", async () => {
     const user = userEvent.setup();
     let resolveFetch: (value: Response) => void = () => undefined;
@@ -165,5 +194,94 @@ describe("ContactForm", () => {
     expect(screen.getByRole("button", { name: /Sending/ })).toBeDisabled();
     resolveFetch(jsonResponse({ ok: true }));
     expect(await screen.findByRole("heading", { name: "Message sent." })).toBeInTheDocument();
+  });
+});
+
+describe("ContactForm with Turnstile", () => {
+  let callbacks: { callback: (token: string) => void; expired: () => void } | undefined;
+  const reset = vi.fn();
+  const remove = vi.fn();
+  const renderWidget = vi.fn((_container: HTMLElement, options: TurnstileRenderOptions) => {
+    callbacks = { callback: options.callback, expired: options["expired-callback"] };
+    return "widget-1";
+  });
+
+  beforeEach(() => {
+    callbacks = undefined;
+    renderWidget.mockClear();
+    window.turnstile = { render: renderWidget, reset, remove };
+  });
+
+  afterEach(() => {
+    delete window.turnstile;
+    vi.unstubAllGlobals();
+    reset.mockClear();
+    remove.mockClear();
+  });
+
+  it("renders a compact, dark widget with the site key", async () => {
+    render(<ContactForm email={EMAIL} turnstileSiteKey="site-key" />);
+    await waitFor(() => {
+      expect(renderWidget).toHaveBeenCalledWith(
+        expect.any(HTMLElement),
+        expect.objectContaining({ sitekey: "site-key", theme: "dark", size: "compact" }),
+      );
+    });
+  });
+
+  it("waits for the check before sending, then sends its token once", async () => {
+    const user = userEvent.setup();
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue(jsonResponse({ ok: false, error: "server_error" }, 500));
+    vi.stubGlobal("fetch", fetchMock);
+    render(<ContactForm email={EMAIL} turnstileSiteKey="site-key" />);
+    await waitFor(() => {
+      expect(callbacks).toBeDefined();
+    });
+
+    await fillValidForm(user);
+    await user.click(screen.getByRole("button", { name: "Send message" }));
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(screen.getByText(/spam check is still running/)).toBeInTheDocument();
+
+    act(() => {
+      callbacks?.callback("token-1");
+    });
+    expect(screen.queryByText(/spam check is still running/)).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Send message" }));
+
+    await screen.findByRole("alert");
+    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    expect(JSON.parse(init.body as string)).toMatchObject({ turnstileToken: "token-1" });
+    // Tokens are single use: the widget asks for a new one after every attempt.
+    expect(reset).toHaveBeenCalledWith("widget-1");
+  });
+
+  it("forgets an expired token", async () => {
+    const user = userEvent.setup();
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    render(<ContactForm email={EMAIL} turnstileSiteKey="site-key" />);
+    await waitFor(() => {
+      expect(callbacks).toBeDefined();
+    });
+
+    act(() => {
+      callbacks?.callback("token-1");
+      callbacks?.expired();
+    });
+    await fillValidForm(user);
+    await user.click(screen.getByRole("button", { name: "Send message" }));
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("removes the widget when the form goes away", async () => {
+    const { unmount } = render(<ContactForm email={EMAIL} turnstileSiteKey="site-key" />);
+    await waitFor(() => {
+      expect(callbacks).toBeDefined();
+    });
+    unmount();
+    expect(remove).toHaveBeenCalledWith("widget-1");
   });
 });

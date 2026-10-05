@@ -4,6 +4,7 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
 import { site } from "@/content/site";
+import { turnstileSiteKey } from "@/lib/env/public";
 
 /** Dark band that flows into the footer (DESIGN.md §9.6). No phone number, ever. */
 export function Contact() {
@@ -29,7 +30,7 @@ export function Contact() {
           </ul>
         </div>
         <div className="lg:col-span-6 lg:col-start-7">
-          <ContactForm email={site.email} />
+          <ContactForm email={site.email} turnstileSiteKey={turnstileSiteKey} />
         </div>
       </Container>
     </Section>

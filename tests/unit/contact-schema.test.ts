@@ -1,6 +1,9 @@
 import {
+  contactErrorCodes,
   contactFieldNames,
+  contactRequestSchema,
   MESSAGE_MAX_LENGTH,
+  TURNSTILE_TOKEN_MAX_LENGTH,
   validateContactField,
   validateContactFields,
 } from "@/lib/contact/schema";
@@ -71,5 +74,33 @@ describe("validateContactField", () => {
 describe("contactFieldNames", () => {
   it("lists the fields in form order", () => {
     expect(contactFieldNames).toEqual(["name", "email", "message"]);
+  });
+});
+
+describe("contactRequestSchema", () => {
+  const request = { ...valid, turnstileToken: "token", company: "", elapsedMs: 8000 };
+
+  it("accepts the fields plus the anti-spam signals", () => {
+    expect(contactRequestSchema.parse(request)).toEqual(request);
+  });
+
+  it.each([
+    ["a missing token", { turnstileToken: undefined }],
+    ["an overlong token", { turnstileToken: "t".repeat(TURNSTILE_TOKEN_MAX_LENGTH + 1) }],
+    ["a missing honeypot", { company: undefined }],
+    ["a fractional time", { elapsedMs: 1.5 }],
+    ["a negative time", { elapsedMs: -1 }],
+    ["a time sent as text", { elapsedMs: "8000" }],
+  ])("rejects %s", (_, override) => {
+    expect(contactRequestSchema.safeParse({ ...request, ...override }).success).toBe(false);
+  });
+
+  it("lists the only error codes the API returns", () => {
+    expect(contactErrorCodes).toEqual([
+      "invalid_input",
+      "rate_limited",
+      "captcha_failed",
+      "server_error",
+    ]);
   });
 });

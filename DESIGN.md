@@ -289,8 +289,9 @@ Bottom center, `--ink` background, white 14px text, `radius-pill`, `--shadow-car
 - A character counter on Message in mono `--night-ink-secondary` (`0 / 2000`).
 - Privacy note under the button, 13px: *"Your message is only used to reply to you. See the privacy policy."*
 - Submit: the primary inverted pill `Send message →`. While sending it shows a small spinner and the label `Sending…`, and is disabled.
-- Success: the form is replaced (a 300ms crossfade) by a check icon, *"Message sent. I'll get back to you soon."*, and a `Send another` link. Failure: an inline alert above the button with a friendly message and a suggestion to use email instead.
-- The anti-spam widget (Turnstile) is rendered in its compact form, dark theme, under the Message field.
+- Success: the form is replaced (a 300ms crossfade) by a check icon, *"Message sent. I'll get back to you soon."*, and a `Send another` link. Failure: an inline alert above the button with a friendly message and a suggestion to use email instead. The message says what happened when the visitor can act on it: *"You've sent several messages in a short time. Please try again later."* (rate limited), *"The spam check didn't go through. Please try again."* (Turnstile), otherwise *"Your message couldn't be sent. Please try again."*
+- The anti-spam widget (Turnstile) is rendered in its compact form, dark theme, under the Message field, in a box that reserves its 140px height so nothing shifts when it loads. If Send is pressed before the check has passed, a polite note under it says so instead of sending. If the script can't load (a content blocker), a 13px note says so.
+- A hidden honeypot field (`company`) sits off-screen, out of the tab order and hidden from assistive technology.
 
 ---
 
