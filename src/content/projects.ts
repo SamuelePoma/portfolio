@@ -13,7 +13,7 @@ export const projects = [
     period: { start: "2024-11", end: "2025-01" },
     status: "completed",
     tagline: "A web app that promotes sustainable digital habits among young adults.",
-    role: "Frontend and backend development, team lead",
+    role: "Team lead: design, user interviews, frontend, backend and testing",
     team: 5,
     stack: ["SvelteKit", "Docker"],
     highlight: "Grand prize · Dragons' Den",
@@ -24,11 +24,12 @@ export const projects = [
     approach: [
       "MuseTrail turns the small actions that reduce a digital CO2 footprint into one-of-a-kind art. Users accept bite-sized challenges, such as deleting duplicate photos, clearing out old videos or unsubscribing from newsletters they no longer read, and their actions become artworks in a personal museum.",
       "A progress view shows how much CO2 a user has saved compared with the average user, and short educational insights explain where a digital footprint comes from.",
-      "I led our team of five and worked on both the frontend and the backend. The app is built with SvelteKit and Docker.",
+      "I led our team of five and worked across the whole project: the design, interviews with users, the SvelteKit frontend, the backend and the testing. The backend is a set of Node.js services for users, challenges, the gallery and educational content, each with its own MySQL database, behind an API gateway; Docker Compose runs it all.",
     ],
     outcome:
-      "We pitched MuseTrail to professors and investors, and the project won the grand prize in a Dragons' Den competition.",
-    highlights: ["Grand prize, Dragons' Den competition"],
+      "We pitched MuseTrail to professors and investors. Out of ten teams, judged by teachers, other students and IT companies, it won the grand prize in the Dragons' Den competition.",
+    highlights: ["Grand prize, Dragons' Den competition (10 teams)"],
+    links: { repo: "https://github.com/Byte-2-Green" },
     media: {
       hero: "IMG-MUSETRAIL-01",
       secondary: "IMG-MUSETRAIL-02",
@@ -56,6 +57,7 @@ export const projects = [
       "The assistant is meant to answer questions about the company database, find information, write emails and code, and prepare quotations and budget calculations. Its interface brings chat, files, search, email and FileMaker together in one sidebar.",
     ],
     approachVisual: "research-map",
+    // Repository link: add it as `links: { repo: "https://github.com/..." }`.
     media: { hero: "IMG-PROGMATIC-01" },
   },
   {
@@ -69,6 +71,7 @@ export const projects = [
       "An online platform, built with the Delta Climate Center, to promote and organise events on environmental themes for young people in Zeeland.",
     stack: [],
     card: { type: "screenshot", slot: "IMG-YOUNGDCC-01" },
+    // Repository link: add it as `links: { repo: "https://github.com/..." }`.
     media: { hero: "IMG-YOUNGDCC-01" },
   },
   {
@@ -89,6 +92,7 @@ export const projects = [
       "I took the project from start to finish during my internship: problem analysis, requirements, implementation and the final delivery. The dashboard is written in Go and covers both the frontend and the backend.",
     ],
     outcome: "I delivered the dashboard at the end of the internship, in January 2025.",
+    // Repository link: add it as `links: { repo: "https://github.com/..." }`.
     media: { hero: "IMG-CONNEQTECH-01", gallery: ["IMG-CONNEQTECH-02"] },
   },
   {
@@ -107,6 +111,7 @@ export const projects = [
     approach: [
       "As part of a university project team, I worked on a web application built with Laravel, PHP and MySQL. For each transformer, it charts the maximum voltages measured over time.",
     ],
+    // Repository link: add it as `links: { repo: "https://github.com/..." }`.
     media: { hero: "IMG-STEDIN-01", gallery: ["IMG-STEDIN-02"] },
   },
   {
@@ -116,13 +121,17 @@ export const projects = [
     period: { start: "2024-12", end: "2025-01" },
     status: "completed",
     tagline: "A text-based chess game built with object-oriented programming and design patterns.",
-    role: "Developer",
+    role: "Developer: the Strategy, Prototype and Decorator patterns",
+    team: 2,
     stack: ["Java", "OOP", "Design patterns"],
     card: { type: "terminal" },
+    problem:
+      "A console chess game for the Software Design exam at HZ, built so that new pieces and rules can be added without rewriting the existing ones.",
     approach: [
       "Players choose a piece by its index, the game lists the moves that piece can make, and the chosen move is checked, logged and added to the move history before the board is printed again.",
-      "It is written in Java, with object-oriented programming and design patterns.",
+      "Andrea Bezzolato and I used six design patterns and each implemented three. Mine were Strategy, one movement strategy per kind of piece; Prototype, a factory that creates pieces by cloning prototypes; and Decorator, which adds logging to every move without changing the pieces.",
     ],
+    links: { repo: "https://github.com/SamuelePoma/SD_ChessGame" },
     media: {},
   },
   {
@@ -133,6 +142,7 @@ export const projects = [
     tagline: "A tower defense game built with object-oriented TypeScript.",
     stack: ["TypeScript", "OOP"],
     card: { type: "screenshot", slot: "IMG-TOWERDEFENSE-01" },
+    // Repository link: add it as `links: { repo: "https://github.com/..." }`.
     media: { hero: "IMG-TOWERDEFENSE-01" },
   },
 ] as const satisfies readonly Project[];
