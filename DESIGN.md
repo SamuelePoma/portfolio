@@ -75,9 +75,9 @@
 
 ### 3.2 Rules
 
-- Most of the page is `--canvas` with `--ink`. Dark bands (`--night`) are used **only** for: the featured project (MuseTrail), and the contact/footer. That gives two dark moments, bookending the work.
+- Most of the page is `--canvas` with `--ink`. Dark bands (`--night`) are the stages of the launch: the opening scene, the featured project (MuseTrail) and the contact/footer. Light sections sit between them, like Apple's alternating product pages.
 - `--ink-tertiary` is for metadata (dates, file labels) at small sizes. Never for sentences.
-- The mesh gradient is **heavily blurred** (≥120px), low opacity (0.25–0.4 on light), sits behind the hero headline, and drifts slowly. It must never appear on buttons, text, cards or anywhere below the hero.
+- The mesh colours appear as **light**: on the dark opening and on the contact band they glow (soft radial blobs, 0.3–0.6 opacity), drift slowly and lean towards the pointer. They never sit on buttons, text or cards, and never on a light section except as the faint 404 mesh.
 - No other colors. Project screenshots bring their own color, and that is enough.
 - All text meets WCAG AA (4.5:1 body, 3:1 large text). Metadata is text too: the small mono labels need 4.5:1, which is why `--ink-tertiary` is `#6b6b6b` and not a lighter gray.
 
@@ -180,7 +180,7 @@ No heavy blur shadows, no colored glows.
 
 ## 7. Motion
 
-Motion follows **Emil Kowalski's design-engineering principles**: animate with purpose, keep UI feedback fast, use custom easing and restrained springs.
+**Direction (2026-10-05): a product launch.** Samuele asked for the site to move like Apple's iPhone and MacBook pages, not like a page that fades things in. The work is presented as products in **pinned, scroll-driven scenes**: a section several screens tall whose stage sticks to the viewport, so scrolling plays the scene forwards and backwards. Devices are drawn in **CSS 3D** (no WebGL; see the option recorded below) and animated with **Motion** (`motion/react`) scroll-linked values.
 
 ### 7.1 Tokens
 
@@ -192,38 +192,37 @@ Motion follows **Emil Kowalski's design-engineering principles**: animate with p
 --dur-instant: 120ms;  /* press, color */
 --dur-fast:    200ms;  /* hover, small UI */
 --dur-base:    300ms;  /* overlays, menus */
---dur-reveal:  700ms;  /* scroll reveals, hero */
+--dur-reveal:  700ms;  /* reveals */
 ```
 
-Springs (Motion library) for interactive/physical things: `{ type: "spring", duration: 0.5, bounce: 0.15 }`. Never bouncy above 0.2.
+Springs for interactive things: `{ type: "spring", duration: 0.5, bounce: 0.15 }`; the glow uses `{ duration: 0.9, bounce: 0 }`. Never bouncy above 0.2.
 
 ### 7.2 Rules
 
-- Animate only `transform`, `opacity`, `filter` (and `clip-path` for reveals). Never layout properties.
-- Never animate from `scale(0)`. Enter from `scale(0.96)` plus opacity.
-- UI responses (hover, press, menu) finish in **≤ 300ms**. Only scroll/hero reveals may be longer.
-- Anything seen often (nav, buttons) gets **less** motion than things seen once (hero).
-- Hover effects only under `@media (hover: hover) and (pointer: fine)`.
-- **`prefers-reduced-motion: reduce`** turns all movement off: content appears with a simple opacity fade of ≤ 150ms, the mesh stops drifting, and there is no parallax.
-- Scroll reveals run **once**, trigger at ~15% visibility, and never hide content from no-JS users or crawlers.
+- Animate only `transform`, `opacity`, `filter` and `clip-path`. Never layout properties.
+- Scroll-linked scenes follow the scroll exactly (no easing on the scroll itself, no scroll-jacking): the page scrolls natively, the stage only sticks.
+- UI responses (hover, press, menu) finish in **≤ 300ms**. Scenes may take as long as their scroll length.
+- Hover effects only for a fine pointer.
+- **Reduced motion:** every scene renders its final state, unpinned, as an ordinary section; the glow stops; the project rail becomes a row you scroll sideways yourself. A Playwright project checks this.
+- **Accessibility:** text that waits for a scene starts fully transparent, never dimmed, so it never reads as low-contrast text; all text stays real text in the DOM. Decorative 3D pieces are `aria-hidden`.
+- **Small screens:** the opening scene pins everywhere; scenes with a lot of text (MuseTrail, Progmatic) pin from `lg` only, and below that they play as they pass through the viewport, with their copy above in normal flow.
+- **Technology option:** devices are CSS 3D for weight and speed. Real 3D models (three.js / WebGL) were considered and kept as a later option if the CSS devices ever feel too stylised.
 
-### 7.3 Signature moments
+### 7.3 Scenes
 
-These are the only "wow" animations. Don't add more.
-
-1. **Hero entrance.** The name reveals line by line: each line slides up 24px, from `opacity 0, blur(8px)` to sharp, 700ms `--ease-out`, 80ms stagger. The subline and CTAs follow 150ms later. The mesh gradient fades in over 1.2s.
-2. **Living mesh.** The hero gradient drifts slowly (a 20–30s loop of translate/rotate on the blurred blobs) and reacts subtly to the pointer (≤ 20px offset, spring-smoothed). It pauses when off-screen.
-3. **Media reveal.** Project screenshots enter with a `clip-path: inset()` wipe from the bottom plus a 1.04 → 1 scale, 900ms `--ease-out`.
-4. **Card spotlight.** On hover, project cards show a soft radial highlight that follows the cursor (Linear/Vercel style), lift by 2px and switch to `--shadow-card-hover`. 200ms.
-5. **Case study transition.** Opening a project animates the card's image into the case-study header (a shared-element / `layoutId` transition, 500ms spring). Closing reverses it.
-6. **Copy email.** Clicking the email copies it and shows a small toast ("Email copied") in Sonner style, sliding up from the bottom.
+1. **Opening (dark).** The name stands in the coloured glow. Scrolling sends it back (fades, shrinks, rises); a closed laptop rises from below, its lid opens on the hinge (−90° to 8°) and the screen wakes up on a real project (the Young DCC platform), captioned in mono. About 3.4 screens.
+2. **MuseTrail (dark).** Two phones swing round in 3D to face the visitor, part to either side, and the four artworks of the *My Museum* screen float out of the screen to different depths around them. The text column fades in at the start. Then the pitch photo opens up from a smaller window as it scrolls into view (clip-path inset to full, image settling from 1.18 to 1).
+3. **Progmatic (light): exploded view.** The assistant's interface tilts into an isometric view, comes apart into four layers (workspace, sidebar, brief, header), each named in a legend that slides in as its layer lifts, then clicks back together.
+4. **More work: horizontal rail.** The section pins and scrolling slides the remaining project cards sideways. Cards lean towards the pointer (≤ 6°) with a soft light following it. Inside them, the Stedin chart draws itself left to right and the chess pawn plays b7 to b5.
+5. **Headings.** Section openers rise into focus word by word as they scroll into place.
+6. **Finale (dark).** *Let's talk.* in the same glow as the opening.
+7. **Copy email.** Unchanged: a toast confirms the copy.
 
 ### 7.4 Micro-interactions
 
 - Buttons: `:active` → `scale(0.97)`, 120ms.
-- Links: an underline that grows from the left on hover (`scaleX` 0 → 1, 200ms).
-- Arrow icons in CTAs nudge 2px right on hover.
-- Nav: transparent at the top. After 24px of scroll it gains a `backdrop-blur(12px)`, a canvas background at 80% opacity and a bottom hairline (200ms).
+- Arrow icons in CTAs nudge 2px on hover.
+- Nav: frosted after 24px of scroll; it takes the tone of the band behind it (dark over the opening, MuseTrail and contact).
 
 ---
 
@@ -301,15 +300,14 @@ One long page plus a case-study view per project. Sections open with a `display`
 
 ### 9.0 Nav (see §8.1)
 
-### 9.1 Hero: light canvas with the mesh gradient
-- Takes about 90svh. Content is left-aligned on desktop, bottom-weighted like an editorial cover.
-- Eyebrow: `SOFTWARE ENGINEER · MIDDELBURG, NL`
-- `display-xl`: **Samuele Poma.** (two lines on mobile: *Samuele* / *Poma.*)
-- `lead`, `--ink-secondary`, max 32ch: *"I build full-stack software, from Go services to React interfaces, and take projects from the first requirement to the final release."*
-- CTAs: **Primary** `View work ↓` · **Secondary** `GitHub ↗` (github.com/SamuelePoma).
-- The mesh sits top-right. Below 768px, where the text is under it, it is masked to fade out by 40% of the hero height, so the small grey eyebrow never sits on a tint.
+### 9.1 Hero: the opening scene (dark)
+- A pinned scene (§7.3.1) on `--night`, pulled up under the nav. The coloured glow fills it.
+- Eyebrow `SOFTWARE ENGINEER · MIDDELBURG, NL`, `display-xl` **Samuele Poma.** (two lines on mobile), the `lead` line, CTAs **View work ↓** and **GitHub ↗**, bottom-left like an editorial cover.
+- Scrolling plays the laptop: it rises, opens and shows the Young DCC platform, captioned `YOUTH CLIMATE EVENTS PLATFORM · DELTA CLIMATE CENTER`.
 
 ### 9.2 Selected work
+**Since 2026-10-05:** MuseTrail and Progmatic are scenes (§7.3.2, §7.3.3); every other project is a card on the horizontal rail (§7.3.4), in the order below. The card content is unchanged.
+
 Section opener: `display`, *"Things I've built."*
 
 **a) Featured: MuseTrail (a full-bleed `--night` band)**

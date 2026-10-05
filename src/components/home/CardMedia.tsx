@@ -1,3 +1,4 @@
+import { DrawReveal } from "@/components/motion/DrawReveal";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import { MediaSlot } from "@/components/ui/MediaSlot";
 import { ProgmaticDiagram } from "@/components/visuals/ProgmaticDiagram";
@@ -19,18 +20,22 @@ interface CardMediaProps {
 
 export function CardMedia({ visual }: Readonly<CardMediaProps>) {
   switch (visual.type) {
-    case "screenshot":
+    case "screenshot": {
+      const image = (
+        <MediaSlot
+          id={visual.slot}
+          sizes="(min-width: 1280px) 620px, (min-width: 768px) 50vw, 100vw"
+          position="top"
+        />
+      );
       return (
         <div className={cn(tray, "aspect-[16/10] md:aspect-auto")}>
           <MediaFrame ratio="fill" className={windowInset}>
-            <MediaSlot
-              id={visual.slot}
-              sizes="(min-width: 1280px) 620px, (min-width: 768px) 50vw, 100vw"
-              position="top"
-            />
+            {visual.effect === "draw" ? <DrawReveal>{image}</DrawReveal> : image}
           </MediaFrame>
         </div>
       );
+    }
     case "terminal":
       // On phones the tray takes the terminal's natural height; from md up the tray
       // is fixed and the terminal fills it, clipping the last lines if space runs out.

@@ -218,6 +218,24 @@
   }
 }
 
+/*
+ * Before NavTone has run, a page that opens on a dark band (the home page) already gets
+ * a dark nav, so there is never a flash of grey links on black.
+ */
+@layer components {
+  body:has(#main > section:first-of-type[data-tone="night"]) #site-nav:not([data-tone-ready]) {
+    --canvas: var(--night);
+    --surface: var(--night-surface);
+    --ink: var(--night-ink);
+    --ink-secondary: var(--night-ink-secondary);
+    --ink-tertiary: var(--night-ink-tertiary);
+    --hairline: var(--night-hairline);
+    --accent: var(--accent-night);
+
+    color: var(--ink);
+  }
+}
+
 @keyframes nav-surface-in {
   from {
     background-color: transparent;
@@ -259,4 +277,40 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/*
+ * Scenes (DESIGN.md §7). The glow drifts on a slow loop and pauses off screen; the
+ * reduced-motion guard below stops it entirely.
+ */
+@keyframes glow-drift-a {
+  to {
+    transform: translate(-58%, 8%) scale(1.08);
+  }
+}
+
+@keyframes glow-drift-b {
+  to {
+    transform: translate(-40%, 12%) scale(0.92);
+  }
+}
+
+@keyframes glow-drift-c {
+  to {
+    transform: translate(-62%, -10%) scale(1.12);
+  }
+}
+
+.glow[data-paused] * {
+  animation-play-state: paused !important;
+}
+
+/* 3D helpers for the CSS-drawn devices. */
+@utility preserve-3d {
+  transform-style: preserve-3d;
+}
+
+@utility backface-hidden {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }

@@ -1,12 +1,18 @@
+import Image from "next/image";
+
 import { Container } from "@/components/layout/Container";
+import { RevealMedia } from "@/components/motion/RevealMedia";
+import { MuseTrailScene } from "@/components/scenes/MuseTrailScene";
 import { Button } from "@/components/ui/Button";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import { MediaSlot } from "@/components/ui/MediaSlot";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { TagList } from "@/components/ui/Tag";
-import { PhonePair } from "@/components/visuals/PhonePair";
 import { getMediaSlot, type MediaSlotId } from "@/content/media";
 import { formatPeriod } from "@/lib/format/period";
+
+/** The artworks of the My Museum screen, cut out for the scene. Decorative. */
+const artworks = [1, 2, 3, 4].map((n) => `/images/scenes/musetrail-art-${String(n)}.webp`);
 
 interface FeaturedProjectProps {
   slug: string;
@@ -24,9 +30,8 @@ interface FeaturedProjectProps {
 }
 
 /**
- * The featured project as a full-bleed dark band (DESIGN.md §9.2a): text on the left
- * and the product on the right (phones for a mobile app, a browser frame otherwise),
- * then a photo that backs up the highlight.
+ * The featured project (DESIGN.md §9.2a): a dark, pinned product reveal, then the photo
+ * that backs up the highlight. The scene animates; this file renders its pieces.
  */
 export function FeaturedProject({
   slug,
@@ -41,82 +46,73 @@ export function FeaturedProject({
   const titleId = `project-${slug}`;
   const [front, back] = media.screens ?? [];
   const photo = media.secondary ? getMediaSlot(media.secondary) : undefined;
+  const sizes = "(min-width: 1024px) 300px, 40vw";
+
+  if (!front || !back) return null;
 
   return (
-    <article aria-labelledby={titleId} data-tone="night" className="tone-night py-20 md:py-28">
-      <Container className="grid grid-cols-1 items-center gap-16 lg:grid-cols-12 lg:gap-12">
-        <div className="flex flex-col gap-6 lg:col-span-5">
-          {highlight && (
-            <MonoLabel as="p" tone="accent">
-              {highlight}
-            </MonoLabel>
-          )}
-          <h3 id={titleId} className="text-display">
-            {title}
-          </h3>
-          <p className="max-w-[36ch] text-lead text-ink-secondary">{tagline}</p>
-
-          {(role ?? period) && (
-            <dl className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-10 gap-y-6 border-t border-hairline pt-6">
-              {role && (
-                <div className="flex flex-col gap-2">
-                  <dt>
-                    <MonoLabel>Role</MonoLabel>
-                  </dt>
-                  <dd className="text-small text-ink-secondary">{role}</dd>
-                </div>
-              )}
-              {period && (
-                <div className="flex flex-col gap-2">
-                  <dt>
-                    <MonoLabel>Timeline</MonoLabel>
-                  </dt>
-                  <dd className="text-small text-ink-secondary tabular">{formatPeriod(period)}</dd>
-                </div>
-              )}
-            </dl>
-          )}
-
-          <TagList tags={stack} />
-          <div className="pt-2">
-            <Button variant="secondary" href={`/work/${slug}`} icon="arrow-right">
-              Read the case study
-            </Button>
-          </div>
-        </div>
-
-        {front && back ? (
-          <PhonePair front={front} back={back} className="mx-auto max-w-xl lg:col-span-7" />
-        ) : (
-          media.hero && (
-            <div className="lg:col-span-7">
-              <MediaFrame ratio="16:10" radius="xl">
-                <MediaSlot
-                  id={media.hero}
-                  sizes="(min-width: 1280px) 700px, (min-width: 1024px) 58vw, 100vw"
-                  position="top"
-                />
-              </MediaFrame>
+    <div data-tone="night" className="tone-night">
+      <MuseTrailScene
+        titleId={titleId}
+        front={<MediaSlot id={front} sizes={sizes} position="top" />}
+        back={<MediaSlot id={back} sizes={sizes} position="top" />}
+        art={artworks.map((src) => (
+          <Image key={src} src={src} alt="" width={240} height={260} className="h-auto w-full" />
+        ))}
+        copy={
+          <>
+            {highlight && (
+              <MonoLabel as="p" tone="accent">
+                {highlight}
+              </MonoLabel>
+            )}
+            <h3 id={titleId} className="text-display">
+              {title}
+            </h3>
+            <p className="max-w-[34ch] text-lead text-ink-secondary">{tagline}</p>
+            {(role ?? period) && (
+              <dl className="flex flex-col gap-4 border-t border-hairline pt-6">
+                {role && (
+                  <div className="flex flex-col gap-1">
+                    <dt>
+                      <MonoLabel>Role</MonoLabel>
+                    </dt>
+                    <dd className="text-small text-ink-secondary">{role}</dd>
+                  </div>
+                )}
+                {period && (
+                  <div className="flex flex-col gap-1">
+                    <dt>
+                      <MonoLabel>Timeline</MonoLabel>
+                    </dt>
+                    <dd className="text-small text-ink-secondary tabular">
+                      {formatPeriod(period)}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            )}
+            <TagList tags={stack} />
+            <div>
+              <Button variant="secondary" href={`/work/${slug}`} icon="arrow-right">
+                Read the case study
+              </Button>
             </div>
-          )
-        )}
-      </Container>
+          </>
+        }
+      />
 
       {photo && media.secondary && (
-        <Container className="mt-20 md:mt-28">
-          {/* From lg the caption sits in the text column, level with the photo's bottom edge. */}
+        <Container className="pb-24 md:pb-32">
           <figure className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-12">
-            <MediaFrame
-              variant="plain"
-              ratio={photo.ratio}
-              radius="xl"
-              className="lg:col-span-7 lg:col-start-6 lg:row-start-1"
-            >
-              <MediaSlot
-                id={media.secondary}
-                sizes="(min-width: 1280px) 700px, (min-width: 1024px) 58vw, 100vw"
-              />
-            </MediaFrame>
+            <RevealMedia className="rounded-xl lg:col-span-8 lg:col-start-5 lg:row-start-1">
+              <MediaFrame variant="plain" ratio={photo.ratio} radius="xl">
+                <MediaSlot
+                  id={media.secondary}
+                  sizes="(min-width: 1280px) 800px, (min-width: 1024px) 66vw, 100vw"
+                />
+              </MediaFrame>
+            </RevealMedia>
             {photo.caption && (
               <figcaption className="text-small text-ink-secondary lg:col-span-4 lg:row-start-1 lg:self-end">
                 {photo.caption}
@@ -125,6 +121,6 @@ export function FeaturedProject({
           </figure>
         </Container>
       )}
-    </article>
+    </div>
   );
 }

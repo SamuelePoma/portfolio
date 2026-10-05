@@ -44,6 +44,8 @@ export function NavTone({ navId }: Readonly<{ navId: string }>) {
     };
 
     observe();
+    // From here on the observer decides; the CSS first guess (globals.css) steps aside.
+    nav.setAttribute("data-tone-ready", "");
     window.addEventListener("resize", observe);
     return () => {
       window.removeEventListener("resize", observe);

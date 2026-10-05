@@ -1,5 +1,6 @@
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
+import { ScrollWords } from "@/components/motion/ScrollWords";
 import { skillGroups } from "@/content/skills";
 
 /** Grouped, typographic, no logos and no progress bars (DESIGN.md §9.4). */
@@ -8,7 +9,7 @@ export function StackSection() {
     <Section id="stack" spacing="top" aria-labelledby="stack-title">
       <Container>
         <h2 id="stack-title" className="text-display">
-          Tools I reach for.
+          <ScrollWords text="Tools I reach for." />
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 md:mt-16 lg:grid-cols-4">
           {skillGroups.map((group) => (

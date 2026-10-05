@@ -29,7 +29,10 @@ async function fakeTurnstile(page: Page) {
     route.fulfill({
       contentType: "text/javascript",
       body: `window.turnstile = {
-        render: function (el, options) { setTimeout(function () { options.callback("e2e-token"); }, 0); return "widget"; },
+        render: function (el, options) {
+          setTimeout(function () { options.callback("e2e-token"); el.setAttribute("data-turnstile-ready", ""); }, 0);
+          return "widget";
+        },
         reset: function () {},
         remove: function () {},
       };`,
@@ -118,15 +121,15 @@ test.describe("home page", () => {
     expect(errors).toEqual([]);
   });
 
-  test("turns the nav dark over dark bands and light again above them", async ({ page }) => {
+  test("matches the nav to the band behind it", async ({ page }) => {
     const nav = page.locator("#site-nav");
-    // Into the first dark band and past the nav, so the band really sits under it.
-    await scrollPast(page, '[data-tone="night"]', 200);
+    // The opening scene is dark, so the nav starts in the night tone...
     await expect(nav).toHaveClass(/tone-night/);
-    await page.evaluate(() => {
-      window.scrollTo(0, 0);
-    });
+    // ...and turns light over a light section.
+    await scrollPast(page, "#stack", 200);
     await expect(nav).not.toHaveClass(/tone-night/);
+    await scrollPast(page, "#contact", 200);
+    await expect(nav).toHaveClass(/tone-night/);
   });
 
   test("has no horizontal overflow at common widths", async ({ page }) => {
@@ -155,6 +158,8 @@ test.describe("contact form", () => {
   test.beforeEach(async ({ page }) => {
     await fakeTurnstile(page);
     await page.goto("/#contact");
+    // The widget loads only near the form: wait until it has handed over its token.
+    await page.locator("[data-turnstile-ready]").waitFor({ state: "attached" });
   });
 
   test("explains every problem and stays accessible in the error state", async ({ page }) => {
@@ -240,6 +245,7 @@ test.describe("contact API", () => {
       route.fulfill({ status: 429, json: { ok: false, error: "rate_limited" } }),
     );
     await page.goto("/#contact");
+    await page.locator("[data-turnstile-ready]").waitFor({ state: "attached" });
     await page.getByLabel("Name").fill("Ada Lovelace");
     await page.getByLabel("Email").fill("ada@example.com");
     await page.getByLabel("Message").fill("I'd like to talk about a project.");

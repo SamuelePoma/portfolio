@@ -1,5 +1,6 @@
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
+import { ScrollWords } from "@/components/motion/ScrollWords";
 import { Button } from "@/components/ui/Button";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { site } from "@/content/site";
@@ -16,7 +17,7 @@ export function About() {
       <Container className="grid grid-cols-1 gap-16 lg:grid-cols-12 lg:gap-12">
         <div className="lg:col-span-5">
           <h2 id="about-title" className="text-display">
-            About me.
+            <ScrollWords text="About me." />
           </h2>
           <div className="mt-8 flex max-w-[40ch] flex-col gap-5 text-lead text-ink-secondary">
             {site.about.map((paragraph) => (

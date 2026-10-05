@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { MovingPiece } from "@/components/motion/MovingPiece";
 import { cn } from "@/lib/utils/cn";
 
 /**
@@ -85,7 +86,11 @@ function Board() {
             {number}|
             {rank.map((code, file) => (
               <Cell key={file} strong={`${files[file] ?? ""}${String(number)}` === LAST_MOVE}>
-                {piece(code)}
+                {`${files[file] ?? ""}${String(number)}` === LAST_MOVE ? (
+                  <MovingPiece ranks={2}>{piece(code)}</MovingPiece>
+                ) : (
+                  piece(code)
+                )}
               </Cell>
             ))}
             |
