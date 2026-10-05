@@ -3,6 +3,7 @@ import { MediaFrame } from "@/components/ui/MediaFrame";
 import { MediaSlot } from "@/components/ui/MediaSlot";
 import { ProgmaticDiagram } from "@/components/visuals/ProgmaticDiagram";
 import { TerminalChess } from "@/components/visuals/TerminalChess";
+import { VetComponentsDiagram } from "@/components/visuals/VetComponentsDiagram";
 import type { CardVisual } from "@/content/schema";
 import { cn } from "@/lib/utils/cn";
 
@@ -49,8 +50,13 @@ export function CardMedia({ visual }: Readonly<CardMediaProps>) {
       );
     case "diagram":
       return (
-        <div className={cn(tray, "flex items-center justify-center px-5 py-10 md:px-8")}>
-          <ProgmaticDiagram />
+        <div className={cn(tray, "flex items-center justify-center px-4 py-8 md:px-6")}>
+          {visual.name === "research-map" ? (
+            <ProgmaticDiagram />
+          ) : (
+            // Sized by the tray's height from md up, so the whole drawing fits.
+            <VetComponentsDiagram className="md:h-full md:w-auto md:max-w-full" />
+          )}
         </div>
       );
   }

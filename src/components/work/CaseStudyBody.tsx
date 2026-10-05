@@ -5,6 +5,8 @@ import { MediaFrame } from "@/components/ui/MediaFrame";
 import { MediaSlot } from "@/components/ui/MediaSlot";
 import { MonoLabel } from "@/components/ui/MonoLabel";
 import { ProgmaticDiagram } from "@/components/visuals/ProgmaticDiagram";
+import { RagFlowDiagram } from "@/components/visuals/RagFlowDiagram";
+import { VetComponentsDiagram } from "@/components/visuals/VetComponentsDiagram";
 import { getMediaSlot } from "@/content/media";
 import type { Project } from "@/content/schema";
 import { publicFileExists } from "@/lib/public-file";
@@ -13,7 +15,7 @@ type CaseStudyBodyProps = Pick<
   Project,
   | "problem"
   | "approach"
-  | "approachVisual"
+  | "approachVisuals"
   | "outcome"
   | "highlights"
   | "learnings"
@@ -60,7 +62,7 @@ function Prose({ paragraphs }: Readonly<{ paragraphs: readonly string[] }>) {
 export function CaseStudyBody({
   problem,
   approach,
-  approachVisual,
+  approachVisuals,
   outcome,
   highlights,
   learnings,
@@ -82,11 +84,16 @@ export function CaseStudyBody({
       {approach && (
         <CaseSection id="approach" title="Approach">
           <Prose paragraphs={approach} />
-          {approachVisual === "research-map" && (
-            <div className="mt-4 flex justify-center rounded-xl bg-surface-sunken px-5 py-12 md:px-8">
-              <ProgmaticDiagram />
+          {approachVisuals?.map((visual) => (
+            <div
+              key={visual}
+              className="mt-4 flex justify-center rounded-xl bg-surface-sunken px-4 py-10 md:px-8 md:py-12"
+            >
+              {visual === "research-map" && <ProgmaticDiagram />}
+              {visual === "rag-flow" && <RagFlowDiagram />}
+              {visual === "vet-components" && <VetComponentsDiagram />}
             </div>
-          )}
+          ))}
         </CaseSection>
       )}
 

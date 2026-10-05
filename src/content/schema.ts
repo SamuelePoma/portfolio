@@ -41,7 +41,7 @@ export const cardVisualSchema = z.discriminatedUnion("type", [
     /** "draw": the screenshot wipes in left to right, for charts. */
     effect: z.enum(["draw"]).optional(),
   }),
-  z.object({ type: z.literal("diagram") }),
+  z.object({ type: z.literal("diagram"), name: z.enum(["research-map", "vet-components"]) }),
   z.object({ type: z.literal("terminal") }),
 ]);
 
@@ -74,8 +74,11 @@ export const projectSchema = z.object({
   problem: visibleText.optional(),
   /** What was done, one to three paragraphs. */
   approach: z.array(visibleText).min(1).max(3).optional(),
-  /** A visual for the Approach section. */
-  approachVisual: z.enum(["research-map"]).optional(),
+  /** Diagrams for the Approach section, in order. */
+  approachVisuals: z
+    .array(z.enum(["research-map", "rag-flow", "vet-components"]))
+    .min(1)
+    .optional(),
   /** The result, one paragraph. */
   outcome: visibleText.optional(),
   /** Real distinctions, listed under the outcome. */

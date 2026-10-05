@@ -338,3 +338,52 @@
     }
   }
 }
+
+/*
+ * Diagram lines draw themselves as the diagram scrolls into view (pathLength="1" on
+ * each path). Without support, or with reduced motion, they are simply drawn.
+ */
+@keyframes draw-line {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .draw-line {
+      stroke-dasharray: 1;
+      animation: draw-line linear both;
+      animation-timeline: view();
+      animation-range: entry calc(10% + var(--i, 0) * 5%) cover calc(40% + var(--i, 0) * 5%);
+    }
+  }
+}
+
+/* The RAG flow: each step's ring lights up in turn, like a request passing through. */
+@keyframes step-glow {
+  0%,
+  16%,
+  100% {
+    opacity: 0;
+  }
+
+  5%,
+  10% {
+    opacity: 1;
+  }
+}
+
+.step-glow {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .step-glow {
+    animation: step-glow 8s var(--ease-in-out) infinite;
+    animation-delay: calc(var(--i, 0) * 1s);
+  }
+}

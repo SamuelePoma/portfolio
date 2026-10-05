@@ -94,6 +94,13 @@ export const mediaSlots = [
     placeholder: "Game screen",
   },
   {
+    id: "IMG-DND-01",
+    file: "dnd-01.webp",
+    ratio: "16:10",
+    alt: "A generated Dungeons & Dragons character sheet",
+    placeholder: "Character sheet page or CLI output",
+  },
+  {
     id: "IMG-PORTRAIT",
     file: "portrait.webp",
     ratio: "4:5",

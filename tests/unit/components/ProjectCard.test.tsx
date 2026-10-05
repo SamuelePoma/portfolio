@@ -12,7 +12,7 @@ const base: ProjectCardProps = {
   status: "in-progress",
   tagline: "Researching an internal assistant.",
   stack: ["AI", "FileMaker"],
-  card: { type: "diagram" },
+  card: { type: "diagram", name: "research-map" },
 };
 
 describe("ProjectCard", () => {

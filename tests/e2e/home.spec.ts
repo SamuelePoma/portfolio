@@ -68,9 +68,11 @@ test.describe("home page", () => {
         "/work/musetrail",
         "/work/progmatic-ai-knowledge-assistant",
         "/work/young-dcc-platform",
+        "/work/veterinary-practice-system",
         "/work/conneqtech-gps-dashboard",
         "/work/stedin-grid-monitoring",
         "/work/chess-game-java",
+        "/work/dnd-character-sheet-generator",
         "/work/tower-defense-typescript",
       ]),
     );

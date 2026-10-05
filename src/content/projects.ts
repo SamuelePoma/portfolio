@@ -55,12 +55,13 @@ export const projects = [
     stack: ["AI", "Document retrieval", "FileMaker"],
     card: { type: "screenshot", slot: "IMG-PROGMATIC-01" },
     problem:
-      "Progmatic wants an internal assistant for its technical and organisational knowledge, one that runs locally.",
+      "Progmatic's information is spread across systems, documents, projects and customers. Finding something often means knowing where it is stored, or which words were used when it was filed.",
     approach: [
-      "Through client meetings and requirements analysis, our team of five is investigating four areas: document retrieval, integration with FileMaker, access control and data confidentiality.",
-      "The assistant is meant to answer questions about the company database, find information, write emails and code, and prepare quotations and budget calculations. Its interface brings chat, files, search, email and FileMaker together in one sidebar.",
+      'The idea, called IO: an employee asks in everyday language, such as "Which PLC did we use for this project?", and gets an answer based on Progmatic\'s own data, together with the sources it came from.',
+      "Rather than training a model on all that data, we are investigating retrieval-augmented generation (RAG): the system first searches Progmatic's knowledge for what is relevant, then hands it to a language model that writes the answer. The model runs internally, so company information never goes to a public AI service.",
+      "Through client meetings and requirements analysis, our team of five is researching document retrieval, FileMaker integration, access control and data confidentiality. The current step is a prototype on dummy Progmatic data, whose interface brings chat, files, search, email and FileMaker together.",
     ],
-    approachVisual: "research-map",
+    approachVisuals: ["rag-flow", "research-map"],
     // Repository link: add it as `links: { repo: "https://github.com/..." }`.
     media: { hero: "IMG-PROGMATIC-01" },
   },
@@ -79,6 +80,30 @@ export const projects = [
     card: { type: "screenshot", slot: "IMG-YOUNGDCC-01" },
     // Repository link: add it as `links: { repo: "https://github.com/..." }`.
     media: { hero: "IMG-YOUNGDCC-01" },
+  },
+  {
+    slug: "veterinary-practice-system",
+    title: "Veterinary practice system",
+    category: "Team project",
+    period: { start: "2026" },
+    status: "in-progress",
+    seoDescription:
+      "Case study: a veterinary practice information system in SvelteKit, with appointment booking and clinical records sharing one backend and one database.",
+    tagline:
+      "An information system for a veterinary practice that puts appointment booking and animals' clinical records on one shared backend and database.",
+    role: "Developer, reviewer of the component architecture",
+    stack: ["SvelteKit"],
+    card: { type: "diagram", name: "vet-components" },
+    problem:
+      "A veterinary practice needs one system for appointments and clinical records: clients book visits, while only authorised staff may see an animal's clinical history, laboratory results and medication.",
+    approach: [
+      "Booking and clinical records share one backend and one database, so both use the same client, animal and veterinarian records instead of keeping two copies. Authentication and authorisation sit in front of every service, because clinical information is protected.",
+      "Later increments add a laboratory integration that receives results from Laboratorium Centraal as HL7 v2.5 ORU messages and matches each one to the right animal, and separate medication and stock services: giving a dose deducts stock, with alerts when it runs low.",
+      "I reviewed the component diagram shown below. The first increment covers signing in, finding an animal and viewing its clinical record.",
+    ],
+    approachVisuals: ["vet-components"],
+    // Repository link: add it as `links: { repo: "https://github.com/..." }`.
+    media: {},
   },
   {
     slug: "conneqtech-gps-dashboard",
@@ -145,6 +170,28 @@ export const projects = [
     ],
     links: { repo: "https://github.com/SamuelePoma/SD_ChessGame" },
     media: {},
+  },
+  {
+    slug: "dnd-character-sheet-generator",
+    title: "D&D character sheet generator",
+    category: "Go",
+    status: "completed",
+    seoDescription:
+      "Case study: a Dungeons & Dragons 5e character sheet generator written in Go, with a command line, an HTML front end and data from the D&D 5e API.",
+    tagline:
+      "A Dungeons & Dragons character sheet generator in Go that follows the 5e rules (SRD 5.1), with a command line and an HTML front end.",
+    role: "Developer, individual university project",
+    stack: ["Go", "REST API", "HTML"],
+    card: { type: "screenshot", slot: "IMG-DND-01" },
+    problem:
+      "Player characters in Dungeons & Dragons follow strict rules that keep the game balanced. The course turns the 403-page System Reference Document 5.1 into the requirements, checked by automated tests on CodeGrade.",
+    approach: [
+      "The scope, set by the course: characters with a name, race, class, level, background and ability scores from the standard array (15, 14, 13, 12, 10, 8) plus racial bonuses, with skill proficiencies and modifiers; weapons, armour and shields; and spells and spell slots for casters.",
+      "Spells and equipment are enriched from the volunteer-run D&D 5e API, at a gentle 5 to 10 requests per second. The sheet works out armour class, initiative, passive perception and, for casters, the spell save DC and spell attack bonus.",
+      "A command line creates, shows and lists characters, and an HTML page lists every character with a link to its sheet. CodeGrade compiles on one core within two minutes, which keeps external libraries to one or two.",
+    ],
+    // Repository link: add it as `links: { repo: "https://github.com/..." }`.
+    media: { hero: "IMG-DND-01" },
   },
   {
     slug: "tower-defense-typescript",

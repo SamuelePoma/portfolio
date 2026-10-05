@@ -307,7 +307,7 @@ One long page plus a case-study view per project. Sections open with a `display`
 - Scrolling plays the laptop: it rises, opens and shows the Young DCC platform, captioned `YOUTH CLIMATE EVENTS PLATFORM · DELTA CLIMATE CENTER`.
 
 ### 9.2 Selected work
-**Since 2026-10-05:** MuseTrail and Progmatic are scenes (§7.3.2, §7.3.3); every other project is a card on the horizontal rail (§7.3.4), in the order below. The card content is unchanged.
+**Since 2026-10-05:** MuseTrail and Progmatic are scenes (§7.3.2, §7.3.3); every other project is a card on the horizontal rail (§7.3.4): Young DCC, the veterinary practice system (its component diagram as the card visual, drawn in CSS: lines draw themselves as it scrolls in), Conneqtech, Stedin, ChessGame, the D&D character sheet generator (placeholder until a screenshot arrives) and the tower defense game. Progmatic's case study adds the RAG flow from the project README: eight steps over two rows, each lighting up in turn with an accent ring.
 
 Section opener: `display`, *"Things I've built."*
 
