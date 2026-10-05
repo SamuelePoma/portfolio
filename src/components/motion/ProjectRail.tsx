@@ -5,6 +5,8 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 
 import { Container } from "@/components/layout/Container";
 
+import { useSmooth } from "./useSceneProgress";
+
 /** Card width and side padding, shared with the cards so the CSS height matches. */
 export const RAIL_CARD_WIDTH = "min(84vw, 620px)";
 const RAIL_GAP = "1.5rem";
@@ -46,7 +48,7 @@ export function ProjectRail({ heading, count, children }: Readonly<ProjectRailPr
   }, [reduce]);
 
   const { scrollYProgress } = useScroll({ target: section, offset: ["start start", "end end"] });
-  const x = useTransform(scrollYProgress, [0, 1], [0, -distance]);
+  const x = useTransform(useSmooth(scrollYProgress), [0, 1], [0, -distance]);
 
   if (reduce) {
     return (

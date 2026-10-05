@@ -3,6 +3,8 @@
 import { m, type MotionValue, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 
+import { useSmooth } from "./useSceneProgress";
+
 function Word({
   progress,
   index,
@@ -30,7 +32,8 @@ function Word({
 export function ScrollWords({ text }: Readonly<{ text: string }>) {
   const ref = useRef<HTMLSpanElement>(null);
   const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.92", "start 0.45"] });
+  const { scrollYProgress: raw } = useScroll({ target: ref, offset: ["start 0.92", "start 0.45"] });
+  const scrollYProgress = useSmooth(raw);
   const words = text.split(" ");
 
   if (reduce) return <span>{text}</span>;

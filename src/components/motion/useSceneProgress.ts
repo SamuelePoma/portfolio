@@ -1,7 +1,24 @@
 "use client";
 
-import { type MotionValue, useMotionValue, useReducedMotion, useScroll } from "motion/react";
+import {
+  type MotionValue,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+} from "motion/react";
 import { type RefObject, useSyncExternalStore } from "react";
+
+/**
+ * The spring every scene follows the scroll with. A mouse wheel moves the page in
+ * steps; the scene glides after it instead of jumping, and settles without overshoot.
+ */
+export const SCROLL_SPRING = { stiffness: 140, damping: 30, mass: 0.35, restDelta: 0.0005 };
+
+/** A motion value that follows another on the scroll spring. */
+export function useSmooth(value: MotionValue<number>): MotionValue<number> {
+  return useSpring(value, SCROLL_SPRING);
+}
 
 /** Where pinned scenes start pinning when they only pin on large screens. */
 const LARGE = "(min-width: 64rem)";
@@ -46,6 +63,8 @@ export function useSceneProgress(
     target,
     offset: ["start 0.75", "end 0.55"],
   });
+  const smoothPinned = useSmooth(whilePinned);
+  const smoothPassing = useSmooth(whilePassing);
   const finished = useMotionValue(1);
-  return { progress: reduce ? finished : pinned ? whilePinned : whilePassing, still: reduce };
+  return { progress: reduce ? finished : pinned ? smoothPinned : smoothPassing, still: reduce };
 }

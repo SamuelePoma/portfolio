@@ -200,7 +200,7 @@ Springs for interactive things: `{ type: "spring", duration: 0.5, bounce: 0.15 }
 ### 7.2 Rules
 
 - Animate only `transform`, `opacity`, `filter` and `clip-path`. Never layout properties.
-- Scroll-linked scenes follow the scroll exactly (no easing on the scroll itself, no scroll-jacking): the page scrolls natively, the stage only sticks.
+- Scroll-linked scenes follow the scroll through a spring (`SCROLL_SPRING`: stiffness 140, damping 30, mass 0.35, no overshoot), so a mouse wheel's steps become a glide. The page itself scrolls natively; no scroll-jacking.
 - UI responses (hover, press, menu) finish in **≤ 300ms**. Scenes may take as long as their scroll length.
 - Hover effects only for a fine pointer.
 - **Reduced motion:** every scene renders its final state, unpinned, as an ordinary section; the glow stops; the project rail becomes a row you scroll sideways yourself. A Playwright project checks this.
@@ -210,11 +210,12 @@ Springs for interactive things: `{ type: "spring", duration: 0.5, bounce: 0.15 }
 
 ### 7.3 Scenes
 
-1. **Opening (dark).** The name stands in the coloured glow. Scrolling sends it back (fades, shrinks, rises); a closed laptop rises from below, its lid opens on the hinge (−90° to 8°) and the screen wakes up on a real project (the Young DCC platform), captioned in mono. About 3.4 screens.
-2. **MuseTrail (dark).** Two phones swing round in 3D to face the visitor, part to either side, and the four artworks of the *My Museum* screen float out of the screen to different depths around them. The text column fades in at the start. Then the pitch photo opens up from a smaller window as it scrolls into view (clip-path inset to full, image settling from 1.18 to 1).
+1. **Opening (dark).** The name stands in the coloured glow. The laptop has a camera in its bezel, a glare that slides across the glass as the lid opens, the screen's light spilling behind it and a contact shadow; its deck is a touch narrower than the lid so, in perspective, its front edge reads as wide as the screen. At the very end the laptop pushes in slightly and the scene dissolves into the light section that follows.
+    Scrolling sends it back (fades, shrinks, rises); a closed laptop rises from below, its lid opens on the hinge (−90° to 8°) and the screen wakes up on a real project (the Young DCC platform), captioned in mono. About 3.4 screens.
+2. **MuseTrail (dark).** Two phones (with side buttons, glass sheen and a floor shadow) swing round in 3D to face the visitor, the back one starting far behind so they never pass through each other, part to either side, and the four artworks of the *My Museum* screen float out of the screen to different depths around them. The text column fades in at the start. Then the pitch photo opens up from a smaller window as it scrolls into view (clip-path inset to full, image settling from 1.18 to 1).
 3. **Progmatic (light): exploded view.** The assistant's interface tilts into an isometric view, comes apart into four layers (workspace, sidebar, brief, header), each named in a legend that slides in as its layer lifts, then clicks back together.
 4. **More work: horizontal rail.** The section pins and scrolling slides the remaining project cards sideways. Cards lean towards the pointer (≤ 6°) with a soft light following it. Inside them, the Stedin chart draws itself left to right and the chess pawn plays b7 to b5.
-5. **Headings.** Section openers rise into focus word by word as they scroll into place.
+5. **Headings and lists.** Section openers rise into focus word by word as they scroll into place. Stack groups and timeline rows rise in, staggered, with CSS scroll-driven animations (no JavaScript; browsers without support just show them). Card screenshots lean in (1.04) on hover.
 6. **Finale (dark).** *Let's talk.* in the same glow as the opening.
 7. **Copy email.** Unchanged: a toast confirms the copy.
 

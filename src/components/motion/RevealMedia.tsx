@@ -5,6 +5,8 @@ import { type ReactNode, useRef } from "react";
 
 import { cn } from "@/lib/utils/cn";
 
+import { useSmooth } from "./useSceneProgress";
+
 interface RevealMediaProps {
   className?: string;
   children: ReactNode;
@@ -17,7 +19,11 @@ interface RevealMediaProps {
 export function RevealMedia({ className, children }: Readonly<RevealMediaProps>) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "center center"] });
+  const { scrollYProgress: raw } = useScroll({
+    target: ref,
+    offset: ["start end", "center center"],
+  });
+  const scrollYProgress = useSmooth(raw);
   const clipPath = useTransform(
     scrollYProgress,
     [0, 1],

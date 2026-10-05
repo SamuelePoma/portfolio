@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { ScrollWords } from "@/components/motion/ScrollWords";
@@ -31,10 +33,11 @@ export function About() {
 
         <div className="lg:col-span-7 lg:pt-3">
           <ol className="border-t border-hairline">
-            {timeline.map((entry) => (
+            {timeline.map((entry, index) => (
               <li
                 key={`${entry.organisation}-${entry.period.start}`}
-                className="grid grid-cols-1 gap-2 border-b border-hairline py-6 md:grid-cols-[5.5rem_minmax(0,1.2fr)_minmax(0,1fr)] md:gap-6"
+                style={{ "--i": index } as CSSProperties}
+                className="rise-in grid grid-cols-1 gap-2 border-b border-hairline py-6 md:grid-cols-[5.5rem_minmax(0,1.2fr)_minmax(0,1fr)] md:gap-6"
               >
                 <MonoLabel as="p" className="md:pt-1">
                   {formatPeriod(entry.period)}

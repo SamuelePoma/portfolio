@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { ScrollWords } from "@/components/motion/ScrollWords";
@@ -12,8 +14,12 @@ export function StackSection() {
           <ScrollWords text="Tools I reach for." />
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 md:mt-16 lg:grid-cols-4">
-          {skillGroups.map((group) => (
-            <div key={group.label} className="border-t border-hairline pt-6">
+          {skillGroups.map((group, index) => (
+            <div
+              key={group.label}
+              className="rise-in border-t border-hairline pt-6"
+              style={{ "--i": index } as CSSProperties}
+            >
               <h3 className="font-mono text-mono-label text-ink-tertiary uppercase">
                 {group.label}
               </h3>

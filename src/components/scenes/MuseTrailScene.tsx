@@ -73,6 +73,12 @@ export function MuseTrailScene({ titleId, copy, front, back, art }: Readonly<Mus
   const frontX = useTransform(progress, [0.34, 0.55], ["6%", "-58%"]);
   const backX = useTransform(progress, [0.34, 0.55], ["-4%", "62%"]);
   const backScale = useTransform(progress, [0.34, 0.55], [0.9, 0.94]);
+  // Depth keeps the phones apart while they turn: the back one starts well behind, so
+  // the two never pass through each other, then comes forward as they part.
+  const frontZ = useTransform(progress, [0, 0.55], [60, 0]);
+  const backZ = useTransform(progress, [0, 0.34, 0.55], [-320, -260, -40]);
+  const shadowOpacity = useTransform(progress, [0.1, 0.4], [0, 0.8]);
+  const shadowScale = useTransform(progress, [0.34, 0.55], [0.55, 1]);
 
   return (
     <Scene
@@ -99,6 +105,12 @@ export function MuseTrailScene({ titleId, copy, front, back, art }: Readonly<Mus
               : "relative mx-auto h-[42svh] w-full max-w-[22rem] [perspective:1800px] sm:max-w-none lg:col-span-8 lg:h-[70svh]"
           }
         >
+          {/* The phones' shadow on the floor, widening as they part. */}
+          <m.div
+            aria-hidden
+            className="bg-black pointer-events-none absolute inset-x-[18%] -bottom-[6%] h-[8%] rounded-[50%] blur-2xl"
+            style={still ? { opacity: 0.8 } : { opacity: shadowOpacity, scaleX: shadowScale }}
+          />
           <m.div
             className="absolute inset-0 preserve-3d"
             style={still ? {} : { y: phonesY, rotateX: tilt }}
@@ -108,7 +120,7 @@ export function MuseTrailScene({ titleId, copy, front, back, art }: Readonly<Mus
               style={
                 still
                   ? { x: "62%", rotateY: 16 }
-                  : { x: backX, rotateY: backRotateY, scale: backScale }
+                  : { x: backX, z: backZ, rotateY: backRotateY, scale: backScale }
               }
             >
               <PhoneFrame className="h-full shadow-[0_40px_80px_-30px_rgb(0_0_0/0.9)]">
@@ -117,7 +129,11 @@ export function MuseTrailScene({ titleId, copy, front, back, art }: Readonly<Mus
             </m.div>
             <m.div
               className="absolute top-0 left-1/2 h-[92%] -translate-x-1/2 preserve-3d"
-              style={still ? { x: "-58%", rotateY: -16 } : { x: frontX, rotateY: frontRotateY }}
+              style={
+                still
+                  ? { x: "-58%", rotateY: -16 }
+                  : { x: frontX, z: frontZ, rotateY: frontRotateY }
+              }
             >
               <PhoneFrame className="h-full shadow-[0_40px_80px_-30px_rgb(0_0_0/0.9)]">
                 {front}
