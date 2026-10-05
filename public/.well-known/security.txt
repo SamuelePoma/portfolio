@@ -1,0 +1,5 @@
+# Security contact for samuelepoma.com (RFC 9116).
+Contact: mailto:samuelepoma45@gmail.com
+Expires: 2027-10-05T00:00:00Z
+Preferred-Languages: en, it
+Canonical: https://samuelepoma.com/.well-known/security.txt

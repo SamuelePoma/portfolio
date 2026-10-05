@@ -51,6 +51,8 @@ export const projectSchema = z.object({
   status: z.enum(["completed", "in-progress"]),
   /** One or two sentences for cards and the featured band. */
   tagline: visibleText.max(180),
+  /** The case study's meta description: 140 to 160 characters, keywords used naturally. */
+  seoDescription: visibleText.min(140).max(160),
   /** Samuele's role. Optional: left out until he confirms it, never guessed. */
   role: visibleText.optional(),
   team: z.number().int().min(2).optional(),
@@ -102,6 +104,27 @@ export const skillGroupSchema = z.object({
   items: z.array(visibleText).min(1),
 });
 
+const legalSectionSchema = z.object({
+  /** Anchor id: lowercase and hyphenated. */
+  id: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
+  title: visibleText,
+  paragraphs: z.array(visibleText).min(1).optional(),
+  items: z.array(visibleText).min(1).optional(),
+  links: z
+    .array(z.object({ label: visibleText, href: httpsUrl }))
+    .min(1)
+    .optional(),
+});
+
+export const legalDocumentSchema = z.object({
+  slug: z.string().regex(/^[a-z]+$/),
+  title: visibleText,
+  seoDescription: visibleText.min(140).max(160),
+  updated: z.iso.date(),
+  intro: visibleText,
+  sections: z.array(legalSectionSchema).min(1),
+});
+
 export const siteSchema = z.object({
   name: visibleText,
   role: visibleText,
@@ -112,6 +135,10 @@ export const siteSchema = z.object({
   cvPath: z.string().startsWith("/"),
   heroEyebrow: visibleText,
   heroLead: visibleText,
+  /** The home page's meta description, 140 to 160 characters. */
+  seoDescription: visibleText.min(140).max(160),
+  /** When the content last changed (YYYY-MM-DD), for the sitemap. */
+  contentUpdated: z.iso.date(),
   about: z.array(visibleText).min(1).max(4),
   languages: visibleText,
 });
@@ -122,3 +149,5 @@ export type CardVisual = z.infer<typeof cardVisualSchema>;
 export type TimelineEntry = z.infer<typeof timelineEntrySchema>;
 export type SkillGroup = z.infer<typeof skillGroupSchema>;
 export type Site = z.infer<typeof siteSchema>;
+export type LegalDocument = z.input<typeof legalDocumentSchema>;
+export type LegalSection = z.infer<typeof legalSectionSchema>;

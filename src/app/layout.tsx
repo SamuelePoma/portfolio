@@ -7,12 +7,16 @@ import { Toaster } from "sonner";
 
 import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
+import { site } from "@/content/site";
+import { publicEnv } from "@/lib/env/public";
+import { isIndexable, rootMetadata } from "@/lib/seo/metadata";
 import { cn } from "@/lib/utils/cn";
 
-export const metadata: Metadata = {
-  title: "Samuele Poma | Software Engineer",
-  description: "Portfolio of Samuele Poma, software engineer based in Middelburg, Netherlands.",
-};
+export const metadata: Metadata = rootMetadata({
+  siteUrl: publicEnv.NEXT_PUBLIC_SITE_URL,
+  description: site.seoDescription,
+  indexable: isIndexable(),
+});
 
 export const viewport: Viewport = {
   themeColor: "#fafafa",

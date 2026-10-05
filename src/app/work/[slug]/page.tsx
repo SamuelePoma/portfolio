@@ -2,12 +2,16 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { Container } from "@/components/layout/Container";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { CaseStudyBody } from "@/components/work/CaseStudyBody";
 import { CaseStudyHeader } from "@/components/work/CaseStudyHeader";
 import { CaseStudyHero } from "@/components/work/CaseStudyHero";
 import { NextProject } from "@/components/work/NextProject";
 import { projects } from "@/content/projects";
 import type { Project } from "@/content/schema";
+import { publicEnv } from "@/lib/env/public";
+import { caseStudyJsonLd } from "@/lib/seo/jsonld";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { nextInLoop } from "@/lib/work/next-in-loop";
 
 /** Every case study is built at build time; any other slug is a 404. */
@@ -29,10 +33,13 @@ function findProject(slug: string): { project: Project; next: Project } | undefi
 export async function generateMetadata({ params }: PageProps<"/work/[slug]">): Promise<Metadata> {
   const found = findProject((await params).slug);
   if (!found) return {};
-  return {
-    title: `${found.project.title} case study | Samuele Poma`,
-    description: found.project.tagline,
-  };
+  const { project } = found;
+  return pageMetadata({
+    title: `${project.title} case study`,
+    description: project.seoDescription,
+    path: `/work/${project.slug}`,
+    type: "article",
+  });
 }
 
 export default async function CaseStudyPage({ params }: PageProps<"/work/[slug]">) {
@@ -43,6 +50,17 @@ export default async function CaseStudyPage({ params }: PageProps<"/work/[slug]"
 
   return (
     <article aria-labelledby={titleId}>
+      <JsonLd
+        data={caseStudyJsonLd({
+          siteUrl: publicEnv.NEXT_PUBLIC_SITE_URL,
+          slug: project.slug,
+          title: project.title,
+          description: project.seoDescription,
+          start: project.period?.start,
+          stack: project.stack,
+          repo: project.links?.repo,
+        })}
+      />
       <Container>
         <CaseStudyHeader titleId={titleId} {...project} />
         <div className="py-12 md:py-16">

@@ -12,6 +12,8 @@ export const projects = [
     category: "Team project",
     period: { start: "2024-11", end: "2025-01" },
     status: "completed",
+    seoDescription:
+      "MuseTrail: a SvelteKit app that turns habits that cut digital CO2 into art. Built by a team of five led by Samuele Poma, it won a Dragons' Den grand prize.",
     tagline: "A web app that promotes sustainable digital habits among young adults.",
     role: "Team lead: design, user interviews, frontend, backend and testing",
     team: 5,
@@ -44,6 +46,8 @@ export const projects = [
     category: "Research",
     period: { start: "2026-09" },
     status: "in-progress",
+    seoDescription:
+      "Case study: a local AI knowledge assistant for Progmatic that will answer questions about the company database and draft emails, code and quotations.",
     tagline:
       "A local AI chatbot for Progmatic that will answer questions about the company database, find information, write emails and code, and prepare quotations and budget calculations.",
     role: "Researcher",
@@ -67,6 +71,8 @@ export const projects = [
     category: "Web platform",
     period: { start: "2026-06", end: "2026-06" },
     status: "completed",
+    seoDescription:
+      "Case study: an online platform built with the Delta Climate Center to promote and organise environmental events for young people in Zeeland.",
     tagline:
       "An online platform, built with the Delta Climate Center, to promote and organise events on environmental themes for young people in Zeeland.",
     stack: [],
@@ -81,6 +87,8 @@ export const projects = [
     category: "Internship",
     period: { start: "2024-09", end: "2025-01" },
     status: "completed",
+    seoDescription:
+      "Case study: a GPS monitoring dashboard in Go for Conneqtech, tracking cars and bicycles, taken from requirements to delivery during an internship.",
     tagline:
       "A dashboard to track cars and bicycles and see their GPS data and vehicle details in one place. Built end to end during my internship.",
     role: "Software engineering intern",
@@ -101,6 +109,8 @@ export const projects = [
     organisation: "Stedin",
     category: "University project",
     status: "completed",
+    seoDescription:
+      "Case study: a Laravel, PHP and MySQL web app for Stedin that visualises power usage and charts transformer voltages across regions of the Netherlands.",
     tagline:
       "Software for visualising power usage and monitoring faulty transformers across regions of the Netherlands.",
     role: "Team member",
@@ -120,6 +130,8 @@ export const projects = [
     category: "Java",
     period: { start: "2024-12", end: "2025-01" },
     status: "completed",
+    seoDescription:
+      "Case study: a console chess game in Java for a Software Design exam, built on six design patterns, with Strategy, Prototype and Decorator by Samuele.",
     tagline: "A text-based chess game built with object-oriented programming and design patterns.",
     role: "Developer: the Strategy, Prototype and Decorator patterns",
     team: 2,
@@ -139,6 +151,8 @@ export const projects = [
     title: "Tower defense game",
     category: "TypeScript",
     status: "completed",
+    seoDescription:
+      "Case study: a tower defense game built with object-oriented TypeScript by Samuele Poma, a software engineer based in Middelburg, the Netherlands.",
     tagline: "A tower defense game built with object-oriented TypeScript.",
     stack: ["TypeScript", "OOP"],
     card: { type: "screenshot", slot: "IMG-TOWERDEFENSE-01" },
