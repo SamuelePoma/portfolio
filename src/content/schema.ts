@@ -25,6 +25,8 @@ export const periodSchema = z
     message: "A period cannot end before it starts",
   });
 
+const httpsUrl = z.url({ protocol: /^https$/ });
+
 const mediaSlotIds = mediaSlots.map((slot) => slot.id) as [
   (typeof mediaSlots)[number]["id"],
   ...(typeof mediaSlots)[number]["id"][],
@@ -58,11 +60,33 @@ export const projectSchema = z.object({
   highlight: visibleText.optional(),
   featured: z.boolean().default(false),
   card: cardVisualSchema,
+
+  // Case study (DESIGN.md §9.3). Every section is optional: a missing fact means a
+  // shorter page, never a guessed one.
+  /** The problem solved, one paragraph. */
+  problem: visibleText.optional(),
+  /** What was done, one to three paragraphs. */
+  approach: z.array(visibleText).min(1).max(3).optional(),
+  /** A visual for the Approach section. */
+  approachVisual: z.enum(["research-map"]).optional(),
+  /** The result, one paragraph. */
+  outcome: visibleText.optional(),
+  /** Real distinctions, listed under the outcome. */
+  highlights: z.array(visibleText).min(1).optional(),
+  /** What Samuele learned, in his words. */
+  learnings: z.array(visibleText).min(1).optional(),
+  /** Only links that are public. */
+  links: z.object({ repo: httpsUrl.optional(), demo: httpsUrl.optional() }).optional(),
+
   media: z.object({
+    /** The case study's main visual; also the card's screenshot when it has one. */
     hero: mediaSlotId.optional(),
+    /** The photo under the featured band. */
     secondary: mediaSlotId.optional(),
-    /** Phone screens for the featured band, front first. */
+    /** Phone screens, front first: the featured band and the case-study hero. */
     screens: z.array(mediaSlotId).min(2).max(2).optional(),
+    /** Extra images at the end of the case study; missing files are skipped. */
+    gallery: z.array(mediaSlotId).min(1).max(3).optional(),
   }),
 });
 
@@ -77,8 +101,6 @@ export const skillGroupSchema = z.object({
   label: visibleText,
   items: z.array(visibleText).min(1),
 });
-
-const httpsUrl = z.url({ protocol: /^https$/ });
 
 export const siteSchema = z.object({
   name: visibleText,

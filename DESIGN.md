@@ -340,15 +340,14 @@ Card content (facts from the résumé and from Samuele; the copy lives in `src/c
 Why not the earlier wording: "live" GPS data, "detecting" transformers, a `RAG` tag and "chess engine" all claimed more than the résumé says.
 
 ### 9.3 Case-study view (one per project)
-Opened from the cards (§7.3.5). The structure is always the same:
-1. Back link (`← All work`), eyebrow with the dates, `display` title, `lead` one-liner.
-2. A meta row of 4 columns in mono: **Role** · **Team** · **Timeline** · **Stack**.
-3. Hero media (the shared element from the card).
-4. **Problem**: 1 paragraph.
-5. **Approach**: 2–3 paragraphs, plus a diagram or secondary media.
-6. **Outcome**: 1 paragraph plus highlights (for example the award).
-7. Gallery: 1–3 extra images (slots in §10).
-8. A next-project link at the bottom (a large `h1`, with an arrow that nudges on hover).
+Opened from the cards (§7.3.5), at `/work/[slug]`. The structure is always the same, and **every part is optional**: a fact that isn't confirmed yet means a shorter page, never a guessed one.
+1. Breadcrumbs (`HOME / WORK / MUSETRAIL`, mono, 44px hit areas); `Work` leads back to `/#work`. They replace a separate back link.
+2. The card's context line (`TEAM PROJECT · 2024-25`, plus the `IN PROGRESS` status where it applies), the `display` title (the page's only `h1`) and the `lead` one-liner.
+3. A meta row in mono between hairlines: **Role** · **Team** · **Timeline** (long form, `Nov 2024 to Jan 2025`) · **Stack**. Unknown values are left out, not shown empty.
+4. Hero media (the shared element from the card): the browser frame at the slot's ratio, the two phones on a sunken tray for MuseTrail, the full terminal transcript on a sunken tray for ChessGame. Preloaded: it is the page's LCP.
+5. Sections in a 4 + 8 column grid (`h2` on the left, `lead`-size prose on the right, at most 60ch), separated by hairlines: **Problem** (1 paragraph), **Approach** (1–3 paragraphs, plus the research map for Progmatic), **Outcome** (1 paragraph, then highlights as accent mono labels), **What I learned** and **Links** (only public repos and demos).
+6. Gallery: 1–3 extra images in the right 8 columns, each caption in the left 4, level with the image's bottom edge. Images whose file is missing are skipped (an optional image never gets a placeholder).
+7. A next-project link at the bottom (mono `NEXT PROJECT`, then the title at `h1` size with an arrow that nudges on hover), looping from the last project back to the first.
 
 ### 9.4 Stack
 Section opener: `display`, *"Tools I reach for."*

@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/Button";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import { MediaSlot } from "@/components/ui/MediaSlot";
 import { MonoLabel } from "@/components/ui/MonoLabel";
-import { PhoneFrame } from "@/components/ui/PhoneFrame";
 import { TagList } from "@/components/ui/Tag";
+import { PhonePair } from "@/components/visuals/PhonePair";
 import { getMediaSlot, type MediaSlotId } from "@/content/media";
 import { formatPeriod } from "@/lib/format/period";
 
@@ -21,25 +21,6 @@ interface FeaturedProjectProps {
     secondary?: MediaSlotId;
     screens?: readonly MediaSlotId[];
   };
-}
-
-/** Two phones side by side, the second set back and lower, like a product shot. */
-function PhoneStage({ front, back }: Readonly<{ front: MediaSlotId; back: MediaSlotId }>) {
-  const sizes = "(min-width: 640px) 260px, 40vw";
-  return (
-    <div className="relative mx-auto aspect-square w-full max-w-xl sm:aspect-[5/4] lg:col-span-7">
-      <div className="absolute top-[8%] left-1/2 h-[88%] -translate-x-[8%]">
-        <PhoneFrame className="h-full">
-          <MediaSlot id={back} sizes={sizes} position="top" />
-        </PhoneFrame>
-      </div>
-      <div className="absolute top-0 left-1/2 h-[94%] -translate-x-[92%]">
-        <PhoneFrame className="h-full">
-          <MediaSlot id={front} sizes={sizes} position="top" />
-        </PhoneFrame>
-      </div>
-    </div>
-  );
 }
 
 /**
@@ -105,7 +86,7 @@ export function FeaturedProject({
         </div>
 
         {front && back ? (
-          <PhoneStage front={front} back={back} />
+          <PhonePair front={front} back={back} className="mx-auto max-w-xl lg:col-span-7" />
         ) : (
           media.hero && (
             <div className="lg:col-span-7">

@@ -1,9 +1,9 @@
 import { formatPeriod } from "./period";
 
 interface ProjectMetaInput {
-  organisation?: string;
+  organisation?: string | undefined;
   category: string;
-  period?: { start: string; end?: string };
+  period?: { start: string; end?: string | undefined } | undefined;
 }
 
 /**

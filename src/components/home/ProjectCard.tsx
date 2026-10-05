@@ -2,6 +2,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 import { MonoLabel } from "@/components/ui/MonoLabel";
+import { StatusLabel } from "@/components/ui/StatusLabel";
 import { TagList } from "@/components/ui/Tag";
 import type { CardVisual } from "@/content/schema";
 import { projectMeta } from "@/lib/format/project-meta";
@@ -38,11 +39,7 @@ export function ProjectCard({
   card,
   className,
 }: Readonly<ProjectCardProps>) {
-  const meta = projectMeta({
-    category,
-    ...(organisation === undefined ? {} : { organisation }),
-    ...(period === undefined ? {} : { period }),
-  });
+  const meta = projectMeta({ category, organisation, period });
 
   return (
     <article
@@ -67,12 +64,7 @@ export function ProjectCard({
           <div className="flex items-start justify-between gap-4">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
               <MonoLabel as="p">{meta}</MonoLabel>
-              {status === "in-progress" && (
-                <MonoLabel as="p" tone="accent" className="inline-flex items-center gap-2">
-                  <span aria-hidden className="size-1.5 rounded-full bg-accent" />
-                  <span>In progress</span>
-                </MonoLabel>
-              )}
+              {status === "in-progress" && <StatusLabel />}
             </div>
             <ArrowRight
               aria-hidden
