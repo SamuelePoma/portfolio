@@ -51,7 +51,7 @@ describe("ProjectCard", () => {
   it("describes the diagram for screen readers", () => {
     render(<ProjectCard {...base} />);
     expect(
-      screen.getByRole("img", { name: /Research areas of the knowledge assistant/ }),
+      screen.getByRole("img", { name: /What the knowledge assistant is built around/ }),
     ).toBeInTheDocument();
   });
 });

@@ -44,7 +44,7 @@ export const projects = [
     slug: "progmatic-ai-knowledge-assistant",
     title: "AI knowledge assistant",
     organisation: "Progmatic",
-    category: "Research",
+    category: "Team project",
     period: { start: "2026-09" },
     status: "in-progress",
     seoDescription:
@@ -58,9 +58,9 @@ export const projects = [
     problem:
       "Progmatic's information is spread across systems, documents, projects and customers. Finding something often means knowing where it is stored, or which words were used when it was filed.",
     approach: [
-      'The idea, called IO: an employee asks in everyday language, such as "Which PLC did we use for this project?", and gets an answer based on Progmatic\'s own data, together with the sources it came from.',
-      "Rather than training a model on all that data, we are investigating retrieval-augmented generation (RAG): the system first searches Progmatic's knowledge for what is relevant, then hands it to a language model that writes the answer. The model runs internally, so company information never goes to a public AI service.",
-      "Through client meetings and requirements analysis, our team of five is researching document retrieval, FileMaker integration, access control and data confidentiality. The current step is a prototype on dummy Progmatic data, whose interface brings chat, files, search, email and FileMaker together.",
+      'IO works like this: an employee asks in everyday language, such as "Which PLC did we use for this project?", and gets an answer based on Progmatic\'s own data, together with the sources it came from.',
+      "Rather than training a model on all that data, IO uses retrieval-augmented generation (RAG): it first searches Progmatic's knowledge for what is relevant, then hands it to a language model that writes the answer. The model runs internally, so company information never goes to a public AI service.",
+      "After client meetings and requirements analysis, our team of five is building it around four pieces: document retrieval, FileMaker integration, access control and data confidentiality. It is developed and tested on dummy Progmatic data first, and its interface brings chat, files, search, email and FileMaker together.",
     ],
     approachVisuals: ["rag-flow", "research-map"],
     // Repository link: add it as `links: { repo: "https://github.com/..." }`.

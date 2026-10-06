@@ -19,7 +19,7 @@ export const site = {
     "I'm a software engineer in the final year of a BSc in ICT at HZ University of Applied Sciences. I like to own a problem from start to finish: understanding what people need, turning it into requirements, and delivering software that solves it.",
   about: [
     "I work mostly with Go, TypeScript, SvelteKit and React, and I use design patterns and domain-driven design to keep codebases easy to change.",
-    "Right now I'm researching a local AI assistant for Progmatic that answers questions from the company's own data, and building a veterinary practice information system in SvelteKit with my team.",
+    "Right now I'm building two things with my teams: IO, a local AI assistant for Progmatic that answers questions from the company's own data, and a veterinary practice information system in SvelteKit.",
   ],
   languages: "Italian (native), English (C1)",
 } as const satisfies Site;

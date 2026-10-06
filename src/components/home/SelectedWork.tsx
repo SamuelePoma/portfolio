@@ -42,7 +42,7 @@ export function SelectedWork() {
         </h2>
         <p className="max-w-[40ch] text-lead text-ink-secondary lg:col-span-5 lg:pb-3">
           {String(projects.length)} projects, from a team app that won a Dragons&apos; Den grand
-          prize to research on a local AI assistant.
+          prize to the local AI assistant we&apos;re building for Progmatic.
         </p>
       </Container>
 

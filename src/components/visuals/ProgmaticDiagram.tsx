@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils/cn";
 
-/** The four areas the research investigates, straight from the project brief. */
+/** The four pieces the assistant is built around, straight from the project brief. */
 const areas = [
   "Document retrieval",
   "FileMaker integration",
@@ -28,8 +28,8 @@ function Node({ children, emphasis = false }: Readonly<{ children: string; empha
 }
 
 /**
- * Research map for the AI knowledge assistant (DESIGN.md §8.9). It shows the open
- * questions being researched, not an architecture, because none has been chosen yet.
+ * What the AI knowledge assistant is built around (DESIGN.md §8.9): the four pieces of
+ * the solution, around the assistant itself. Not a component diagram of the code.
  * Lines are drawn behind the nodes with percentage coordinates, so they follow the
  * grid at any width.
  */
@@ -39,7 +39,7 @@ export function ProgmaticDiagram({ className }: Readonly<ProgmaticDiagramProps>)
   return (
     <div
       role="img"
-      aria-label={`Research areas of the knowledge assistant: ${areas.join(", ")}`}
+      aria-label={`What the knowledge assistant is built around: ${areas.join(", ")}`}
       className={cn("relative isolate w-full max-w-md", className)}
     >
       <svg aria-hidden className="absolute inset-0 -z-10 size-full overflow-visible">
