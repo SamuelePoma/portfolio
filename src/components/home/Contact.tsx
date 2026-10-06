@@ -1,4 +1,3 @@
-import { ContactForm } from "@/components/contact/ContactForm";
 import { CopyEmail } from "@/components/contact/CopyEmail";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
@@ -6,41 +5,48 @@ import { Glow } from "@/components/motion/Glow";
 import { ScrollWords } from "@/components/motion/ScrollWords";
 import { Button } from "@/components/ui/Button";
 import { site } from "@/content/site";
-import { turnstileSiteKey } from "@/lib/env/public";
 
-/** Dark band that flows into the footer (DESIGN.md §9.6). No phone number, ever. */
+/**
+ * The finale (DESIGN.md §9.6): a dark band that flows into the footer, with the email
+ * as the one thing to do. No form, so nothing to fill in and nothing stored; no phone
+ * number, ever.
+ */
 export function Contact() {
   return (
     <Section
       id="contact"
       tone="night"
       aria-labelledby="contact-title"
-      className="relative isolate overflow-hidden"
+      // A full screen for the last word: the page ends on the horizon, not mid-band.
+      className="relative isolate flex min-h-svh flex-col justify-center overflow-hidden"
     >
       {/* The opening's light, closing the page. */}
-      <Glow className="top-auto h-[140%] opacity-60" />
-      <Container className="grid grid-cols-1 gap-16 lg:grid-cols-12 lg:gap-12">
-        <div className="flex flex-col gap-10 lg:col-span-6">
-          <h2 id="contact-title" className="text-display">
-            <ScrollWords text="Let's talk." />
-          </h2>
-          <CopyEmail email={site.email} />
-          <ul className="flex flex-wrap gap-3">
-            <li>
-              <Button variant="secondary" href={site.github} icon="arrow-up-right">
-                GitHub
-              </Button>
-            </li>
-            <li>
-              <Button variant="secondary" href={site.linkedin} icon="arrow-up-right">
-                LinkedIn
-              </Button>
-            </li>
-          </ul>
-        </div>
-        <div className="lg:col-span-6 lg:col-start-7">
-          <ContactForm email={site.email} turnstileSiteKey={turnstileSiteKey} />
-        </div>
+      <Glow variant="horizon" />
+      <Container className="flex flex-col items-center text-center">
+        <h2 id="contact-title" className="text-display-xl">
+          <ScrollWords text="Let's talk." />
+        </h2>
+        <p className="mt-6 max-w-[36ch] text-lead text-ink-secondary">
+          Have a project, a question or an idea? Email is the best way to reach me.
+        </p>
+        <CopyEmail email={site.email} size="display" className="mt-12 md:mt-16" />
+        <ul className="mt-12 flex flex-wrap justify-center gap-3">
+          <li>
+            <Button href={`mailto:${site.email}`} icon="arrow-up-right">
+              Write an email
+            </Button>
+          </li>
+          <li>
+            <Button variant="secondary" href={site.github} icon="arrow-up-right">
+              GitHub
+            </Button>
+          </li>
+          <li>
+            <Button variant="secondary" href={site.linkedin} icon="arrow-up-right">
+              LinkedIn
+            </Button>
+          </li>
+        </ul>
       </Container>
     </Section>
   );

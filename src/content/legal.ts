@@ -10,8 +10,8 @@ export const privacyPolicy = {
   slug: "privacy",
   title: "Privacy policy",
   seoDescription:
-    "How this site handles personal data: the contact form, server logs, rate limiting, spam protection and cookieless analytics. No cookies are used.",
-  updated: "2026-10-05",
+    "How this site handles personal data: the emails you send me, the server logs and cookieless analytics. No cookies are set, so there is no cookie banner.",
+  updated: "2026-10-06",
   intro:
     "This site is a portfolio. It collects as little personal data as it can, sets no cookies and shows no banner, because there is nothing to consent to. This page explains what happens to the data it does handle.",
   sections: [
@@ -27,10 +27,8 @@ export const privacyPolicy = {
       title: "What data is collected, and why",
       paragraphs: ["Only what each feature needs, and only for that purpose:"],
       items: [
-        "Contact form: your name, email address and message, so I can reply. The legal basis is taking steps at your request (Art. 6(1)(b) GDPR) and my legitimate interest in answering messages (Art. 6(1)(f)).",
+        "Email: if you write to me, I receive your email address and your message, and use them only to reply. The legal basis is taking steps at your request (Art. 6(1)(b) GDPR) and my legitimate interest in answering messages (Art. 6(1)(f)). The site itself has no form and stores nothing you type.",
         "Server logs: the hosting provider records technical data such as your IP address, browser and the time of each request, to keep the site secure and running (legitimate interest).",
-        "Rate limiting: to stop the contact form from being flooded, a salted SHA-256 hash of your IP address is stored for at most 24 hours. The hash can't be turned back into your IP address.",
-        "Spam protection: Cloudflare Turnstile checks that the contact form is used by a person. It loads only when you scroll near the form, and processes technical data about your browser and connection (legitimate interest in preventing spam).",
         "Analytics: Umami counts page views, referrers, device types and countries in aggregate. It uses no cookies, stores no personal data and respects Do Not Track.",
         "Performance monitoring: Vercel Speed Insights measures page speed in aggregate, without cookies.",
       ],
@@ -39,8 +37,7 @@ export const privacyPolicy = {
       id: "retention",
       title: "How long it is kept",
       items: [
-        "Contact messages: deleted 12 months after our conversation ends.",
-        "Rate-limit hashes: at most 24 hours.",
+        "Emails: deleted 12 months after our conversation ends.",
         "Server logs: as long as the hosting provider's retention policy allows, then deleted.",
         "Analytics: only aggregated figures are kept; they can't identify you.",
       ],
@@ -57,16 +54,8 @@ export const privacyPolicy = {
           href: "https://vercel.com/legal/privacy-policy",
         },
         {
-          label: "Resend (delivering contact messages by email)",
-          href: "https://resend.com/legal/privacy-policy",
-        },
-        {
-          label: "Upstash (rate limiting, EU region)",
-          href: "https://upstash.com/trust/privacy.pdf",
-        },
-        {
-          label: "Cloudflare Turnstile (spam protection)",
-          href: "https://www.cloudflare.com/turnstile-privacy-policy/",
+          label: "Google (Gmail, where your emails arrive)",
+          href: "https://policies.google.com/privacy",
         },
         { label: "Umami (analytics, EU region)", href: "https://umami.is/privacy" },
       ],
@@ -96,7 +85,7 @@ export const privacyPolicy = {
       id: "cookies",
       title: "Cookies",
       paragraphs: [
-        "This site does not use cookies, and it does not use your browser's storage to track you. Cloudflare Turnstile runs in a frame served by Cloudflare, under Cloudflare's own policy linked above.",
+        "This site does not use cookies, and it does not use your browser's storage to track you.",
         'If a tool that sets non-essential cookies or tracks visitors is ever added, it will first come with a consent manager: a separate opt-in for each category, a "reject all" button as prominent as "accept all", and a permanent link to change your choice.',
       ],
     },
@@ -124,7 +113,7 @@ export const legalNotice = {
   title: "Legal notice",
   seoDescription:
     "Legal notice for this site: who runs it, the terms of use, copyright, the MIT licence of the source code and credits for the third-party software it uses.",
-  updated: "2026-10-05",
+  updated: "2026-10-06",
   intro:
     "The practical details: who runs this site, what you may do with it and whose work it builds on.",
   sections: [
@@ -171,7 +160,7 @@ export const legalNotice = {
         "Tailwind CSS, MIT licence",
         "Lucide icons, ISC licence",
         "Simple Icons (the GitHub logo), CC0 1.0",
-        "Zod, Sonner, Resend and Upstash client libraries, MIT licence",
+        "Motion, Zod and Sonner, MIT licence",
       ],
     },
   ],

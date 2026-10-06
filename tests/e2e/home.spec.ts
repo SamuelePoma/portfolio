@@ -20,26 +20,6 @@ async function scrollPast(page: Page, selector: string, offset: number) {
   );
 }
 
-/**
- * Stands in for Cloudflare's Turnstile script: the widget "passes" at once with a fixed
- * token, so the tests never depend on a third party being reachable.
- */
-async function fakeTurnstile(page: Page) {
-  await page.route("https://challenges.cloudflare.com/turnstile/v0/api.js*", (route) =>
-    route.fulfill({
-      contentType: "text/javascript",
-      body: `window.turnstile = {
-        render: function (el, options) {
-          setTimeout(function () { options.callback("e2e-token"); el.setAttribute("data-turnstile-ready", ""); }, 0);
-          return "widget";
-        },
-        reset: function () {},
-        remove: function () {},
-      };`,
-    }),
-  );
-}
-
 /** Phone-like: 8+ digits with at most one separator between them (a chess board is not). */
 const PHONE_PATTERN = /\+?\d(?:[\s.-]?\d){7,}/;
 
@@ -156,23 +136,19 @@ test.describe("home page", () => {
   });
 });
 
-test.describe("contact form", () => {
-  test.beforeEach(async ({ page }) => {
-    await fakeTurnstile(page);
+test.describe("contact", () => {
+  test("offers email and profiles, and no form", async ({ page }) => {
     await page.goto("/#contact");
-    // The widget loads only near the form. WebKit doesn't always finish the jump to
-    // the hash before the page settles, so bring the form into view explicitly.
-    await page.getByRole("form", { name: "Contact form" }).scrollIntoViewIfNeeded();
-    await page.locator("[data-turnstile-ready]").waitFor({ state: "attached" });
-  });
-
-  test("explains every problem and stays accessible in the error state", async ({ page }) => {
-    await page.getByRole("button", { name: "Send message" }).click();
-
-    await expect(page.getByText("Please enter your name.")).toBeVisible();
-    await expect(page.getByText("Please enter your email address.")).toBeVisible();
-    await expect(page.getByText("Please write a message.")).toBeVisible();
-    await expect(page.getByLabel("Name")).toBeFocused();
+    const contact = page.locator("#contact");
+    await expect(contact.locator("form, input, textarea")).toHaveCount(0);
+    await expect(
+      contact.getByRole("link", { name: `${EMAIL} (copy to clipboard)` }),
+    ).toHaveAttribute("href", `mailto:${EMAIL}`);
+    await expect(contact.getByRole("link", { name: /GitHub/ })).toHaveAttribute(
+      "href",
+      "https://github.com/SamuelePoma",
+    );
+    await expect(contact.getByRole("link", { name: /LinkedIn/ })).toBeVisible();
 
     const results = await new AxeBuilder({ page })
       .include("#contact")
@@ -181,45 +157,9 @@ test.describe("contact form", () => {
     expect(results.violations).toEqual([]);
   });
 
-  test("confirms when the message is sent", async ({ page }) => {
-    let payload: unknown;
-    await page.route("**/api/contact", async (route) => {
-      payload = route.request().postDataJSON();
-      await route.fulfill({ json: { ok: true } });
-    });
-
-    await page.getByLabel("Name").fill("Ada Lovelace");
-    await page.getByLabel("Email").fill("ada@example.com");
-    await page.getByLabel("Message").fill("I'd like to talk about a project.");
-    await page.getByRole("button", { name: "Send message" }).click();
-
-    await expect(page.getByRole("heading", { name: "Message sent." })).toBeVisible();
-    expect(payload).toEqual({
-      name: "Ada Lovelace",
-      email: "ada@example.com",
-      message: "I'd like to talk about a project.",
-      turnstileToken: "e2e-token",
-      company: "",
-      elapsedMs: expect.any(Number),
-    });
-  });
-
-  test("offers email when sending fails", async ({ page }) => {
-    await page.route("**/api/contact", (route) =>
-      route.fulfill({ status: 500, json: { ok: false, error: "server_error" } }),
-    );
-
-    await page.getByLabel("Name").fill("Ada Lovelace");
-    await page.getByLabel("Email").fill("ada@example.com");
-    await page.getByLabel("Message").fill("I'd like to talk about a project.");
-    await page.getByRole("button", { name: "Send message" }).click();
-
-    const alert = page.getByRole("alert").filter({ hasText: "couldn't be sent" });
-    await expect(alert).toBeVisible();
-    await expect(alert.getByRole("link", { name: EMAIL })).toHaveAttribute(
-      "href",
-      `mailto:${EMAIL}`,
-    );
+  test("has no form endpoint", async ({ request }) => {
+    const response = await request.post("/api/contact", { data: {} });
+    expect(response.status()).toBe(404);
   });
 });
 
@@ -234,30 +174,5 @@ test.describe("copy email", () => {
 
     await expect(page.getByText("Email copied")).toBeVisible();
     expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(EMAIL);
-  });
-});
-
-test.describe("contact API", () => {
-  test("only accepts POST", async ({ request }) => {
-    const response = await request.get("/api/contact");
-    expect(response.status()).toBe(405);
-  });
-
-  test("tells a visitor who is rate limited to try later", async ({ page }) => {
-    await fakeTurnstile(page);
-    await page.route("**/api/contact", (route) =>
-      route.fulfill({ status: 429, json: { ok: false, error: "rate_limited" } }),
-    );
-    await page.goto("/#contact");
-    await page.getByRole("form", { name: "Contact form" }).scrollIntoViewIfNeeded();
-    await page.locator("[data-turnstile-ready]").waitFor({ state: "attached" });
-    await page.getByLabel("Name").fill("Ada Lovelace");
-    await page.getByLabel("Email").fill("ada@example.com");
-    await page.getByLabel("Message").fill("I'd like to talk about a project.");
-    await page.getByRole("button", { name: "Send message" }).click();
-
-    await expect(
-      page.getByRole("alert").filter({ hasText: "several messages in a short time" }),
-    ).toBeVisible();
   });
 });

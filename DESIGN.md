@@ -77,7 +77,7 @@
 
 - Most of the page is `--canvas` with `--ink`. Dark bands (`--night`) are the stages of the launch: the opening scene, the featured project (MuseTrail) and the contact/footer. Light sections sit between them, like Apple's alternating product pages.
 - `--ink-tertiary` is for metadata (dates, file labels) at small sizes. Never for sentences.
-- The mesh colours appear as **light**: on the dark opening and on the contact band they glow (soft radial blobs, 0.3–0.6 opacity), drift slowly and lean towards the pointer. They never sit on buttons, text or cards, and never on a light section except as the faint 404 mesh.
+- The mesh colours appear as **light** (since 2026-10-06, a **horizon**): on the dark opening and on the contact band they rise behind the rim of a dark planet, like first light, with a crisp lit rim and a faint grain so the gradients never band. They drift slowly; on the opening they lean towards the pointer. All gradients, no blur filters. They never sit on buttons or cards, and never on a light section except as the faint 404 mesh.
 - No other colors. Project screenshots bring their own color, and that is enough.
 - All text meets WCAG AA (4.5:1 body, 3:1 large text). Metadata is text too: the small mono labels need 4.5:1, which is why `--ink-tertiary` is `#6b6b6b` and not a lighter gray.
 
@@ -200,7 +200,8 @@ Springs for interactive things: `{ type: "spring", duration: 0.5, bounce: 0.15 }
 ### 7.2 Rules
 
 - Animate only `transform`, `opacity`, `filter` and `clip-path`. Never layout properties.
-- Scroll-linked scenes follow the scroll through a spring (`SCROLL_SPRING`: stiffness 140, damping 30, mass 0.35, no overshoot), so a mouse wheel's steps become a glide. The page itself scrolls natively; no scroll-jacking.
+- **Wheel smoothing (2026-10-06, Samuele: "lo scorrimento non è fluido").** A mouse wheel moves the page in 100px steps; Lenis turns them into one glide, so scenes play like a film. Only the wheel, and only on devices with a mouse (`hover: hover` and `pointer: fine`): touch, keyboard, scrollbar and anchor links stay native, a click on a link to another page stops the glide, and with reduced motion Lenis never loads. It loads when the page is idle.
+- Scroll-linked scenes follow the scroll through a critically damped spring (`SCROLL_SPRING`: stiffness 140, damping 14.5, mass 0.35): about 50ms behind, enough to round off a keyboard jump, never floating behind the page.
 - UI responses (hover, press, menu) finish in **≤ 300ms**. Scenes may take as long as their scroll length.
 - Hover effects only for a fine pointer.
 - **Reduced motion:** every scene renders its final state, unpinned, as an ordinary section; the glow stops; the project rail becomes a row you scroll sideways yourself. A Playwright project checks this.
@@ -210,13 +211,12 @@ Springs for interactive things: `{ type: "spring", duration: 0.5, bounce: 0.15 }
 
 ### 7.3 Scenes
 
-1. **Opening (dark).** The name stands in the coloured glow. The laptop has a camera in its bezel, a glare that slides across the glass as the lid opens, the screen's light spilling behind it and a contact shadow; its deck is a touch narrower than the lid so, in perspective, its front edge reads as wide as the screen. At the very end the laptop pushes in slightly and the scene dissolves into the light section that follows.
-    Scrolling sends it back (fades, shrinks, rises); a closed laptop rises from below, its lid opens on the hinge (−90° to 8°) and the screen wakes up on a real project (the Young DCC platform), captioned in mono. About 3.4 screens.
-2. **MuseTrail (dark).** Two phones (with side buttons, glass sheen and a floor shadow) swing round in 3D to face the visitor, the back one starting far behind so they never pass through each other, part to either side, and the four artworks of the *My Museum* screen float out of the screen to different depths around them. The text column fades in at the start. Then the pitch photo opens up from a smaller window as it scrolls into view (clip-path inset to full, image settling from 1.18 to 1).
+1. **Opening (dark).** The name, in brushed metal with one sweep of light as the page opens, stands over the horizon. Scrolling sends it back; a closed laptop rises from behind the horizon like a sunrise while the horizon sinks away, its lid opens on the hinge (−88° to 8°) and the screen wakes up on a real project (the Young DCC platform), captioned in mono. The laptop has a camera in its bezel, a glare that slides across the glass as the lid opens, the screen's light spilling behind it and a contact shadow; its deck is as wide as the lid at the hinge, like the real thing. Then the light work section slides up over it as a sheet with rounded top corners, and the laptop steps back into the dark. Four screens, the last one shared with the sheet.
+2. **MuseTrail (dark), a tile.** The band is a dark tile on the light page, inset from the edges with large rounded corners, like Apple's product tiles. Two phones (with side buttons, glass sheen and a floor shadow) swing round in 3D to face the visitor, the back one starting far behind so they never pass through each other, part to either side, and the four artworks of the *My Museum* screen float out of the screen to different depths around them. The text column fades in at the start. Then the pitch photo opens up from a smaller window as it scrolls into view (clip-path inset to full, image settling from 1.18 to 1).
 3. **Progmatic (light): exploded view.** The assistant's interface tilts into an isometric view, comes apart into four layers (workspace, sidebar, brief, header), each named in a legend that slides in as its layer lifts, then clicks back together.
-4. **More work: horizontal rail.** The section pins and scrolling slides the remaining project cards sideways. Cards lean towards the pointer (≤ 6°) with a soft light following it. Inside them, the Stedin chart draws itself left to right and the chess pawn plays b7 to b5.
+4. **More work: horizontal rail.** The section pins and scrolling slides the remaining project cards sideways. Cards lean towards the pointer (≤ 6°) with a soft light following it. Inside them, the Stedin chart draws itself left to right and the chess pawn plays b7 to b5. Projects without a screenshot yet get a drawn stand-in instead of a placeholder (§10): a city map whose tracked route draws itself (Conneqtech), and the ability scores of a character sheet (D&D).
 5. **Headings and lists.** Section openers rise into focus word by word as they scroll into place. Stack groups and timeline rows rise in, staggered, with CSS scroll-driven animations (no JavaScript; browsers without support just show them). Card screenshots lean in (1.04) on hover.
-6. **Finale (dark).** *Let's talk.* in the same glow as the opening.
+6. **Finale (dark).** *Let's talk.* over the same horizon as the opening, closing the page.
 7. **Copy email.** Unchanged: a toast confirms the copy.
 
 ### 7.4 Micro-interactions
@@ -282,16 +282,8 @@ For the background/experience list. A 3-column row: mono date (`2024-25`) · rol
 ### 8.11 Toast
 Bottom center, `--ink` background, white 14px text, `radius-pill`, `--shadow-card-hover`. Enters from `translateY(16px) opacity 0`, 300ms `--ease-drawer`, and auto-dismisses after 2s.
 
-### 8.12 Contact form (on the dark band)
-- Fields: **Name**, **Email**, **Message** (textarea, 5 rows). All are required, with visible `<label>`s above the inputs (never placeholder-only labels).
-- Inputs: `--night-surface` background, `--night-hairline` ring, `radius-md`, 44px minimum height, 16px text (this prevents iOS zoom). Focus: a 2px `--accent-night` ring.
-- Errors: 13px text in `#ff6b6b` (the only non-token color, used for errors only) under the field, linked with `aria-describedby`, and the icon `⚠` in mono. Validate on blur and on submit, never on every keystroke.
-- A character counter on Message in mono `--night-ink-secondary` (`0 / 2000`).
-- Privacy note under the button, 13px: *"Your message is only used to reply to you. See the privacy policy."*
-- Submit: the primary inverted pill `Send message →`. While sending it shows a small spinner and the label `Sending…`, and is disabled.
-- Success: the form is replaced (a 300ms crossfade) by a check icon, *"Message sent. I'll get back to you soon."*, and a `Send another` link. Failure: an inline alert above the button with a friendly message and a suggestion to use email instead. The message says what happened when the visitor can act on it: *"You've sent several messages in a short time. Please try again later."* (rate limited), *"The spam check didn't go through. Please try again."* (Turnstile), otherwise *"Your message couldn't be sent. Please try again."*
-- The anti-spam widget (Turnstile) is rendered in its compact form, dark theme, under the Message field, in a box that reserves its 140px height so nothing shifts when it loads. If Send is pressed before the check has passed, a polite note under it says so instead of sending. If the script can't load (a content blocker), a 13px note says so.
-- A hidden honeypot field (`company`) sits off-screen, out of the tab order and hidden from assistive technology.
+### 8.12 Contact form (removed 2026-10-06)
+Samuele chose email only: no form, so there is nothing to fill in, nothing stored, and no mail service, rate limiter or captcha behind the site. The form, its API route and their tests are in the git history if it ever comes back.
 
 ---
 
@@ -351,7 +343,7 @@ Opened from the cards (§7.3.5), at `/work/[slug]`. The structure is always the 
 
 ### 9.4 Stack
 Section opener: `display`, *"Tools I reach for."*
-Four columns (2 on tablet, 1 on mobile), each a group with a mono label and a plain list:
+A **spec sheet** (two columns on desktop, one on mobile): each group has a mono label and a hairline list, every tool in `h2` type with, beside it, the projects whose stack lists it, linked to their case studies. Show, don't claim. The groups:
 - **Languages**: Go, TypeScript, JavaScript, Java, PHP, SQL
 - **Frameworks**: React, SvelteKit, Laravel, Tailwind CSS
 - **Tools**: Git, GitHub, Docker, MySQL
@@ -360,7 +352,7 @@ Four columns (2 on tablet, 1 on mobile), each a group with a mono label and a pl
 No logos wall, no progress bars.
 
 ### 9.5 About
-Section opener: `display`, *"About me."* Two columns: a short paragraph (3–4 sentences, first person, `lead` size) on the left, and a **timeline** (§8.10) on the right:
+Section opener: `display`, *"About me."* Then a **statement** in large type (two sentences: who Samuele is and how he works) whose words light up from tertiary to ink as it is read, with a CSS scroll-driven animation (the grey still meets AA; without support it is simply lit). Below it, two columns: short paragraphs (`lead`: the stack, and what he is working on now) on the left, and a **timeline** (§8.10) on the right:
 - `2023-27` · HZ University of Applied Sciences · BSc ICT, Software Engineering
 - `2024-25` · Conneqtech · Software engineering intern
 - `2020-22` · Rondinella & Partners · Web development & marketing
@@ -370,10 +362,10 @@ Below the timeline: a secondary button `Résumé (PDF) ↓` that downloads `/cv/
 Optional portrait: `IMG-PORTRAIT`, 4:5, grayscale, `radius-lg`. Not shown until Samuele provides one (an optional image never gets a placeholder).
 
 ### 9.6 Contact (a `--night` band that merges into the footer)
-- `display`, `--night-ink`: *"Let's talk."*
-- Two columns on desktop, stacked on mobile:
-  - **Left:** the email at `h2` size: a real `mailto:` link that copies on click and confirms with a toast (§7.3.6); without JavaScript or clipboard access it opens the email app. On narrow screens it wraps after the `@`. Then secondary buttons: GitHub ↗ (`github.com/SamuelePoma`) · LinkedIn ↗ (`linkedin.com/in/samuele-poma-547120242`). The résumé stays in About, so no intent is repeated.
-  - **Right:** the contact form (§8.12). It posts to `/api/contact` (never a GET, so a message can't end up in a URL), uses uncontrolled inputs so text typed before hydration survives, and shows a `<noscript>` note offering email.
+- Centred, over the horizon (§3.2): `display-xl`, `--night-ink`: *"Let's talk."*, then one `lead` line: *"Have a project, a question or an idea? Email is the best way to reach me."*
+- The email as the headline act, up to 72px: a real `mailto:` link that copies on click and confirms with a toast (§7.3.6); without JavaScript or clipboard access it opens the email app. On narrow screens it wraps after the `@`.
+- Then three pills: `Write an email ↗` (primary, `mailto:`), GitHub ↗ (`github.com/SamuelePoma`) and LinkedIn ↗ (`linkedin.com/in/samuele-poma-547120242`). The résumé stays in About, so no intent is repeated.
+- **No form** (§8.12) and **no phone number.**
 - **No phone number.**
 
 ### 9.7 Footer (continues the `--night` band)
@@ -409,7 +401,7 @@ Put files in `/public/images/`. Format: **WebP or AVIF**, sRGB, long edge 2400px
 | `OG-IMAGE` | Social share preview | 1200×630 | Generated from the hero (name plus mesh), not a photo | Built in code |
 | `CV-PDF` | `/public/cv/samuele-poma-cv.pdf` | A4 PDF | The résumé **without the phone number** (it's public) | Samuele to export |
 
-ChessGame needs no images: the terminal block is the visual. The source files Samuele sent are kept untracked in `assets-src/`; the exported WebP files are what ships.
+ChessGame needs no images: the terminal block is the visual. Slots shown on the live site while their file is missing get a drawn stand-in instead of the placeholder (`illustration` in `src/content/media.ts`): `IMG-CONNEQTECH-01` a city map with a tracked route, `IMG-DND-01` the ability scores of a character sheet (the course's standard array). The real image replaces it as soon as the file exists. The source files Samuele sent are kept untracked in `assets-src/`; the exported WebP files are what ships.
 
 ---
 
@@ -438,7 +430,7 @@ ChessGame needs no images: the terminal block is the visual. The source files Sa
 - ❌ Add colors, gradients (outside the hero), glows or colored shadows.
 - ❌ Use weight 700+, all-caps headlines, or mono body text.
 - ❌ Use skill bars, percentages, logo walls, emoji, or stock illustrations.
-- ❌ Use typewriter hero text, cursor trails, particle backgrounds, or scroll-jacking.
+- ❌ Use typewriter hero text, cursor trails, particle backgrounds, or scroll-jacking (wheel smoothing, §7.2, is the one exception: it never changes where the page goes, only how it glides there).
 - ❌ Use bounce easing, `scale(0)` entrances, or animations over 300ms on UI that is used repeatedly.
 - ❌ Use single drop-shadows, or heavy blurred shadows.
 - ❌ Use CV language: "seeking", "hire me", "looking for an internship", phone numbers. (Listing a past internship as experience is fine.)

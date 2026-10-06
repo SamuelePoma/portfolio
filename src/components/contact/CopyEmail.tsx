@@ -4,9 +4,23 @@ import { Copy } from "lucide-react";
 import type { MouseEvent } from "react";
 
 import { showToast } from "@/components/ui/toast";
+import { cn } from "@/lib/utils/cn";
+
+const sizes = {
+  /** A sub-heading's size, for a column next to other content. */
+  h2: { text: "self-start text-h2", icon: 20, offset: "underline-offset-8" },
+  /** The contact finale: the address is the headline act. */
+  display: {
+    text: "self-center text-[clamp(1.75rem,5.4vw,4.5rem)] leading-[1.05] font-semibold tracking-[-0.035em]",
+    icon: 28,
+    offset: "underline-offset-[0.18em]",
+  },
+} as const;
 
 interface CopyEmailProps {
   email: string;
+  size?: keyof typeof sizes;
+  className?: string;
 }
 
 /**
@@ -14,7 +28,7 @@ interface CopyEmailProps {
  * toast. It is a real `mailto:` link, so without JavaScript or clipboard access it
  * simply opens the email app.
  */
-export function CopyEmail({ email }: Readonly<CopyEmailProps>) {
+export function CopyEmail({ email, size = "h2", className }: Readonly<CopyEmailProps>) {
   function handleClick(event: MouseEvent<HTMLAnchorElement>) {
     if (typeof navigator === "undefined" || !("clipboard" in navigator)) return;
     event.preventDefault();
@@ -31,21 +45,31 @@ export function CopyEmail({ email }: Readonly<CopyEmailProps>) {
   const at = email.indexOf("@");
   const local = email.slice(0, at);
   const domain = email.slice(at + 1);
+  const style = sizes[size];
 
   return (
     <a
       href={`mailto:${email}`}
       onClick={handleClick}
-      className="group inline-flex max-w-full items-center gap-3 self-start rounded-sm text-h2 [overflow-wrap:anywhere] text-ink"
+      className={cn(
+        "group inline-flex max-w-full items-center gap-3 rounded-sm [overflow-wrap:anywhere] text-ink",
+        style.text,
+        className,
+      )}
     >
-      <span className="underline decoration-hairline-strong decoration-1 underline-offset-8 transition-colors duration-200 ease-out group-hover:decoration-ink">
+      <span
+        className={cn(
+          "underline decoration-hairline-strong decoration-1 transition-colors duration-200 ease-out group-hover:decoration-ink",
+          style.offset,
+        )}
+      >
         {/* On narrow screens, wrap after the @ rather than mid-word. */}
         {local}@<wbr />
         {domain}
       </span>
       <Copy
         aria-hidden
-        size={20}
+        size={style.icon}
         strokeWidth={1.75}
         className="shrink-0 text-ink-tertiary transition-colors duration-200 ease-out group-hover:text-ink"
       />

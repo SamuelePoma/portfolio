@@ -15,9 +15,6 @@ concurrency:
 env:
   NEXT_TELEMETRY_DISABLED: 1
   NEXT_PUBLIC_SITE_URL: http://localhost:3000
-  # Cloudflare's public always-pass test key: the build renders the widget, and the
-  # end-to-end tests stand in for Cloudflare's script.
-  NEXT_PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
 
 # Runners are pinned (not ubuntu-latest) so an OS upgrade never breaks
 # Playwright's system dependencies unannounced; Dependabot bumps the actions.

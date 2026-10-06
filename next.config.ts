@@ -3,8 +3,8 @@ import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 
 import { assertProductionEnv } from "./src/lib/env/schema";
 
-// Fail the production build early if a secret is missing (or is a test key), instead
-// of failing at runtime when the first visitor submits the contact form.
+// Fail the production build early if the canonical URL is missing, instead of
+// publishing canonical links, a sitemap and social cards that point at localhost.
 if (process.env.VERCEL_ENV === "production") {
   assertProductionEnv(process.env);
 }
