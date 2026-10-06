@@ -5,15 +5,21 @@ import { TiltCard } from "@/components/motion/TiltCard";
 import { projects } from "@/content/projects";
 
 import { FeaturedProject } from "./FeaturedProject";
+import { LaptopFeature } from "./LaptopFeature";
 import { ProgmaticFeature } from "./ProgmaticFeature";
 import { ProjectCard } from "./ProjectCard";
 
 /** Projects with a scene of their own; the rest ride the rail. */
-const SCENE_SLUGS = new Set(["musetrail", "progmatic-ai-knowledge-assistant"]);
+const SCENE_SLUGS = new Set([
+  "young-dcc-platform",
+  "musetrail",
+  "progmatic-ai-knowledge-assistant",
+]);
 
 /**
- * The work, told as a product launch (DESIGN.md §9.2): MuseTrail's reveal, Progmatic's
- * exploded view, then every other project on a horizontal rail.
+ * The work, told as a product launch (DESIGN.md §9.2): the Young DCC platform opening
+ * on a laptop, MuseTrail's reveal, Progmatic's exploded view, then every other
+ * project on a horizontal rail.
  *
  * The section is a light sheet that slides up over the opening's last screen while
  * the laptop is still pinned behind it (`-mt-[100svh]`, the overlap HeroScene plans
@@ -40,6 +46,7 @@ export function SelectedWork() {
         </p>
       </Container>
 
+      <LaptopFeature />
       {featured && <FeaturedProject {...featured} />}
       <ProgmaticFeature />
 

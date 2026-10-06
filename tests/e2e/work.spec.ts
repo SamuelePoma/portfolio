@@ -57,7 +57,11 @@ test.describe("navigation through the work", () => {
     const [first, second] = projects;
     await page.goto("/");
 
-    await page.locator("#work").getByRole("link", { name: "Read the case study" }).first().click();
+    // The first project's scene, wherever it sits in the work.
+    await page
+      .locator(`#work a[href="/work/${first.slug}"]`)
+      .filter({ hasText: "Read the case study" })
+      .click();
     await expect(page).toHaveURL(`/work/${first.slug}`);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(first.title);
 
@@ -74,7 +78,8 @@ test.describe("navigation through the work", () => {
   });
 
   test("opens a rail card's case study from its title link", async ({ page }) => {
-    const [, , project] = projects;
+    // The first three projects have scenes of their own; the fourth rides the rail.
+    const [, , , project] = projects;
     await page.goto("/");
     await page.locator("#work").getByRole("link", { name: project.title, exact: true }).click();
     await expect(page).toHaveURL(`/work/${project.slug}`);

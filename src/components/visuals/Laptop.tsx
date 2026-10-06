@@ -13,6 +13,11 @@ interface LaptopProps {
   lid: MotionValue<number>;
   /** The screen: a `fill` image positioned against it. */
   screen: ReactNode;
+  /**
+   * What the laptop stands on. On a dark band the screen's light spills behind it; on
+   * a light section there is no glow (DESIGN.md §3.2) and the floor shadow is softer.
+   */
+  surface?: "night" | "light";
   className?: string;
 }
 
@@ -26,7 +31,7 @@ const keys =
  * As the lid opens the screen wakes up, a glare slides across the glass and its
  * light spills onto the space behind. No WebGL: just transforms.
  */
-export function Laptop({ lid, screen, className }: Readonly<LaptopProps>) {
+export function Laptop({ lid, screen, surface = "night", className }: Readonly<LaptopProps>) {
   const screenOff = useTransform(lid, [-60, -12], [1, 0]);
   const spill = useTransform(lid, [-40, 8], [0, 0.6]);
   const glare = useTransform(lid, [-70, 8], ["-80%", "70%"]);
@@ -35,11 +40,13 @@ export function Laptop({ lid, screen, className }: Readonly<LaptopProps>) {
     <div className={cn("relative [perspective:4400px]", className)}>
       {/* The screen's light on the space behind the laptop. A gradient already fades
           to nothing, so it needs no blur filter (a large one repaints on every frame). */}
-      <m.div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-[4%] top-[8%] -z-10 h-[70%] rounded-[50%] bg-[radial-gradient(closest-side,rgb(64_180_150/0.5),rgb(0_124_240/0.22)_55%,transparent)]"
-        style={{ opacity: spill }}
-      />
+      {surface === "night" && (
+        <m.div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-[4%] top-[8%] -z-10 h-[70%] rounded-[50%] bg-[radial-gradient(closest-side,rgb(64_180_150/0.5),rgb(0_124_240/0.22)_55%,transparent)]"
+          style={{ opacity: spill }}
+        />
+      )}
 
       {/* The camera: a little above the laptop, looking down at the deck. */}
       <div className="relative [transform:rotateX(-5deg)] preserve-3d">
@@ -87,7 +94,12 @@ export function Laptop({ lid, screen, className }: Readonly<LaptopProps>) {
       {/* Contact shadow on the floor: a soft gradient ellipse rather than a blurred one. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 -bottom-[20%] -z-10 h-[18%] bg-[radial-gradient(closest-side,rgb(0_0_0/0.7),rgb(0_0_0/0.35)_55%,transparent)]"
+        className={cn(
+          "pointer-events-none absolute inset-x-0 -bottom-[20%] -z-10 h-[18%]",
+          surface === "night"
+            ? "bg-[radial-gradient(closest-side,rgb(0_0_0/0.7),rgb(0_0_0/0.35)_55%,transparent)]"
+            : "bg-[radial-gradient(closest-side,rgb(0_0_0/0.28),rgb(0_0_0/0.1)_55%,transparent)]",
+        )}
       />
     </div>
   );

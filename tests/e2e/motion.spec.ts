@@ -60,25 +60,40 @@ test.describe("without JavaScript", () => {
 });
 
 test.describe("with motion", () => {
-  test("pins the opening scene and opens the laptop as you scroll", async ({
+  test("pins the opening, then opens the laptop as you scroll through its scene", async ({
     page,
     browserName,
   }) => {
     test.skip(browserName !== "chromium", "One engine is enough to check the choreography.");
     await page.goto("/");
-    const scene = page.locator(".scene").first();
-    const height = await scene.evaluate((element) => element.getBoundingClientRect().height);
-    expect(height).toBeGreaterThan((page.viewportSize()?.height ?? 900) * 2);
+    const viewport = page.viewportSize()?.height ?? 900;
+    const opening = page.locator(".scene").first();
+    const openingHeight = await opening.evaluate(
+      (element) => element.getBoundingClientRect().height,
+    );
+    expect(openingHeight).toBeGreaterThan(viewport * 2);
+
+    // The laptop belongs to the Young DCC scene, inside the work.
+    const scene = page.locator(".scene", { has: page.locator("#project-young-dcc-platform") });
+    const box = await scene.evaluate((element) => {
+      const rect = element.getBoundingClientRect();
+      return { top: rect.top + window.scrollY, height: rect.height };
+    });
+    expect(box.height).toBeGreaterThan(viewport * 2);
 
     const screenOff = () =>
-      page.evaluate(() => {
-        const overlay = document.querySelector(".scene .absolute.inset-0.bg-black");
+      scene.evaluate((element) => {
+        const overlay = element.querySelector(".absolute.inset-0.bg-black");
         return overlay ? Number(getComputedStyle(overlay).opacity) : -1;
       });
-    expect(await screenOff()).toBe(1);
-    await page.evaluate((top) => {
-      window.scrollTo({ top, behavior: "instant" });
-    }, height);
+    const scrollTo = (top: number) =>
+      page.evaluate((y) => {
+        window.scrollTo({ top: y, behavior: "instant" });
+      }, top);
+
+    await scrollTo(box.top);
+    await expect.poll(screenOff).toBe(1);
+    await scrollTo(box.top + box.height - viewport);
     await expect.poll(screenOff).toBe(0);
   });
 });
