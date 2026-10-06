@@ -42,6 +42,7 @@ export function HeroScene({ eyebrow, lead, actions, screen, caption }: Readonly<
   return (
     <Scene
       sceneRef={ref}
+      still={still}
       length={3.4}
       tone="night"
       labelledBy="hero-title"
@@ -78,6 +79,7 @@ export function HeroScene({ eyebrow, lead, actions, screen, caption }: Readonly<
       >
         <Laptop lid={lid} screen={screen} className="w-[min(84vw,820px)]" />
         <m.p
+          data-reveal
           className="mt-[9vw] font-mono text-mono-label text-ink-tertiary uppercase md:mt-[84px]"
           style={still ? {} : { opacity: captionOpacity }}
         >

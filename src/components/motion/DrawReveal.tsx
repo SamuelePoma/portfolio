@@ -3,6 +3,8 @@
 import { m } from "motion/react";
 import type { ReactNode } from "react";
 
+import { usePrefersReducedMotion } from "./useSceneProgress";
+
 const wipe = {
   hidden: { clipPath: "inset(0% 100% 0% 0%)" },
   shown: { clipPath: "inset(0% 0% 0% 0%)" },
@@ -11,9 +13,13 @@ const wipe = {
 /**
  * Wipes its content in from left to right once it comes into view: a chart drawing
  * itself (DESIGN.md §7.3.3). The outer box is what is watched, because a fully
- * clipped element never counts as visible.
+ * clipped element never counts as visible. With reduced motion the chart is simply
+ * there: a wipe is movement too, and Motion's reduced-motion setting only stops
+ * transforms.
  */
 export function DrawReveal({ children }: Readonly<{ children: ReactNode }>) {
+  const reduce = usePrefersReducedMotion();
+  if (reduce) return <div className="absolute inset-0">{children}</div>;
   return (
     <m.div
       className="absolute inset-0"
@@ -22,6 +28,7 @@ export function DrawReveal({ children }: Readonly<{ children: ReactNode }>) {
       viewport={{ once: true, amount: 0.4 }}
     >
       <m.div
+        data-reveal
         className="absolute inset-0"
         variants={wipe}
         transition={{ duration: 1.8, ease: [0.77, 0, 0.175, 1] }}

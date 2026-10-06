@@ -1,9 +1,11 @@
 "use client";
 
-import { m, useMotionTemplate, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import { m, useMotionTemplate, useMotionValue, useSpring } from "motion/react";
 import type { CSSProperties, PointerEvent, ReactNode } from "react";
 
 import { cn } from "@/lib/utils/cn";
+
+import { usePrefersReducedMotion } from "./useSceneProgress";
 
 /** The most the card leans towards the pointer, in degrees. */
 const MAX_TILT = 6;
@@ -19,7 +21,7 @@ interface TiltCardProps {
  * (DESIGN.md §7.3.4). Fine pointers only; touch and reduced motion get a still card.
  */
 export function TiltCard({ className, style, children }: Readonly<TiltCardProps>) {
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   const tiltX = useMotionValue(0);
   const tiltY = useMotionValue(0);
   const lightX = useMotionValue(50);

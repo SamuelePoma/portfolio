@@ -1,9 +1,9 @@
 "use client";
 
-import { m, type MotionValue, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { m, type MotionValue, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 
-import { useSmooth } from "./useSceneProgress";
+import { usePrefersReducedMotion, useSmooth } from "./useSceneProgress";
 
 function Word({
   progress,
@@ -19,7 +19,7 @@ function Word({
   const blur = useTransform(progress, [start, start + 0.3], [10, 0]);
   const filter = useTransform(blur, (value) => `blur(${String(value)}px)`);
   return (
-    <m.span className="inline-block" style={{ opacity, y, filter }}>
+    <m.span data-reveal className="inline-block" style={{ opacity, y, filter }}>
       {children}
     </m.span>
   );
@@ -31,7 +31,7 @@ function Word({
  */
 export function ScrollWords({ text }: Readonly<{ text: string }>) {
   const ref = useRef<HTMLSpanElement>(null);
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   const { scrollYProgress: raw } = useScroll({ target: ref, offset: ["start 0.92", "start 0.45"] });
   const scrollYProgress = useSmooth(raw);
   const words = text.split(" ");

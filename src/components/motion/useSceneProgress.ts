@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  type MotionValue,
-  useMotionValue,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-} from "motion/react";
+import { type MotionValue, useMotionValue, useScroll, useSpring } from "motion/react";
 import { type RefObject, useSyncExternalStore } from "react";
 
 /**
@@ -20,24 +14,37 @@ export function useSmooth(value: MotionValue<number>): MotionValue<number> {
   return useSpring(value, SCROLL_SPRING);
 }
 
-/** Where pinned scenes start pinning when they only pin on large screens. */
-const LARGE = "(min-width: 64rem)";
-
-function subscribe(onChange: () => void) {
-  const query = window.matchMedia(LARGE);
-  query.addEventListener("change", onChange);
-  return () => {
-    query.removeEventListener("change", onChange);
-  };
+/**
+ * A media query as React state. While hydrating it reports `serverValue`, like the
+ * server did, so the markup matches; right after, it re-renders with the real answer.
+ */
+function useMediaQuery(query: string, serverValue: boolean): boolean {
+  return useSyncExternalStore(
+    (onChange) => {
+      const list = window.matchMedia(query);
+      list.addEventListener("change", onChange);
+      return () => {
+        list.removeEventListener("change", onChange);
+      };
+    },
+    () => window.matchMedia(query).matches,
+    () => serverValue,
+  );
 }
 
-/** True from the lg breakpoint up. Assumes a large screen on the server. */
+/** True from the lg breakpoint up, where pinned scenes pin when they only pin on large screens. */
 export function useIsLarge(): boolean {
-  return useSyncExternalStore(
-    subscribe,
-    () => window.matchMedia(LARGE).matches,
-    () => true,
-  );
+  return useMediaQuery("(min-width: 64rem)", true);
+}
+
+/**
+ * True when the visitor asks for reduced motion. Motion's own `useReducedMotion`
+ * answers on the very first client render, which differs from the server's and makes
+ * React throw away the server HTML (a hydration error); this one waits for hydration.
+ * Until then the CSS (`motion-reduce:` and the reduced-motion rules) keeps things still.
+ */
+export function usePrefersReducedMotion(): boolean {
+  return useMediaQuery("(prefers-reduced-motion: reduce)", false);
 }
 
 export type PinMode = "always" | "large";
@@ -59,7 +66,7 @@ export function useSceneProgress(
   target: RefObject<HTMLElement | null>,
   mode: PinMode = "always",
 ): { progress: MotionValue<number>; still: boolean } {
-  const reduce = useReducedMotion() ?? false;
+  const reduce = usePrefersReducedMotion();
   const large = useIsLarge();
   const pinned = !reduce && (mode === "always" || large);
   const { scrollYProgress } = useScroll({ target, offset: pinned ? PINNED : PASSING });

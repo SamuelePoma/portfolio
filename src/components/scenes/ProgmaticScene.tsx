@@ -58,7 +58,11 @@ function LegendItem({ progress, index, label, text }: Readonly<LegendItemProps>)
   const opacity = useTransform(progress, [start, start + 0.08], [0, 1]);
   const x = useTransform(progress, [start, start + 0.08], [24, 0]);
   return (
-    <m.li className="flex flex-col gap-1 border-t border-hairline pt-3" style={{ opacity, x }}>
+    <m.li
+      data-reveal
+      className="flex flex-col gap-1 border-t border-hairline pt-3"
+      style={{ opacity, x }}
+    >
       <span className="font-mono text-mono-label text-ink-tertiary uppercase">{label}</span>
       <span className="text-small text-ink-secondary">{text}</span>
     </m.li>
@@ -89,6 +93,7 @@ export function ProgmaticScene({ titleId, copy, layers }: Readonly<ProgmaticScen
   return (
     <Scene
       sceneRef={ref}
+      still={still}
       length={3.2}
       mode="large"
       labelledBy={titleId}

@@ -13,6 +13,7 @@ interface MovingPieceProps {
 export function MovingPiece({ ranks, children }: Readonly<MovingPieceProps>) {
   return (
     <m.span
+      data-reveal
       className="inline-block"
       initial={{ y: `-${String(ranks * 1.4)}em` }}
       whileInView={{ y: "0em" }}

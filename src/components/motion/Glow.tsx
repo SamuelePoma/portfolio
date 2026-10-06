@@ -1,9 +1,11 @@
 "use client";
 
-import { m, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import { m, useMotionValue, useSpring } from "motion/react";
 import { useEffect, useRef } from "react";
 
 import { cn } from "@/lib/utils/cn";
+
+import { usePrefersReducedMotion } from "./useSceneProgress";
 
 const blobs = [
   "left-[55%] top-[-25%] size-[60vmax] bg-[radial-gradient(closest-side,var(--mesh-2),transparent)] opacity-60 [animation:glow-drift-a_26s_ease-in-out_infinite_alternate]",
@@ -25,7 +27,7 @@ interface GlowProps {
  */
 export function Glow({ className }: Readonly<GlowProps>) {
   const root = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
   const x = useSpring(pointerX, { duration: 0.9, bounce: 0 });

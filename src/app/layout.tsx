@@ -24,9 +24,22 @@ export const viewport: Viewport = {
   colorScheme: "light",
 };
 
+/**
+ * Scroll-driven pieces are rendered in their starting state (hidden, offset, clipped)
+ * and brought in by JavaScript. Without it they would stay that way, so everything
+ * marked `data-reveal` is simply shown: the page reads in full with no script at all.
+ */
+const noScriptReveal =
+  "[data-reveal]{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important}";
+
 export default function RootLayout({ children }: Readonly<LayoutProps<"/">>) {
   return (
     <html lang="en" className={cn(geistSans.variable, geistMono.variable)}>
+      <head>
+        <noscript>
+          <style>{noScriptReveal}</style>
+        </noscript>
+      </head>
       <body>
         <a
           href="#main"

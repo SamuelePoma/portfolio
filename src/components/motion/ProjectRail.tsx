@@ -1,11 +1,11 @@
 "use client";
 
-import { m, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { m, useScroll, useTransform } from "motion/react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
 import { Container } from "@/components/layout/Container";
 
-import { useSmooth } from "./useSceneProgress";
+import { usePrefersReducedMotion, useSmooth } from "./useSceneProgress";
 
 /** Card width and side padding, shared with the cards so the CSS height matches. */
 export const RAIL_CARD_WIDTH = "min(84vw, 620px)";
@@ -28,7 +28,7 @@ interface ProjectRailProps {
 export function ProjectRail({ heading, count, children }: Readonly<ProjectRailProps>) {
   const section = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion() ?? false;
+  const reduce = usePrefersReducedMotion();
   const [distance, setDistance] = useState(0);
 
   useEffect(() => {

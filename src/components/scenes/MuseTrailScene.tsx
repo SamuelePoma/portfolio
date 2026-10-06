@@ -83,6 +83,7 @@ export function MuseTrailScene({ titleId, copy, front, back, art }: Readonly<Mus
   return (
     <Scene
       sceneRef={ref}
+      still={still}
       length={3.4}
       mode="large"
       tone="night"
@@ -92,6 +93,7 @@ export function MuseTrailScene({ titleId, copy, front, back, art }: Readonly<Mus
     >
       <Container className="grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8">
         <m.div
+          data-reveal
           className="relative z-10 flex flex-col gap-6 lg:col-span-4"
           style={still ? {} : { opacity: copyOpacity, y: copyY }}
         >

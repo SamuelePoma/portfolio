@@ -28,6 +28,12 @@ interface SceneProps {
   length: number;
   /** Pin on every screen, or from the lg breakpoint up (see useSceneProgress). */
   mode?: PinMode;
+  /**
+   * The scene is shown in its final state (reduced motion). The stage is rebuilt when
+   * this changes: elements that were following the scroll would otherwise keep the
+   * last transforms they were given.
+   */
+  still?: boolean;
   className?: string;
   stageClassName?: string;
   labelledBy?: string;
@@ -44,6 +50,7 @@ export function Scene({
   sceneRef,
   length,
   mode = "always",
+  still = false,
   className,
   stageClassName,
   labelledBy,
@@ -63,7 +70,10 @@ export function Scene({
       )}
       style={{ "--scene-height": `${String(length * 100)}svh` } as CSSProperties}
     >
-      <div className={cn("scene-stage overflow-hidden", pinning[mode].stage, stageClassName)}>
+      <div
+        key={still ? "still" : "moving"}
+        className={cn("scene-stage overflow-hidden", pinning[mode].stage, stageClassName)}
+      >
         {children}
       </div>
     </section>

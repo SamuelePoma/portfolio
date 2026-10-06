@@ -32,7 +32,8 @@ export function CardMedia({ visual }: Readonly<CardMediaProps>) {
       return (
         <div className={cn(tray, "aspect-[16/10] md:aspect-auto")}>
           <MediaFrame ratio="fill" className={windowInset}>
-            {/* The screenshot leans in a touch when the card is hovered. */}
+            {/* The screenshot leans in a touch when the card is hovered. The strong ease-out
+                does most of the move in the first 200ms; the rest of the 700ms is a slow settle. */}
             <div className="absolute inset-0 transition-transform duration-700 ease-(--ease-out) group-hover:scale-[1.04]">
               {visual.effect === "draw" ? <DrawReveal>{image}</DrawReveal> : image}
             </div>

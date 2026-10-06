@@ -1,11 +1,11 @@
 "use client";
 
-import { m, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { m, useScroll, useTransform } from "motion/react";
 import { type ReactNode, useRef } from "react";
 
 import { cn } from "@/lib/utils/cn";
 
-import { useSmooth } from "./useSceneProgress";
+import { usePrefersReducedMotion, useSmooth } from "./useSceneProgress";
 
 interface RevealMediaProps {
   className?: string;
@@ -18,7 +18,7 @@ interface RevealMediaProps {
  */
 export function RevealMedia({ className, children }: Readonly<RevealMediaProps>) {
   const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   const { scrollYProgress: raw } = useScroll({
     target: ref,
     offset: ["start end", "center center"],
@@ -31,13 +31,13 @@ export function RevealMedia({ className, children }: Readonly<RevealMediaProps>)
   );
   const scale = useTransform(scrollYProgress, [0, 1], [1.18, 1]);
 
+  // A plain element, not the same one with its styles removed: Motion would keep the
+  // clip and zoom it last applied.
+  if (reduce) return <div className={cn("overflow-hidden", className)}>{children}</div>;
+
   return (
-    <m.div
-      ref={ref}
-      className={cn("overflow-hidden", className)}
-      style={reduce ? {} : { clipPath }}
-    >
-      <m.div className="h-full w-full" style={reduce ? {} : { scale }}>
+    <m.div ref={ref} className={cn("overflow-hidden", className)} style={{ clipPath }}>
+      <m.div className="h-full w-full" style={{ scale }}>
         {children}
       </m.div>
     </m.div>
