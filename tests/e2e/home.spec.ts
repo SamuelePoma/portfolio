@@ -160,7 +160,9 @@ test.describe("contact form", () => {
   test.beforeEach(async ({ page }) => {
     await fakeTurnstile(page);
     await page.goto("/#contact");
-    // The widget loads only near the form: wait until it has handed over its token.
+    // The widget loads only near the form. WebKit doesn't always finish the jump to
+    // the hash before the page settles, so bring the form into view explicitly.
+    await page.getByRole("form", { name: "Contact form" }).scrollIntoViewIfNeeded();
     await page.locator("[data-turnstile-ready]").waitFor({ state: "attached" });
   });
 
@@ -247,6 +249,7 @@ test.describe("contact API", () => {
       route.fulfill({ status: 429, json: { ok: false, error: "rate_limited" } }),
     );
     await page.goto("/#contact");
+    await page.getByRole("form", { name: "Contact form" }).scrollIntoViewIfNeeded();
     await page.locator("[data-turnstile-ready]").waitFor({ state: "attached" });
     await page.getByLabel("Name").fill("Ada Lovelace");
     await page.getByLabel("Email").fill("ada@example.com");

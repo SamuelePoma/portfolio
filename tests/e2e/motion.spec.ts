@@ -20,6 +20,17 @@ test.describe("with reduced motion", () => {
     for (const height of heights) expect(height).toBeLessThan(viewport * 3);
   });
 
+  test("hydrates without errors", async ({ page }) => {
+    // The server can't know the preference, so the page must hydrate as rendered and
+    // only then settle into its still state, never discard the server HTML.
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    await page.goto("/");
+    // NavTone marks the nav once its effects have run, so hydration is over by then.
+    await page.locator("#site-nav[data-tone-ready]").waitFor({ state: "attached" });
+    expect(errors).toEqual([]);
+  });
+
   test("keeps the hero name and the open laptop visible", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
@@ -30,6 +41,21 @@ test.describe("with reduced motion", () => {
     await page.goto("/");
     const row = page.locator(".overflow-x-auto").filter({ has: page.locator("article") });
     await expect(row).toHaveCount(1);
+  });
+});
+
+test.describe("without JavaScript", () => {
+  test.use({ javaScriptEnabled: false });
+
+  test("shows every piece a scroll animation would bring in", async ({ page }) => {
+    await page.goto("/");
+    const pieces = page.locator("[data-reveal]");
+    expect(await pieces.count()).toBeGreaterThan(0);
+    // Playwright counts opacity 0 as visible, so check the computed style itself.
+    const hidden = await pieces.evaluateAll(
+      (elements) => elements.filter((element) => getComputedStyle(element).opacity === "0").length,
+    );
+    expect(hidden).toBe(0);
   });
 });
 
