@@ -160,7 +160,7 @@ export const legalNotice = {
         "Tailwind CSS, MIT licence",
         "Lucide icons, ISC licence",
         "Simple Icons (the GitHub logo), CC0 1.0",
-        "Motion, Zod and Sonner, MIT licence",
+        "Motion, Lenis, Zod and Sonner, MIT licence",
       ],
     },
   ],
