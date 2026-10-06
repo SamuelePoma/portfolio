@@ -19,13 +19,13 @@ export function MetaRow({ role, team, period, stack }: Readonly<MetaRowProps>) {
   if (items.length === 0) return null;
 
   return (
-    <dl className="grid grid-cols-1 gap-x-8 gap-y-6 border-y border-hairline py-6 sm:grid-cols-2 lg:grid-cols-4">
+    <dl className="grid grid-cols-1 gap-x-10 gap-y-8 border-b border-hairline pb-10 sm:grid-cols-2 md:pb-12 lg:grid-cols-4">
       {items.map(({ label, value }) => (
         <div key={label} className="flex flex-col gap-2">
           <dt>
             <MonoLabel>{label}</MonoLabel>
           </dt>
-          <dd className="text-small text-ink-secondary">{value}</dd>
+          <dd className="text-body text-ink">{value}</dd>
         </div>
       ))}
     </dl>

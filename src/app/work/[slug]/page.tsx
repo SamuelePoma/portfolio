@@ -5,7 +5,7 @@ import { Container } from "@/components/layout/Container";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { CaseStudyBody } from "@/components/work/CaseStudyBody";
 import { CaseStudyHeader } from "@/components/work/CaseStudyHeader";
-import { CaseStudyHero } from "@/components/work/CaseStudyHero";
+import { MetaRow } from "@/components/work/MetaRow";
 import { NextProject } from "@/components/work/NextProject";
 import { projects } from "@/content/projects";
 import type { Project } from "@/content/schema";
@@ -61,14 +61,17 @@ export default async function CaseStudyPage({ params }: PageProps<"/work/[slug]"
           repo: project.links?.repo,
         })}
       />
-      <Container>
-        <CaseStudyHeader titleId={titleId} {...project} />
-        <div className="py-12 md:py-16">
-          <CaseStudyHero card={project.card} media={project.media} />
-        </div>
+      <CaseStudyHeader titleId={titleId} {...project} />
+      <Container className="pt-12 md:pt-16">
+        <MetaRow
+          role={project.role}
+          team={project.team}
+          period={project.period}
+          stack={project.stack}
+        />
         <CaseStudyBody {...project} />
-        <NextProject slug={next.slug} title={next.title} />
       </Container>
+      <NextProject project={next} />
     </article>
   );
 }

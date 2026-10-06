@@ -77,7 +77,7 @@
 
 - Most of the page is `--canvas` with `--ink`. Dark bands (`--night`) are the stages of the launch: the opening scene, the featured project (MuseTrail) and the contact/footer. Light sections sit between them, like Apple's alternating product pages.
 - `--ink-tertiary` is for metadata (dates, file labels) at small sizes. Never for sentences.
-- The mesh colours appear as **light** (since 2026-10-06, a **horizon**): on the dark opening and on the contact band they rise behind the rim of a dark planet, like first light, with a crisp lit rim and a faint grain so the gradients never band. They drift slowly; on the opening they lean towards the pointer. All gradients, no blur filters. They never sit on buttons or cards, and never on a light section except as the faint 404 mesh.
+- The mesh colours appear as **light** (since 2026-10-06, a **horizon**): on the dark opening and on the contact band they rise behind the rim of a dark planet, like first light, with a crisp lit rim and a faint grain so the gradients never band. They drift slowly; on the opening they lean towards the pointer. All gradients, no blur filters. The same horizon heads every other page (case studies, privacy, legal, 404) and the next-project tile, so every page opens in the same light. It never sits on a light section.
 - No other colors. Project screenshots bring their own color, and that is enough.
 - All text meets WCAG AA (4.5:1 body, 3:1 large text). Metadata is text too: the small mono labels need 4.5:1, which is why `--ink-tertiary` is `#6b6b6b` and not a lighter gray.
 
@@ -211,13 +211,14 @@ Springs for interactive things: `{ type: "spring", duration: 0.5, bounce: 0.15 }
 
 ### 7.3 Scenes
 
-1. **Opening (dark).** The name, in brushed metal with one sweep of light as the page opens, stands over the horizon. Scrolling sends it back; a closed laptop rises from behind the horizon like a sunrise while the horizon sinks away, its lid opens on the hinge (−88° to 8°) and the screen wakes up on a real project (the Young DCC platform), captioned in mono. The laptop has a camera in its bezel, a glare that slides across the glass as the lid opens, the screen's light spilling behind it and a contact shadow; its deck is as wide as the lid at the hinge, like the real thing. Then the light work section slides up over it as a sheet with rounded top corners, and the laptop steps back into the dark. Four screens, the last one shared with the sheet.
-2. **MuseTrail (dark), a tile.** The band is a dark tile on the light page, inset from the edges with large rounded corners, like Apple's product tiles. Two phones (with side buttons, glass sheen and a floor shadow) swing round in 3D to face the visitor, the back one starting far behind so they never pass through each other, part to either side, and the four artworks of the *My Museum* screen float out of the screen to different depths around them. The text column fades in at the start. Then the pitch photo opens up from a smaller window as it scrolls into view (clip-path inset to full, image settling from 1.18 to 1).
-3. **Progmatic (light): exploded view.** The assistant's interface tilts into an isometric view, comes apart into four layers (workspace, sidebar, brief, header), each named in a legend that slides in as its layer lifts, then clicks back together.
-4. **More work: horizontal rail.** The section pins and scrolling slides the remaining project cards sideways. Cards lean towards the pointer (≤ 6°) with a soft light following it. Inside them, the Stedin chart draws itself left to right and the chess pawn plays b7 to b5. Projects without a screenshot yet get a drawn stand-in instead of a placeholder (§10): a city map whose tracked route draws itself (Conneqtech), and the ability scores of a character sheet (D&D).
-5. **Headings and lists.** Section openers rise into focus word by word as they scroll into place. Stack groups and timeline rows rise in, staggered, with CSS scroll-driven animations (no JavaScript; browsers without support just show them). Card screenshots lean in (1.04) on hover.
-6. **Finale (dark).** *Let's talk.* over the same horizon as the opening, closing the page.
-7. **Copy email.** Unchanged: a toast confirms the copy.
+1. **Opening (dark).** The name, in brushed metal with one sweep of light as the page opens, stands over the horizon. Scrolling is a sunrise: the light climbs and swells while the horizon sinks away and the name drifts up. Then the light work section slides up over it as a sheet with rounded top corners, and the opening steps back into the dark. 2.6 screens, the last one shared with the sheet. (Until 2026-10-06 the laptop rose here; Samuele moved it into the work, §7.3.2.)
+2. **Young DCC (light): a MacBook launch.** The first project in *Things I've built.*, on the light page: the headline centred at the top, and under it a closed laptop already peeking in, which rises into place, opens on the hinge (−88° to 8°), wakes up on the platform's home page and leans in a touch. The laptop has a camera in its bezel, a glare across the glass and a soft floor shadow; on a light section it has no glow. Its deck is as wide as the lid at the hinge. Sized by the room the text leaves (a size container), so it always fits the screen. Three screens, pinned everywhere.
+3. **MuseTrail (dark), a tile.** The band is a dark tile on the light page, inset from the edges with large rounded corners, like Apple's product tiles. Two phones (with side buttons, glass sheen and a floor shadow) swing round in 3D to face the visitor, the back one starting far behind so they never pass through each other, part to either side, and the four artworks of the *My Museum* screen float out of the screen to different depths around them. The text column fades in at the start. Then the pitch photo opens up from a smaller window as it scrolls into view (clip-path inset to full, image settling from 1.18 to 1).
+4. **Progmatic (light): exploded view.** The assistant's interface tilts into an isometric view, comes apart into four layers (workspace, sidebar, brief, header), each named in a legend that slides in as its layer lifts, then clicks back together.
+5. **More work: horizontal rail.** The section pins and scrolling slides the remaining project cards sideways. Cards lean towards the pointer (≤ 6°) with a soft light following it. Inside them, the Stedin chart draws itself left to right and the chess pawn plays b7 to b5. Projects without a screenshot yet get a drawn stand-in instead of a placeholder (§10): a city map whose tracked route draws itself (Conneqtech), and the ability scores of a character sheet (D&D).
+6. **Headings and lists.** Section openers rise into focus word by word as they scroll into place. Stack groups and timeline rows rise in, staggered, with CSS scroll-driven animations (no JavaScript; browsers without support just show them). Card screenshots lean in (1.04) on hover.
+7. **Finale (dark).** *Let's talk.* over the same horizon as the opening, closing the page.
+8. **Copy email.** Unchanged: a toast confirms the copy.
 
 ### 7.4 Micro-interactions
 
@@ -268,7 +269,7 @@ Top: a **sunken tray** (`--surface-sunken`) with the visual. Windows (browser fr
 - `h3` title, plus a 1–2 line `small` description in `--ink-secondary`.
 - A row of tech tags.
 - An arrow icon at the top right that nudges on hover.
-The whole card is one link (it opens the case study), with the card spotlight on hover (§7.3.4).
+The whole card is one link (it opens the case study), with the card spotlight on hover (§7.3.5).
 
 ### 8.8 Terminal block
 For ChessGame, and anywhere code is the product. `--night-surface`, `radius-md`, Geist Mono 14px, `--night-ink`. A 32px top bar with gray dots and a title such as `chess.java`. Content is the game's **real output**, copied from Samuele's terminal: the prompts, the `[LOG]` line, the board and the move history after 1. a4 b5 (a debug line in Italian is left out). The game prints Unicode pieces; each square is a fixed 2ch cell so the board stays aligned whatever font draws them, and every piece carries the text variation selector (U+FE0E) so phones don't turn the black pawn into an emoji. The square the last move landed on and the player's typed input are set in `--night-ink`, the rest in `--night-ink-secondary`. The card shows the last move and the board; the case study shows the whole turn. Exposed to screen readers as one image with a description. Optionally it types itself out once when it enters the viewport (respecting reduced motion).
@@ -294,12 +295,12 @@ One long page plus a case-study view per project. Sections open with a `display`
 ### 9.0 Nav (see §8.1)
 
 ### 9.1 Hero: the opening scene (dark)
-- A pinned scene (§7.3.1) on `--night`, pulled up under the nav. The coloured glow fills it.
+- A pinned scene (§7.3.1) on `--night`, pulled up under the nav, over the horizon (§3.2).
 - Eyebrow `SOFTWARE ENGINEER · MIDDELBURG, NL`, `display-xl` **Samuele Poma.** (two lines on mobile), the `lead` line, CTAs **View work ↓** and **GitHub ↗**, bottom-left like an editorial cover.
-- Scrolling plays the laptop: it rises, opens and shows the Young DCC platform, captioned `YOUTH CLIMATE EVENTS PLATFORM · DELTA CLIMATE CENTER`.
+- Scrolling is a sunrise over the horizon, then the work slides over it (§7.3.1).
 
 ### 9.2 Selected work
-**Since 2026-10-05:** MuseTrail and Progmatic are scenes (§7.3.2, §7.3.3); every other project is a card on the horizontal rail (§7.3.4): Young DCC, the veterinary practice system (its component diagram as the card visual, drawn in CSS: lines draw themselves as it scrolls in), Conneqtech, Stedin, ChessGame, the D&D character sheet generator (placeholder until a screenshot arrives) and the tower defense game. Progmatic's case study adds the RAG flow from the project README: eight steps over two rows, each lighting up in turn with an accent ring.
+**Since 2026-10-06:** Young DCC (on the laptop), MuseTrail and Progmatic are scenes (§7.3.2 to §7.3.4); every other project is a card on the horizontal rail (§7.3.5): the veterinary practice system (its component diagram as the card visual, drawn in CSS: lines draw themselves as it scrolls in), Conneqtech, Stedin, ChessGame, the D&D character sheet generator (placeholder until a screenshot arrives) and the tower defense game. Progmatic's case study adds the RAG flow from the project README: eight steps over two rows, each lighting up in turn with an accent ring.
 
 Section opener: `display`, *"Things I've built."*
 
@@ -332,14 +333,13 @@ Card content (facts from the résumé and from Samuele; the copy lives in `src/c
 Why not the earlier wording: "live" GPS data, "detecting" transformers, a `RAG` tag and "chess engine" all claimed more than the résumé says.
 
 ### 9.3 Case-study view (one per project)
-Opened from the cards (§7.3.5), at `/work/[slug]`. The structure is always the same, and **every part is optional**: a fact that isn't confirmed yet means a shorter page, never a guessed one.
-1. Breadcrumbs (`HOME / WORK / MUSETRAIL`, mono, 44px hit areas); `Work` leads back to `/#work`. They replace a separate back link.
-2. The card's context line (`TEAM PROJECT · 2024-25`, plus the `IN PROGRESS` status where it applies), the `display` title (the page's only `h1`) and the `lead` one-liner.
-3. A meta row in mono between hairlines: **Role** · **Team** · **Timeline** (long form, `Nov 2024 to Jan 2025`) · **Stack**. Unknown values are left out, not shown empty.
-4. Hero media (the shared element from the card): the browser frame at the slot's ratio, the two phones on a sunken tray for MuseTrail, the full terminal transcript on a sunken tray for ChessGame. Preloaded: it is the page's LCP.
-5. Sections in a 4 + 8 column grid (`h2` on the left, `lead`-size prose on the right, at most 60ch), separated by hairlines: **Problem** (1 paragraph), **Approach** (1–3 paragraphs, plus the research map for Progmatic), **Outcome** (1 paragraph, then highlights as accent mono labels), **What I learned** and **Links** (only public repos and demos).
-6. Gallery: 1–3 extra images in the right 8 columns, each caption in the left 4, level with the image's bottom edge. Images whose file is missing are skipped (an optional image never gets a placeholder).
-7. A next-project link at the bottom (mono `NEXT PROJECT`, then the title at `h1` size with an arrow that nudges on hover), looping from the last project back to the first.
+Opened from the cards (§7.3.5) and the scenes, at `/work/[slug]`. The structure is always the same, and **every part is optional**: a fact that isn't confirmed yet means a shorter page, never a guessed one.
+1. **A dark header over the horizon** (since 2026-10-06), pulled up under the nav: breadcrumbs (`HOME / WORK / MUSETRAIL`, mono, 44px hit areas; `Work` leads back to `/#work`), the card's context line (`TEAM PROJECT · 2024-25`, plus the `IN PROGRESS` status where it applies), the `display-xl` title (the page's only `h1`) and the `lead` one-liner.
+2. **The main visual floats over the header's edge**, half on the dark band and half on the page, like a product on a stage: the browser frame at the slot's ratio, the two phones for MuseTrail, the full terminal transcript for ChessGame. No tray. Preloaded: it is the page's LCP. Projects without one end the header plainly.
+3. A meta row: **Role** · **Team** · **Timeline** (long form, `Nov 2024 to Jan 2025`) · **Stack**, mono labels over values in `body` ink. Unknown values are left out, not shown empty.
+4. Sections in a 4 + 8 column grid (`h2` on the left, staying in view while its section is read on wide screens; `lead`-size prose on the right, at most 60ch), separated by hairlines: **Problem** (1 paragraph, set as a large statement that lights up as it is read), **Approach** (1–3 paragraphs, plus the research map for Progmatic), **Outcome** (1 paragraph, then highlights as accent mono labels), **What I learned** and **Links** (only public repos and demos).
+5. Gallery: 1–3 extra images in the right 8 columns, each caption in the left 4, level with the image's bottom edge. Images whose file is missing are skipped (an optional image never gets a placeholder).
+6. **Next project:** a dark rounded tile over the horizon, inset from the edges like the home tiles: an accent mono `NEXT PROJECT` and the context line, the `display` title and one-liner, `Read the case study →`, and the project's card visual rising from the tile's bottom edge. The whole tile is one link; it loops from the last project back to the first.
 
 ### 9.4 Stack
 Section opener: `display`, *"Tools I reach for."*
@@ -363,7 +363,7 @@ Optional portrait: `IMG-PORTRAIT`, 4:5, grayscale, `radius-lg`. Not shown until 
 
 ### 9.6 Contact (a `--night` band that merges into the footer)
 - Centred, over the horizon (§3.2): `display-xl`, `--night-ink`: *"Let's talk."*, then one `lead` line: *"Have a project, a question or an idea? Email is the best way to reach me."*
-- The email as the headline act, up to 72px: a real `mailto:` link that copies on click and confirms with a toast (§7.3.6); without JavaScript or clipboard access it opens the email app. On narrow screens it wraps after the `@`.
+- The email as the headline act, up to 72px: a real `mailto:` link that copies on click and confirms with a toast (§7.3.8); without JavaScript or clipboard access it opens the email app. On narrow screens it wraps after the `@`.
 - Then three pills: `Write an email ↗` (primary, `mailto:`), GitHub ↗ (`github.com/SamuelePoma`) and LinkedIn ↗ (`linkedin.com/in/samuele-poma-547120242`). The résumé stays in About, so no intent is repeated.
 - **No form** (§8.12) and **no phone number.**
 - **No phone number.**
@@ -374,10 +374,10 @@ Optional portrait: `IMG-PORTRAIT`, 4:5, grayscale, `radius-lg`. Not shown until 
 - On mobile the two groups stack.
 
 ### 9.8 Utility pages
-All utility pages use the nav and footer, the light canvas, and a single reading column (`65ch`).
-- **404:** a mono eyebrow `ERROR 404`, the `display` text *"This page doesn't exist."*, a `lead` line, a primary button `Back home` and a secondary `View work`. A faint mesh gradient at 15% opacity is the only exception to the hero-only rule.
+All utility pages use the nav and footer.
+- **404:** a full dark screen over the horizon, centred: a mono eyebrow `ERROR 404`, the `display-xl` text *"This page doesn't exist."*, a `lead` line, a primary button `Back home` and a secondary `View work`.
 - **Error (500 / runtime):** the same layout, *"Something broke."*, plus a `Try again` button (resets the error boundary) and `Back home`. Never show a stack trace or error message.
-- **Privacy / Legal:** a breadcrumb, a `h1`, a mono `LAST UPDATED 2026-10-01` label, and long-form text styled as `body`, with `h2` sections and anchor links on the headings.
+- **Privacy / Legal:** a short dark header over the horizon (breadcrumb, mono `LAST UPDATED` label, `display` title, `lead` intro), then the text in a `65ch` reading column styled as `body`, with `h2` sections and anchor links on the headings. On wide screens an *On this page* list of the sections stays in view beside it.
 
 ---
 

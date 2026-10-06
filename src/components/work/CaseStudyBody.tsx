@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { LitText } from "@/components/motion/LitText";
 import { Button } from "@/components/ui/Button";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import { MediaSlot } from "@/components/ui/MediaSlot";
@@ -29,14 +30,17 @@ interface CaseSectionProps {
   children: ReactNode;
 }
 
-/** A titled section: the heading in the left columns, the reading column on the right. */
+/**
+ * A titled section: the heading in the left columns, the reading column on the right.
+ * On wide screens the heading stays in view while its section is read.
+ */
 function CaseSection({ id, title, children }: Readonly<CaseSectionProps>) {
   return (
     <section
       aria-labelledby={id}
-      className="grid grid-cols-1 gap-4 border-t border-hairline py-12 md:py-16 lg:grid-cols-12 lg:gap-12"
+      className="grid grid-cols-1 gap-4 border-t border-hairline py-12 first:border-t-0 md:py-16 lg:grid-cols-12 lg:gap-12"
     >
-      <h2 id={id} className="text-h2 lg:col-span-4">
+      <h2 id={id} className="text-h2 lg:sticky lg:top-28 lg:col-span-4 lg:self-start">
         {title}
       </h2>
       <div className="flex flex-col gap-6 lg:col-span-8">{children}</div>
@@ -77,7 +81,11 @@ export function CaseStudyBody({
     <>
       {problem && (
         <CaseSection id="problem" title="Problem">
-          <Prose paragraphs={[problem]} />
+          {/* The question the project answers, as a statement that lights up as it is read. */}
+          <LitText
+            text={problem}
+            className="max-w-[34ch] text-[clamp(1.5rem,2.4vw,2.125rem)] leading-[1.25] font-semibold tracking-[-0.02em]"
+          />
         </CaseSection>
       )}
 

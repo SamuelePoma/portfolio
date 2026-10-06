@@ -12,14 +12,17 @@ import { cn } from "@/lib/utils/cn";
  * titles line up across a row whatever the visual inside. Windows (browser frame,
  * terminal) rise from the tray's bottom edge; their bottom corners are hidden.
  */
-const tray = "relative overflow-hidden bg-surface-sunken md:h-72 lg:h-88";
+const trayBox = "relative overflow-hidden md:h-72 lg:h-88";
 const windowInset = "absolute inset-x-5 top-5 bottom-0 rounded-b-none md:inset-x-8 md:top-8";
 
 interface CardMediaProps {
   visual: CardVisual;
+  /** Without the sunken tray, for a visual that sits on a surface of its own. */
+  bare?: boolean;
 }
 
-export function CardMedia({ visual }: Readonly<CardMediaProps>) {
+export function CardMedia({ visual, bare = false }: Readonly<CardMediaProps>) {
+  const tray = cn(trayBox, !bare && "bg-surface-sunken");
   switch (visual.type) {
     case "screenshot": {
       const image = (
