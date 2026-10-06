@@ -108,7 +108,7 @@ export function MuseTrailScene({ titleId, copy, front, back, art }: Readonly<Mus
           {/* The phones' shadow on the floor, widening as they part. */}
           <m.div
             aria-hidden
-            className="bg-black pointer-events-none absolute inset-x-[18%] -bottom-[6%] h-[8%] rounded-[50%] blur-2xl"
+            className="pointer-events-none absolute inset-x-[10%] -bottom-[10%] h-[16%] bg-[radial-gradient(closest-side,rgb(0_0_0/0.9),rgb(0_0_0/0.45)_55%,transparent)]"
             style={still ? { opacity: 0.8 } : { opacity: shadowOpacity, scaleX: shadowScale }}
           />
           <m.div

@@ -1,17 +1,17 @@
 import "./globals.css";
 
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
 import type { Metadata, Viewport } from "next";
-import { Toaster } from "sonner";
 
 import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
 import { MotionProvider } from "@/components/motion/MotionProvider";
+import { LazyToaster } from "@/components/ui/LazyToaster";
 import { site } from "@/content/site";
 import { publicEnv } from "@/lib/env/public";
 import { isIndexable, rootMetadata } from "@/lib/seo/metadata";
 import { cn } from "@/lib/utils/cn";
+
+import { geistMono, geistSans } from "./fonts";
 
 export const metadata: Metadata = rootMetadata({
   siteUrl: publicEnv.NEXT_PUBLIC_SITE_URL,
@@ -26,7 +26,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<LayoutProps<"/">>) {
   return (
-    <html lang="en" className={cn(GeistSans.variable, GeistMono.variable)}>
+    <html lang="en" className={cn(geistSans.variable, geistMono.variable)}>
       <body>
         <a
           href="#main"
@@ -42,7 +42,7 @@ export default function RootLayout({ children }: Readonly<LayoutProps<"/">>) {
           </main>
           <Footer />
         </MotionProvider>
-        <Toaster position="bottom-center" offset={24} mobileOffset={16} />
+        <LazyToaster />
       </body>
     </html>
   );

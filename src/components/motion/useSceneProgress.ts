@@ -42,11 +42,18 @@ export function useIsLarge(): boolean {
 
 export type PinMode = "always" | "large";
 
+/** Scroll offsets: while the stage is pinned, or while the scene passes through the viewport. */
+const PINNED: ["start start", "end end"] = ["start start", "end end"];
+const PASSING: ["start 0.75", "end 0.55"] = ["start 0.75", "end 0.55"];
+
 /**
  * How far the visitor has scrolled through a scene, from 0 to 1. A pinned scene runs
  * while its stage sticks to the viewport; an unpinned one (small screens, for scenes
  * with a lot of text) runs while it passes through the viewport. With reduced motion
  * the scene is shown in its final state and never pinned (`still` is true).
+ *
+ * One scroll observer and one spring per scene: when the breakpoint flips, the
+ * observer restarts with the other offset instead of a second one running unused.
  */
 export function useSceneProgress(
   target: RefObject<HTMLElement | null>,
@@ -55,16 +62,8 @@ export function useSceneProgress(
   const reduce = useReducedMotion() ?? false;
   const large = useIsLarge();
   const pinned = !reduce && (mode === "always" || large);
-  const { scrollYProgress: whilePinned } = useScroll({
-    target,
-    offset: ["start start", "end end"],
-  });
-  const { scrollYProgress: whilePassing } = useScroll({
-    target,
-    offset: ["start 0.75", "end 0.55"],
-  });
-  const smoothPinned = useSmooth(whilePinned);
-  const smoothPassing = useSmooth(whilePassing);
+  const { scrollYProgress } = useScroll({ target, offset: pinned ? PINNED : PASSING });
+  const smooth = useSmooth(scrollYProgress);
   const finished = useMotionValue(1);
-  return { progress: reduce ? finished : pinned ? smoothPinned : smoothPassing, still: reduce };
+  return { progress: reduce ? finished : smooth, still: reduce };
 }

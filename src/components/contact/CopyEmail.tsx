@@ -20,7 +20,7 @@ export function CopyEmail({ email }: Readonly<CopyEmailProps>) {
     event.preventDefault();
     navigator.clipboard.writeText(email).then(
       () => {
-        showToast("Email copied");
+        void showToast("Email copied");
       },
       () => {
         window.location.href = `mailto:${email}`;

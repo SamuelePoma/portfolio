@@ -51,7 +51,8 @@ describe("ContactForm", () => {
 
     await user.click(screen.getByRole("button", { name: "Send message" }));
 
-    expect(screen.getByText("Please enter your name.")).toBeInTheDocument();
+    // The rules load on first use, so the messages arrive a moment after the click.
+    expect(await screen.findByText("Please enter your name.")).toBeInTheDocument();
     expect(screen.getByText("Please enter your email address.")).toBeInTheDocument();
     expect(screen.getByText("Please write a message.")).toBeInTheDocument();
     expect(screen.getByLabelText("Name")).toHaveFocus();
@@ -69,10 +70,12 @@ describe("ContactForm", () => {
     expect(screen.queryByText(/valid email address/)).not.toBeInTheDocument();
 
     await user.tab();
-    expect(screen.getByText(/valid email address/)).toBeInTheDocument();
+    expect(await screen.findByText(/valid email address/)).toBeInTheDocument();
 
     await user.type(email, "example.com");
-    expect(screen.queryByText(/valid email address/)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText(/valid email address/)).not.toBeInTheDocument();
+    });
   });
 
   it("does not flag an untouched empty field on blur", async () => {
@@ -243,7 +246,7 @@ describe("ContactForm with Turnstile", () => {
     await fillValidForm(user);
     await user.click(screen.getByRole("button", { name: "Send message" }));
     expect(fetchMock).not.toHaveBeenCalled();
-    expect(screen.getByText(/spam check is still running/)).toBeInTheDocument();
+    expect(await screen.findByText(/spam check is still running/)).toBeInTheDocument();
 
     act(() => {
       callbacks?.callback("token-1");

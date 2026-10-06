@@ -24,12 +24,7 @@ export function Hero() {
         </>
       }
       screen={
-        <MediaSlot
-          id="IMG-YOUNGDCC-01"
-          sizes="(min-width: 1024px) 900px, 90vw"
-          position="top"
-          preload
-        />
+        <MediaSlot id="IMG-YOUNGDCC-01" sizes="(min-width: 1024px) 900px, 90vw" position="top" />
       }
       caption={onScreen ? `${onScreen.title} · ${onScreen.organisation}` : ""}
     />

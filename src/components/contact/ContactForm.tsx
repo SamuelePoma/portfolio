@@ -22,9 +22,8 @@ import {
   EMAIL_MAX_LENGTH,
   MESSAGE_MAX_LENGTH,
   NAME_MAX_LENGTH,
-  validateContactField,
-  validateContactFields,
-} from "@/lib/contact/schema";
+} from "@/lib/contact/fields";
+import type * as Rules from "@/lib/contact/schema";
 
 import { Turnstile, type TurnstileHandle } from "./Turnstile";
 
@@ -32,6 +31,21 @@ type Status = "idle" | "sending" | "sent" | "failed";
 /** Why sending failed, as far as the visitor needs to know. */
 type Failure = "rate_limited" | "captcha_failed" | "other";
 type FieldElement = HTMLInputElement | HTMLTextAreaElement;
+
+let rules: Promise<typeof Rules> | undefined;
+
+/**
+ * The validation rules, and Zod with them, load the first time someone focuses a
+ * field instead of with the page: most visitors never write a message. Resolves to
+ * undefined if they can't load (the connection dropped), and tries again next time.
+ */
+function loadRules(): Promise<typeof Rules | undefined> {
+  rules ??= import("@/lib/contact/schema").catch((error: unknown) => {
+    rules = undefined;
+    throw error;
+  });
+  return rules.catch(() => undefined);
+}
 
 const inputClass =
   "w-full rounded-md bg-surface px-4 py-3 text-body text-ink ring-1 ring-hairline ring-inset transition-shadow duration-200 ease-out placeholder:text-ink-tertiary hover:ring-hairline-strong aria-invalid:ring-danger";
@@ -126,9 +140,7 @@ export function ContactForm({ email, turnstileSiteKey }: Readonly<ContactFormPro
     const field = event.target.name as ContactFieldName;
     const { value } = event.target;
     if (field === "message") setMessageLength(value.length);
-    if (errors[field]) {
-      setErrors((current) => ({ ...current, [field]: validateContactField(field, value) }));
-    }
+    if (errors[field]) void checkField(field, value);
   }
 
   function handleBlur(event: FocusEvent<FieldElement>) {
@@ -136,7 +148,13 @@ export function ContactForm({ email, turnstileSiteKey }: Readonly<ContactFormPro
     const { value } = event.target;
     // An untouched empty field is not an error yet; submitting will say so.
     if (value === "" && !errors[field]) return;
-    setErrors((current) => ({ ...current, [field]: validateContactField(field, value) }));
+    void checkField(field, value);
+  }
+
+  async function checkField(field: ContactFieldName, value: string) {
+    const loaded = await loadRules();
+    if (!loaded) return;
+    setErrors((current) => ({ ...current, [field]: loaded.validateContactField(field, value) }));
   }
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
@@ -144,11 +162,19 @@ export function ContactForm({ email, turnstileSiteKey }: Readonly<ContactFormPro
     if (status === "sending") return;
 
     const form = event.currentTarget;
-    const result = validateContactFields({
+    const values = {
       name: readField(form, "name"),
       email: readField(form, "email"),
       message: readField(form, "message"),
-    });
+    };
+    const loaded = await loadRules();
+    if (!loaded) {
+      // Offline: sending would fail as well.
+      setFailure("other");
+      setStatus("failed");
+      return;
+    }
+    const result = loaded.validateContactFields(values);
     if (!result.success) {
       setErrors(result.errors);
       const firstInvalid = contactFieldNames.find((field) => result.errors[field]);
@@ -224,6 +250,9 @@ export function ContactForm({ email, turnstileSiteKey }: Readonly<ContactFormPro
     required: true,
     onChange: handleChange,
     onBlur: handleBlur,
+    onFocus: () => {
+      void loadRules();
+    },
     "aria-invalid": errors[field] ? true : undefined,
   });
 

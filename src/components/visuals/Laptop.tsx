@@ -33,10 +33,11 @@ export function Laptop({ lid, screen, className }: Readonly<LaptopProps>) {
 
   return (
     <div className={cn("relative [perspective:3400px]", className)}>
-      {/* The screen's light on the space behind the laptop. */}
+      {/* The screen's light on the space behind the laptop. A gradient already fades
+          to nothing, so it needs no blur filter (a large one repaints on every frame). */}
       <m.div
         aria-hidden
-        className="pointer-events-none absolute inset-x-[4%] top-[8%] -z-10 h-[70%] rounded-[50%] bg-[radial-gradient(closest-side,rgb(64_180_150/0.55),rgb(0_124_240/0.25),transparent)] blur-3xl"
+        className="pointer-events-none absolute inset-x-[4%] top-[8%] -z-10 h-[70%] rounded-[50%] bg-[radial-gradient(closest-side,rgb(64_180_150/0.5),rgb(0_124_240/0.22)_55%,transparent)]"
         style={{ opacity: spill }}
       />
 
@@ -83,10 +84,10 @@ export function Laptop({ lid, screen, className }: Readonly<LaptopProps>) {
         </div>
       </div>
 
-      {/* Contact shadow on the floor. */}
+      {/* Contact shadow on the floor: a soft gradient ellipse rather than a blurred one. */}
       <div
         aria-hidden
-        className="bg-black/70 pointer-events-none absolute inset-x-[6%] -bottom-[16%] -z-10 h-[10%] rounded-[50%] blur-2xl"
+        className="pointer-events-none absolute inset-x-0 -bottom-[20%] -z-10 h-[18%] bg-[radial-gradient(closest-side,rgb(0_0_0/0.7),rgb(0_0_0/0.35)_55%,transparent)]"
       />
     </div>
   );

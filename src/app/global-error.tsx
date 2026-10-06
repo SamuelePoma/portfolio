@@ -2,14 +2,14 @@
 
 import "./globals.css";
 
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
 import { useEffect } from "react";
 
 import { ErrorScreen } from "@/components/layout/ErrorScreen";
 import { Button } from "@/components/ui/Button";
 import { errorPages } from "@/content/errors";
 import { cn } from "@/lib/utils/cn";
+
+import { geistMono, geistSans } from "./fonts";
 
 const copy = errorPages.error;
 
@@ -28,7 +28,7 @@ export default function GlobalError({ error, retry }: Readonly<GlobalErrorProps>
   }, [error]);
 
   return (
-    <html lang="en" className={cn(GeistSans.variable, GeistMono.variable)}>
+    <html lang="en" className={cn(geistSans.variable, geistMono.variable)}>
       <body>
         <title>{`${copy.title.replace(".", "")} | Samuele Poma`}</title>
         <main>
