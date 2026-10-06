@@ -14,7 +14,8 @@ export const projects = [
     status: "completed",
     seoDescription:
       "MuseTrail: a SvelteKit app that turns habits that cut digital CO2 into art. Built by a team of five led by Samuele Poma, it won a Dragons' Den grand prize.",
-    tagline: "A web app that promotes sustainable digital habits among young adults.",
+    tagline:
+      "A web app that turns the small actions that cut your digital CO2 into one-of-a-kind art for a personal museum.",
     role: "Team lead: design, user interviews, frontend, backend and testing",
     team: 5,
     stack: ["SvelteKit", "Docker"],
@@ -49,7 +50,7 @@ export const projects = [
     seoDescription:
       "Case study: a local AI knowledge assistant for Progmatic that will answer questions about the company database and draft emails, code and quotations.",
     tagline:
-      "A local AI chatbot for Progmatic that will answer questions about the company database, find information, write emails and code, and prepare quotations and budget calculations.",
+      "IO, a local AI assistant for Progmatic: ask in everyday language, get answers from the company's own data with their sources, plus drafts of emails, code and quotations.",
     role: "Researcher",
     team: 5,
     stack: ["AI", "Document retrieval", "FileMaker"],

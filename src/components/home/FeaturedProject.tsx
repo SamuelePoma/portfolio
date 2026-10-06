@@ -51,7 +51,12 @@ export function FeaturedProject({
   if (!front || !back) return null;
 
   return (
-    <div data-tone="night" className="tone-night">
+    // A dark tile on the light page, like Apple's product tiles: rounded, inset from the
+    // edges. `overflow: clip` rounds the corners without breaking the pinned stage inside.
+    <div
+      data-tone="night"
+      className="tone-night mx-2 overflow-clip rounded-[28px] bg-canvas md:mx-4 md:rounded-[40px]"
+    >
       <MuseTrailScene
         titleId={titleId}
         front={<MediaSlot id={front} sizes={sizes} position="top" />}

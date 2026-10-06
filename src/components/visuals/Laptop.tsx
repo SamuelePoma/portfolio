@@ -32,7 +32,7 @@ export function Laptop({ lid, screen, className }: Readonly<LaptopProps>) {
   const glare = useTransform(lid, [-70, 8], ["-80%", "70%"]);
 
   return (
-    <div className={cn("relative [perspective:3400px]", className)}>
+    <div className={cn("relative [perspective:4400px]", className)}>
       {/* The screen's light on the space behind the laptop. A gradient already fades
           to nothing, so it needs no blur filter (a large one repaints on every frame). */}
       <m.div
@@ -65,9 +65,9 @@ export function Laptop({ lid, screen, className }: Readonly<LaptopProps>) {
           <div className="absolute inset-0 [transform:rotateY(180deg)] rounded-t-[2.4%] bg-[linear-gradient(180deg,#3d3d40,#232325)] ring-1 ring-white/10 backface-hidden" />
         </m.div>
 
-        {/* Keyboard deck, flat, reaching towards the viewer. A touch narrower than the lid,
-            so with perspective its near edge reads as wide as the screen. */}
-        <div className="absolute top-full left-[5%] aspect-[16/6.8] w-[90%] origin-top [transform:rotateX(90deg)] preserve-3d">
+        {/* Keyboard deck, flat, reaching towards the viewer: as wide as the lid at the
+            hinge, like the real thing, so perspective widens only its near edge. */}
+        <div className="absolute top-full left-0 aspect-[16/6.4] w-full origin-top [transform:rotateX(90deg)] preserve-3d">
           <div className="absolute inset-0 rounded-b-[4%] bg-[linear-gradient(180deg,#2a2a2d,#3a3a3d)] ring-1 ring-white/10">
             {/* The hinge. */}
             <div className="bg-black/40 absolute inset-x-[12%] top-0 h-[4%] rounded-b-sm" />

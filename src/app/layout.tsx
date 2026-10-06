@@ -5,6 +5,7 @@ import type { Metadata, Viewport } from "next";
 import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
 import { MotionProvider } from "@/components/motion/MotionProvider";
+import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { LazyToaster } from "@/components/ui/LazyToaster";
 import { site } from "@/content/site";
 import { publicEnv } from "@/lib/env/public";
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: Readonly<LayoutProps<"/">>) {
           <Footer />
         </MotionProvider>
         <LazyToaster />
+        <SmoothScroll />
       </body>
     </html>
   );

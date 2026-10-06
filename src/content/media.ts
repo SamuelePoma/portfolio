@@ -18,6 +18,11 @@ export interface MediaSlotDefinition {
   placeholder: string;
   /** Visible caption, for photos that need context (who, where, when). */
   caption?: string;
+  /**
+   * A drawn stand-in shown while the file is missing, instead of the placeholder, for
+   * slots that appear on the live site. The real image replaces it as soon as it exists.
+   */
+  illustration?: "route-map" | "character-sheet";
 }
 
 export const mediaSlots = [
@@ -49,6 +54,7 @@ export const mediaSlots = [
     ratio: "16:10",
     alt: "GPS monitoring dashboard with a map of tracked vehicles",
     placeholder: "Dashboard main view with map",
+    illustration: "route-map",
   },
   {
     id: "IMG-CONNEQTECH-02",
@@ -99,6 +105,7 @@ export const mediaSlots = [
     ratio: "16:10",
     alt: "A generated Dungeons & Dragons character sheet",
     placeholder: "Character sheet page or CLI output",
+    illustration: "character-sheet",
   },
   {
     id: "IMG-PORTRAIT",

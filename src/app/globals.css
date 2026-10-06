@@ -160,6 +160,12 @@
     }
   }
 
+  /* Lenis (SmoothScroll): the page keeps its natural height while it drives the scroll. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
   body {
     background-color: var(--canvas);
     color: var(--ink);
@@ -282,24 +288,160 @@
 }
 
 /*
- * Scenes (DESIGN.md §7). The glow drifts on a slow loop and pauses off screen; the
- * reduced-motion guard below stops it entirely.
+ * The horizon (DESIGN.md §3.2): the mesh colours rising behind the rim of a dark
+ * planet. Gradients only, no blur filters. `--rim` is where the rim crosses the band.
  */
-@keyframes glow-drift-a {
+.horizon {
+  --rim: 74%;
+  --planet: max(110vw, 1300px);
+}
+
+.horizon-low {
+  --rim: 84%;
+}
+
+.horizon-light {
+  position: absolute;
+  left: 50%;
+  top: var(--rim);
+  border-radius: 50%;
+  translate: -50% -50%;
+}
+
+.horizon-light-a {
+  width: 96vw;
+  height: max(46vw, 420px);
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--mesh-2) 72%, transparent),
+    color-mix(in srgb, var(--mesh-2) 22%, transparent) 55%,
+    transparent
+  );
+  animation: horizon-drift-a 26s ease-in-out infinite alternate;
+}
+
+.horizon-light-b {
+  width: 62vw;
+  height: max(32vw, 300px);
+  margin-left: -26vw;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--mesh-1) 58%, transparent),
+    transparent
+  );
+  animation: horizon-drift-b 31s ease-in-out infinite alternate;
+}
+
+.horizon-light-c {
+  width: 58vw;
+  height: max(30vw, 280px);
+  margin-left: 26vw;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--mesh-3) 52%, transparent),
+    transparent
+  );
+  animation: horizon-drift-c 23s ease-in-out infinite alternate;
+}
+
+/*
+ * The planet: a circle of radius --planet whose top crosses the band at --rim, drawn
+ * with gradients on a box the size of the band. A real circle element would be thousands
+ * of pixels across, and moving it with the scroll costs an integrated GPU whole frames.
+ * Layers, top first: the lit rim, the atmosphere just inside it, the dark body.
+ */
+.horizon-planet {
+  --centre: 50% calc(var(--rim) + var(--planet));
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle var(--planet) at var(--centre),
+      transparent calc(var(--planet) - 2px),
+      rgb(255 255 255 / 0.5) calc(var(--planet) - 1px),
+      transparent var(--planet)
+    ),
+    radial-gradient(
+      circle var(--planet) at var(--centre),
+      transparent calc(var(--planet) - 72px),
+      color-mix(in srgb, var(--mesh-2) 30%, transparent) calc(var(--planet) - 2px),
+      transparent var(--planet)
+    ),
+    radial-gradient(
+      circle var(--planet) at var(--centre),
+      var(--night) calc(var(--planet) - 0.5px),
+      transparent var(--planet)
+    );
+}
+
+.horizon-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.7 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes horizon-drift-a {
   to {
-    transform: translate(-58%, 8%) scale(1.08);
+    transform: translateX(5%) scale(1.06);
   }
 }
 
-@keyframes glow-drift-b {
+@keyframes horizon-drift-b {
   to {
-    transform: translate(-40%, 12%) scale(0.92);
+    transform: translate(12%, -8%) scale(0.92);
   }
 }
 
-@keyframes glow-drift-c {
+@keyframes horizon-drift-c {
   to {
-    transform: translate(-62%, -10%) scale(1.12);
+    transform: translate(-10%, -6%) scale(1.1);
+  }
+}
+
+/*
+ * The hero name in brushed metal: a light-to-grey gradient clipped to the letters,
+ * and one sweep of light across them as the page opens.
+ */
+.name-shine {
+  color: transparent;
+  background-image:
+    linear-gradient(105deg, transparent 42%, rgb(255 255 255 / 0.95) 50%, transparent 58%),
+    linear-gradient(180deg, #fafafa 28%, #9c9c9c 100%);
+  background-size:
+    300% 100%,
+    100% 100%;
+  background-position:
+    100% 0,
+    0 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .name-shine {
+    animation: name-shine 2.2s var(--ease-in-out) 0.5s both;
+  }
+}
+
+@keyframes name-shine {
+  from {
+    background-position:
+      100% 0,
+      0 0;
+  }
+  to {
+    background-position:
+      0% 0,
+      0 0;
+  }
+}
+
+@media (forced-colors: active) {
+  .name-shine {
+    color: CanvasText;
+    background: none;
   }
 }
 
@@ -335,6 +477,34 @@
       animation: rise-in linear both;
       animation-timeline: view();
       animation-range: entry calc(var(--i, 0) * 6%) entry calc(70% + var(--i, 0) * 6%);
+    }
+  }
+}
+
+/*
+ * Statements that light up word by word as they scroll through (LitText). The
+ * paragraph names its view timeline; each word lights at its own place in it, `--p`.
+ * Without support, or with reduced motion, the text is simply lit.
+ */
+@keyframes lit {
+  from {
+    color: var(--ink-tertiary);
+  }
+  to {
+    color: var(--ink);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .lit {
+      view-timeline: --lit block;
+    }
+
+    .lit-word {
+      animation: lit linear both;
+      animation-timeline: --lit;
+      animation-range: cover calc(14% + var(--p) * 38%) cover calc(18% + var(--p) * 38%);
     }
   }
 }

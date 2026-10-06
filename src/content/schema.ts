@@ -147,7 +147,10 @@ export const siteSchema = z.object({
   seoDescription: visibleText.min(140).max(160),
   /** When the content last changed (YYYY-MM-DD), for the sitemap. */
   contentUpdated: z.iso.date(),
-  about: z.array(visibleText).min(1).max(4),
+  /** The About statement, in large type: who Samuele is and how he works. */
+  aboutStatement: visibleText.max(320),
+  /** Shorter paragraphs under the statement. */
+  about: z.array(visibleText).min(1).max(3),
   languages: visibleText,
 });
 

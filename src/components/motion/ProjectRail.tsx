@@ -76,7 +76,12 @@ export function ProjectRail({ heading, count, children }: Readonly<ProjectRailPr
     >
       <div className="sticky top-0 flex h-svh flex-col justify-center gap-10 overflow-hidden pt-16">
         <Container>{heading}</Container>
-        <m.div ref={track} className="flex w-max gap-6" style={{ x, paddingInline: RAIL_PADDING }}>
+        <m.div
+          ref={track}
+          // Composited, so sliding it costs the GPU a move, not a repaint of every card.
+          className="flex w-max gap-6 will-change-transform"
+          style={{ x, paddingInline: RAIL_PADDING }}
+        >
           {children}
         </m.div>
       </div>

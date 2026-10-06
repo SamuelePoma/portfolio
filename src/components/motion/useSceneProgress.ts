@@ -4,10 +4,13 @@ import { type MotionValue, useMotionValue, useScroll, useSpring } from "motion/r
 import { type RefObject, useSyncExternalStore } from "react";
 
 /**
- * The spring every scene follows the scroll with. A mouse wheel moves the page in
- * steps; the scene glides after it instead of jumping, and settles without overshoot.
+ * The spring every scene follows the scroll with. Critically damped (damping is
+ * 2 * sqrt(stiffness * mass)), so it never overshoots and trails the scroll by only
+ * about 50ms: enough to round off a keyboard or scrollbar jump, too little to feel
+ * like the scene is floating behind the page. Wheel scrolling is already smoothed by
+ * Lenis (SmoothScroll).
  */
-export const SCROLL_SPRING = { stiffness: 140, damping: 30, mass: 0.35, restDelta: 0.0005 };
+export const SCROLL_SPRING = { stiffness: 140, damping: 14.5, mass: 0.35, restDelta: 0.0005 };
 
 /** A motion value that follows another on the scroll spring. */
 export function useSmooth(value: MotionValue<number>): MotionValue<number> {
