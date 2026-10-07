@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { type FocusEvent, type ReactNode, useEffect, useRef, useState } from "react";
 
 import { Container } from "@/components/layout/Container";
 
@@ -51,6 +51,20 @@ export function ProjectRail({ heading, count, children }: Readonly<ProjectRailPr
   const progress = useSmooth(useScrollProgress(section, ["start start", "end end"]));
   const x = useTransform(progress, [0, 1], [0, -distance]);
 
+  // The cards slide with a transform, which the browser can't scroll a focused card
+  // into view through. When a card takes keyboard focus, scroll the page to the point
+  // of the rail where that card sits in the middle of the screen instead.
+  function onFocus(event: FocusEvent<HTMLDivElement>) {
+    const pinned = section.current;
+    const card = [...event.currentTarget.children].find((child) => child.contains(event.target));
+    if (!pinned || distance === 0 || !(card instanceof HTMLElement)) return;
+    const centred = card.offsetLeft + card.offsetWidth / 2 - window.innerWidth / 2;
+    const share = Math.min(1, Math.max(0, centred / distance));
+    const viewport = document.documentElement.clientHeight;
+    const top = pinned.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({ top: top + share * (pinned.offsetHeight - viewport), behavior: "instant" });
+  }
+
   if (reduce) {
     return (
       <section className="py-24">
@@ -75,13 +89,15 @@ export function ProjectRail({ heading, count, children }: Readonly<ProjectRailPr
         height: `calc(100svh + max(0px, ${String(count)} * ${RAIL_CARD_WIDTH} + ${String(count - 1)} * ${RAIL_GAP} + 2 * ${RAIL_PADDING} - 100vw))`,
       }}
     >
-      <div className="sticky top-0 flex h-svh flex-col justify-center gap-10 overflow-hidden pt-16">
+      {/* Clipped, not hidden: a hidden box can still be scrolled sideways by focus. */}
+      <div className="sticky top-0 flex h-svh flex-col justify-center gap-10 overflow-clip pt-16">
         <Container>{heading}</Container>
         <Animated.div
           ref={track}
           // Composited, so sliding it costs the GPU a move, not a repaint of every card.
           className="flex w-max gap-6 will-change-transform"
           style={{ x, paddingInline: RAIL_PADDING }}
+          onFocus={onFocus}
         >
           {children}
         </Animated.div>
