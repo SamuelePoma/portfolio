@@ -36,10 +36,8 @@ interface RagFlowDiagramProps {
 
 export function RagFlowDiagram({ className }: Readonly<RagFlowDiagramProps>) {
   return (
-    <ol
-      aria-label="How a question is answered: retrieval-augmented generation"
-      className={cn("@container relative isolate aspect-[16/7] w-full", className)}
-    >
+    // The line is a sibling of the list, not inside it: an <ol> may only hold <li>s.
+    <div className={cn("@container relative isolate aspect-[16/7] w-full", className)}>
       <svg
         aria-hidden
         viewBox="0 0 160 70"
@@ -53,24 +51,29 @@ export function RagFlowDiagram({ className }: Readonly<RagFlowDiagramProps>) {
           strokeWidth={0.35}
         />
       </svg>
-      {steps.map((step, index) => {
-        const [x, y] = positions[index] ?? [0, 0];
-        return (
-          <li
-            key={step}
-            className="absolute w-[21%] -translate-x-1/2 -translate-y-1/2 rounded-sm bg-surface px-[1cqw] py-[1.2cqw] text-center font-mono text-[max(9px,1.4cqw)] leading-snug text-ink-secondary ring-1 ring-hairline-strong"
-            style={{ left: `${String(x)}%`, top: `${String(y)}%` }}
-          >
-            {step}
-            {/* The pulse passing through this step: a ring that lights up in turn. */}
-            <span
-              aria-hidden
-              className="step-glow pointer-events-none absolute -inset-px rounded-[inherit] ring-2 ring-accent"
-              style={{ "--i": index } as CSSProperties}
-            />
-          </li>
-        );
-      })}
-    </ol>
+      <ol
+        aria-label="How a question is answered: retrieval-augmented generation"
+        className="absolute inset-0"
+      >
+        {steps.map((step, index) => {
+          const [x, y] = positions[index] ?? [0, 0];
+          return (
+            <li
+              key={step}
+              className="absolute w-[21%] -translate-x-1/2 -translate-y-1/2 rounded-sm bg-surface px-[1cqw] py-[1.2cqw] text-center font-mono text-[max(9px,1.4cqw)] leading-snug text-ink-secondary ring-1 ring-hairline-strong"
+              style={{ left: `${String(x)}%`, top: `${String(y)}%` }}
+            >
+              {step}
+              {/* The pulse passing through this step: a ring that lights up in turn. */}
+              <span
+                aria-hidden
+                className="step-glow pointer-events-none absolute -inset-px rounded-[inherit] ring-2 ring-accent"
+                style={{ "--i": index } as CSSProperties}
+              />
+            </li>
+          );
+        })}
+      </ol>
+    </div>
   );
 }

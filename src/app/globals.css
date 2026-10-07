@@ -482,6 +482,14 @@
 }
 
 /*
+ * Text that a scene fades in is shown as soon as something in it has keyboard focus,
+ * whatever the scroll position: a focused link must never be invisible.
+ */
+[data-reveal]:focus-within {
+  opacity: 1 !important;
+}
+
+/*
  * Statements that light up word by word as they scroll through (LitText). The
  * paragraph names its view timeline; each word lights at its own place in it, `--p`.
  * Without support, or with reduced motion, the text is simply lit.

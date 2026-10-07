@@ -100,7 +100,7 @@ export function ProgmaticScene({ titleId, copy, layers }: Readonly<ProgmaticScen
       className="overflow-x-clip"
       stageClassName="flex items-center py-24 lg:py-0"
     >
-      <Container className="grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8">
+      <Container className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8">
         <div className="flex flex-col gap-6 lg:col-span-4">
           {copy}
           <ol className="flex flex-col gap-3">
