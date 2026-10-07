@@ -27,6 +27,7 @@ const periodSchema = z
 
 const httpsUrl = z.url({ protocol: /^https$/ });
 
+// z.enum needs a non-empty tuple, and the registry is never empty.
 const mediaSlotIds = mediaSlots.map((slot) => slot.id) as [
   (typeof mediaSlots)[number]["id"],
   ...(typeof mediaSlots)[number]["id"][],

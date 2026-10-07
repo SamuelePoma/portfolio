@@ -34,6 +34,7 @@ function mixStrings(from: string, to: string): (progress: number) => string {
     );
 }
 
+/** Mixing never changes the kind of value, so the result has the inputs' type `T`. */
 function mixer<T extends number | string>(from: T, to: T): (progress: number) => T {
   if (typeof from === "number" && typeof to === "number") {
     return (progress) => mix(from, to, progress) as T;

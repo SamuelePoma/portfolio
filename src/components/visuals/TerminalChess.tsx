@@ -110,6 +110,7 @@ function Board() {
 /** A transcript line; text after `>` is the player's input, set brighter. */
 function Line({ text }: Readonly<{ text: string }>) {
   if (text === "") return <span className="block"> </span>;
+  // split() always returns at least one string, so `output` is never undefined.
   const [output, input] = text.split(">", 2) as [string, string | undefined];
   // "b7 -> b5" contains ">" too: only a trailing input after ": " counts as typed.
   if (input === undefined || !output.endsWith(": ")) return <span className="block">{text}</span>;

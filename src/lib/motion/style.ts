@@ -13,6 +13,7 @@ const transforms = {
 
 export type TransformKey = keyof typeof transforms;
 
+// Object.keys is typed string[] even for a literal object.
 const transformKeys = Object.keys(transforms) as TransformKey[];
 
 function isTransformKey(key: string): key is TransformKey {
