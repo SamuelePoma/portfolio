@@ -1,6 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const PORT = 3000;
+// PORT lets the suite run beside a server already using 3000 (next start reads it too).
+const PORT = Number(process.env.PORT ?? 3000);
 const BASE_URL = `http://localhost:${PORT}`;
 const isCI = Boolean(process.env.CI);
 

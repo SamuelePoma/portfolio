@@ -15,11 +15,12 @@ export function Tag({ className, ...props }: Readonly<ComponentPropsWithoutRef<"
   );
 }
 
-/** A list of tags with list semantics, so screen readers announce the count. */
+/** A list of tags with list semantics, so screen readers announce the count. Renders nothing when empty. */
 export function TagList({
   tags,
   className,
 }: Readonly<{ tags: readonly string[]; className?: string }>) {
+  if (tags.length === 0) return null;
   return (
     <ul className={cn("flex flex-wrap gap-2", className)}>
       {tags.map((tag) => (

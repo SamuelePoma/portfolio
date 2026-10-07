@@ -1,11 +1,18 @@
+import { legalDocuments } from "@/content/legal";
 import { mediaSlots } from "@/content/media";
 import { projects } from "@/content/projects";
-import { projectSchema, siteSchema, skillGroupSchema, timelineEntrySchema } from "@/content/schema";
+import {
+  legalDocumentSchema,
+  projectSchema,
+  siteSchema,
+  skillGroupSchema,
+  timelineEntrySchema,
+} from "@/content/schema";
 import { site } from "@/content/site";
 import { skillGroups } from "@/content/skills";
 import { timeline } from "@/content/timeline";
 
-const allContent = { site, projects, timeline, skillGroups, mediaSlots };
+const allContent = { site, projects, timeline, skillGroups, mediaSlots, legalDocuments };
 
 /** Every string anywhere in the content, with its path, for global rules. */
 function collectStrings(value: unknown, path = "content"): [string, string][] {
@@ -30,6 +37,13 @@ describe("content schemas", () => {
     },
   );
 
+  it.each(legalDocuments.map((document) => [document.slug, document] as const))(
+    "legal page %s is valid",
+    (_, document) => {
+      expect(() => legalDocumentSchema.parse(document)).not.toThrow();
+    },
+  );
+
   it("timeline entries and skill groups are valid", () => {
     for (const entry of timeline) expect(() => timelineEntrySchema.parse(entry)).not.toThrow();
     for (const group of skillGroups) expect(() => skillGroupSchema.parse(group)).not.toThrow();
@@ -46,10 +60,13 @@ describe("content rules", () => {
 
   it("never contains a phone number", () => {
     // Eight or more digits with at most one space, dot or dash between them. Profile URLs
-    // carry numeric ids (LinkedIn), so https URLs are skipped; tel: links never are.
+    // carry numeric ids (LinkedIn) and ISO dates look alike, so https URLs and exact
+    // dates are skipped; tel: links never are.
+    const isDate = (text: string) => /^\d{4}-\d{2}-\d{2}$/.test(text);
     const offenders = strings.filter(
       ([, text]) =>
-        /tel:/i.test(text) || (!text.startsWith("https://") && /\+?\d(?:[\s.-]?\d){7,}/.test(text)),
+        /tel:/i.test(text) ||
+        (!text.startsWith("https://") && !isDate(text) && /\+?\d(?:[\s.-]?\d){7,}/.test(text)),
     );
     expect(offenders).toEqual([]);
   });
@@ -65,6 +82,15 @@ describe("content rules", () => {
       const openEnded = "period" in project && !("end" in project.period);
       expect(project.status === "in-progress").toBe(openEnded);
     }
+  });
+
+  it("gives every page a unique meta description", () => {
+    const descriptions = [
+      site.seoDescription,
+      ...projects.map((project) => project.seoDescription),
+      ...legalDocuments.map((document) => document.seoDescription),
+    ];
+    expect(new Set(descriptions).size).toBe(descriptions.length);
   });
 
   it("uses at most one middle dot per string", () => {

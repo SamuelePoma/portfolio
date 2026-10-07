@@ -1,7 +1,9 @@
+import { DrawReveal } from "@/components/motion/DrawReveal";
 import { MediaFrame } from "@/components/ui/MediaFrame";
 import { MediaSlot } from "@/components/ui/MediaSlot";
 import { ProgmaticDiagram } from "@/components/visuals/ProgmaticDiagram";
 import { TerminalChess } from "@/components/visuals/TerminalChess";
+import { VetComponentsDiagram } from "@/components/visuals/VetComponentsDiagram";
 import type { CardVisual } from "@/content/schema";
 import { cn } from "@/lib/utils/cn";
 
@@ -10,27 +12,38 @@ import { cn } from "@/lib/utils/cn";
  * titles line up across a row whatever the visual inside. Windows (browser frame,
  * terminal) rise from the tray's bottom edge; their bottom corners are hidden.
  */
-const tray = "relative overflow-hidden bg-surface-sunken md:h-72 lg:h-88";
+const trayBox = "relative overflow-hidden md:h-72 lg:h-88";
 const windowInset = "absolute inset-x-5 top-5 bottom-0 rounded-b-none md:inset-x-8 md:top-8";
 
 interface CardMediaProps {
   visual: CardVisual;
+  /** Without the sunken tray, for a visual that sits on a surface of its own. */
+  bare?: boolean;
 }
 
-export function CardMedia({ visual }: Readonly<CardMediaProps>) {
+export function CardMedia({ visual, bare = false }: Readonly<CardMediaProps>) {
+  const tray = cn(trayBox, !bare && "bg-surface-sunken");
   switch (visual.type) {
-    case "screenshot":
+    case "screenshot": {
+      const image = (
+        <MediaSlot
+          id={visual.slot}
+          sizes="(min-width: 1280px) 620px, (min-width: 768px) 50vw, 100vw"
+          position="top"
+        />
+      );
       return (
         <div className={cn(tray, "aspect-[16/10] md:aspect-auto")}>
           <MediaFrame ratio="fill" className={windowInset}>
-            <MediaSlot
-              id={visual.slot}
-              sizes="(min-width: 1280px) 620px, (min-width: 768px) 50vw, 100vw"
-              position="top"
-            />
+            {/* The screenshot leans in a touch when the card is hovered. The strong ease-out
+                does most of the move in the first 200ms; the rest of the 700ms is a slow settle. */}
+            <div className="absolute inset-0 transition-transform duration-700 ease-(--ease-out) group-hover:scale-[1.04]">
+              {visual.effect === "draw" ? <DrawReveal>{image}</DrawReveal> : image}
+            </div>
           </MediaFrame>
         </div>
       );
+    }
     case "terminal":
       // On phones the tray takes the terminal's natural height; from md up the tray
       // is fixed and the terminal fills it, clipping the last lines if space runs out.
@@ -41,8 +54,13 @@ export function CardMedia({ visual }: Readonly<CardMediaProps>) {
       );
     case "diagram":
       return (
-        <div className={cn(tray, "flex items-center justify-center px-5 py-10 md:px-8")}>
-          <ProgmaticDiagram />
+        <div className={cn(tray, "flex items-center justify-center px-4 py-8 md:px-6")}>
+          {visual.name === "research-map" ? (
+            <ProgmaticDiagram />
+          ) : (
+            // Sized by the tray's height from md up, so the whole drawing fits.
+            <VetComponentsDiagram className="md:h-full md:w-auto md:max-w-full" />
+          )}
         </div>
       );
   }

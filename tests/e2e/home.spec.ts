@@ -46,10 +46,14 @@ test.describe("home page", () => {
     expect(new Set(hrefs)).toEqual(
       new Set([
         "/work/musetrail",
+        "/work/progmatic-ai-knowledge-assistant",
+        "/work/young-dcc-platform",
+        "/work/veterinary-practice-system",
         "/work/conneqtech-gps-dashboard",
         "/work/stedin-grid-monitoring",
-        "/work/progmatic-ai-knowledge-assistant",
         "/work/chess-game-java",
+        "/work/dnd-character-sheet-generator",
+        "/work/tower-defense-typescript",
       ]),
     );
   });
@@ -99,15 +103,15 @@ test.describe("home page", () => {
     expect(errors).toEqual([]);
   });
 
-  test("turns the nav dark over dark bands and light again above them", async ({ page }) => {
+  test("matches the nav to the band behind it", async ({ page }) => {
     const nav = page.locator("#site-nav");
-    // Into the first dark band and past the nav, so the band really sits under it.
-    await scrollPast(page, '[data-tone="night"]', 200);
+    // The opening scene is dark, so the nav starts in the night tone...
     await expect(nav).toHaveClass(/tone-night/);
-    await page.evaluate(() => {
-      window.scrollTo(0, 0);
-    });
+    // ...and turns light over a light section.
+    await scrollPast(page, "#stack", 200);
     await expect(nav).not.toHaveClass(/tone-night/);
+    await scrollPast(page, "#contact", 200);
+    await expect(nav).toHaveClass(/tone-night/);
   });
 
   test("has no horizontal overflow at common widths", async ({ page }) => {
@@ -132,18 +136,19 @@ test.describe("home page", () => {
   });
 });
 
-test.describe("contact form", () => {
-  test.beforeEach(async ({ page }) => {
+test.describe("contact", () => {
+  test("offers email and profiles, and no form", async ({ page }) => {
     await page.goto("/#contact");
-  });
-
-  test("explains every problem and stays accessible in the error state", async ({ page }) => {
-    await page.getByRole("button", { name: "Send message" }).click();
-
-    await expect(page.getByText("Please enter your name.")).toBeVisible();
-    await expect(page.getByText("Please enter your email address.")).toBeVisible();
-    await expect(page.getByText("Please write a message.")).toBeVisible();
-    await expect(page.getByLabel("Name")).toBeFocused();
+    const contact = page.locator("#contact");
+    await expect(contact.locator("form, input, textarea")).toHaveCount(0);
+    await expect(
+      contact.getByRole("link", { name: `${EMAIL} (copy to clipboard)` }),
+    ).toHaveAttribute("href", `mailto:${EMAIL}`);
+    await expect(contact.getByRole("link", { name: /GitHub/ })).toHaveAttribute(
+      "href",
+      "https://github.com/SamuelePoma",
+    );
+    await expect(contact.getByRole("link", { name: /LinkedIn/ })).toBeVisible();
 
     const results = await new AxeBuilder({ page })
       .include("#contact")
@@ -152,42 +157,9 @@ test.describe("contact form", () => {
     expect(results.violations).toEqual([]);
   });
 
-  test("confirms when the message is sent", async ({ page }) => {
-    let payload: unknown;
-    await page.route("**/api/contact", async (route) => {
-      payload = route.request().postDataJSON();
-      await route.fulfill({ json: { ok: true } });
-    });
-
-    await page.getByLabel("Name").fill("Ada Lovelace");
-    await page.getByLabel("Email").fill("ada@example.com");
-    await page.getByLabel("Message").fill("I'd like to talk about a project.");
-    await page.getByRole("button", { name: "Send message" }).click();
-
-    await expect(page.getByRole("heading", { name: "Message sent." })).toBeVisible();
-    expect(payload).toEqual({
-      name: "Ada Lovelace",
-      email: "ada@example.com",
-      message: "I'd like to talk about a project.",
-    });
-  });
-
-  test("offers email when sending fails", async ({ page }) => {
-    await page.route("**/api/contact", (route) =>
-      route.fulfill({ status: 500, json: { ok: false, error: "server_error" } }),
-    );
-
-    await page.getByLabel("Name").fill("Ada Lovelace");
-    await page.getByLabel("Email").fill("ada@example.com");
-    await page.getByLabel("Message").fill("I'd like to talk about a project.");
-    await page.getByRole("button", { name: "Send message" }).click();
-
-    const alert = page.getByRole("alert").filter({ hasText: "couldn't be sent" });
-    await expect(alert).toBeVisible();
-    await expect(alert.getByRole("link", { name: EMAIL })).toHaveAttribute(
-      "href",
-      `mailto:${EMAIL}`,
-    );
+  test("has no form endpoint", async ({ request }) => {
+    const response = await request.post("/api/contact", { data: {} });
+    expect(response.status()).toBe(404);
   });
 });
 

@@ -1,12 +1,12 @@
 import type { NextConfig } from "next";
 import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 
-import { parseServerEnv } from "./src/lib/env/schema";
+import { assertProductionEnv } from "./src/lib/env/schema";
 
-// Fail the production build early if a secret is missing, instead of failing
-// at runtime when the first visitor submits the contact form.
+// Fail the production build early if the canonical URL is missing, instead of
+// publishing canonical links, a sitemap and social cards that point at localhost.
 if (process.env.VERCEL_ENV === "production") {
-  parseServerEnv(process.env);
+  assertProductionEnv(process.env);
 }
 
 const defaultPageExtensions = ["tsx", "ts", "jsx", "js"];
@@ -16,6 +16,19 @@ export default function config(phase: string): NextConfig {
 
   return {
     poweredByHeader: false,
+    // The résumé has a short, shareable address.
+    redirects() {
+      return Promise.resolve([
+        { source: "/cv", destination: "/cv/samuele-poma-cv.pdf", permanent: true },
+      ]);
+    },
+    // Previews and local builds must never be indexed, even through a shared link.
+    headers() {
+      if (process.env.VERCEL_ENV === "production") return Promise.resolve([]);
+      return Promise.resolve([
+        { source: "/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] },
+      ]);
+    },
     reactStrictMode: true,
     // `*.dev.tsx` routes (the styleguide) exist only on the dev server and are
     // left out of production builds entirely.

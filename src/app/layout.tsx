@@ -1,27 +1,46 @@
 import "./globals.css";
 
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
 import type { Metadata, Viewport } from "next";
-import { Toaster } from "sonner";
 
 import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
+import { MotionProvider } from "@/components/motion/MotionProvider";
+import { SmoothScroll } from "@/components/motion/SmoothScroll";
+import { LazyToaster } from "@/components/ui/LazyToaster";
+import { site } from "@/content/site";
+import { publicEnv } from "@/lib/env/public";
+import { isIndexable, rootMetadata } from "@/lib/seo/metadata";
 import { cn } from "@/lib/utils/cn";
 
-export const metadata: Metadata = {
-  title: "Samuele Poma | Software Engineer",
-  description: "Portfolio of Samuele Poma, software engineer based in Middelburg, Netherlands.",
-};
+import { geistMono, geistSans } from "./fonts";
+
+export const metadata: Metadata = rootMetadata({
+  siteUrl: publicEnv.NEXT_PUBLIC_SITE_URL,
+  description: site.seoDescription,
+  indexable: isIndexable(),
+});
 
 export const viewport: Viewport = {
   themeColor: "#fafafa",
   colorScheme: "light",
 };
 
+/**
+ * Scroll-driven pieces are rendered in their starting state (hidden, offset, clipped)
+ * and brought in by JavaScript. Without it they would stay that way, so everything
+ * marked `data-reveal` is simply shown: the page reads in full with no script at all.
+ */
+const noScriptReveal =
+  "[data-reveal]{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important}";
+
 export default function RootLayout({ children }: Readonly<LayoutProps<"/">>) {
   return (
-    <html lang="en" className={cn(GeistSans.variable, GeistMono.variable)}>
+    <html lang="en" className={cn(geistSans.variable, geistMono.variable)}>
+      <head>
+        <noscript>
+          <style>{noScriptReveal}</style>
+        </noscript>
+      </head>
       <body>
         <a
           href="#main"
@@ -29,13 +48,16 @@ export default function RootLayout({ children }: Readonly<LayoutProps<"/">>) {
         >
           Skip to content
         </a>
-        <Nav />
-        {/* tabIndex lets the skip link move focus here in every browser. */}
-        <main id="main" tabIndex={-1} className="outline-hidden">
-          {children}
-        </main>
-        <Footer />
-        <Toaster position="bottom-center" offset={24} mobileOffset={16} />
+        <MotionProvider>
+          <Nav />
+          {/* tabIndex lets the skip link move focus here in every browser. */}
+          <main id="main" tabIndex={-1} className="outline-hidden">
+            {children}
+          </main>
+          <Footer />
+        </MotionProvider>
+        <LazyToaster />
+        <SmoothScroll />
       </body>
     </html>
   );

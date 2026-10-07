@@ -75,9 +75,9 @@
 
 ### 3.2 Rules
 
-- Most of the page is `--canvas` with `--ink`. Dark bands (`--night`) are used **only** for: the featured project (MuseTrail), and the contact/footer. That gives two dark moments, bookending the work.
+- Most of the page is `--canvas` with `--ink`. Dark bands (`--night`) are the stages of the launch: the opening scene, the featured project (MuseTrail) and the contact/footer. Light sections sit between them, like Apple's alternating product pages.
 - `--ink-tertiary` is for metadata (dates, file labels) at small sizes. Never for sentences.
-- The mesh gradient is **heavily blurred** (≥120px), low opacity (0.25–0.4 on light), sits behind the hero headline, and drifts slowly. It must never appear on buttons, text, cards or anywhere below the hero.
+- The mesh colours appear as **light** (since 2026-10-06, a **horizon**): on the dark opening and on the contact band they rise behind the rim of a dark planet, like first light, with a crisp lit rim and a faint grain so the gradients never band. They drift slowly; on the opening they lean towards the pointer. All gradients, no blur filters. The same horizon heads every other page (case studies, privacy, legal, 404) and the next-project tile, so every page opens in the same light. It never sits on a light section.
 - No other colors. Project screenshots bring their own color, and that is enough.
 - All text meets WCAG AA (4.5:1 body, 3:1 large text). Metadata is text too: the small mono labels need 4.5:1, which is why `--ink-tertiary` is `#6b6b6b` and not a lighter gray.
 
@@ -180,7 +180,7 @@ No heavy blur shadows, no colored glows.
 
 ## 7. Motion
 
-Motion follows **Emil Kowalski's design-engineering principles**: animate with purpose, keep UI feedback fast, use custom easing and restrained springs.
+**Direction (2026-10-05): a product launch.** Samuele asked for the site to move like Apple's iPhone and MacBook pages, not like a page that fades things in. The work is presented as products in **pinned, scroll-driven scenes**: a section several screens tall whose stage sticks to the viewport, so scrolling plays the scene forwards and backwards. Devices are drawn in **CSS 3D** (no WebGL; see the option recorded below) and animated with **Motion** (`motion/react`) scroll-linked values.
 
 ### 7.1 Tokens
 
@@ -192,38 +192,39 @@ Motion follows **Emil Kowalski's design-engineering principles**: animate with p
 --dur-instant: 120ms;  /* press, color */
 --dur-fast:    200ms;  /* hover, small UI */
 --dur-base:    300ms;  /* overlays, menus */
---dur-reveal:  700ms;  /* scroll reveals, hero */
+--dur-reveal:  700ms;  /* reveals */
 ```
 
-Springs (Motion library) for interactive/physical things: `{ type: "spring", duration: 0.5, bounce: 0.15 }`. Never bouncy above 0.2.
+Springs for interactive things: `{ type: "spring", duration: 0.5, bounce: 0.15 }`; the glow uses `{ duration: 0.9, bounce: 0 }`. Never bouncy above 0.2.
 
 ### 7.2 Rules
 
-- Animate only `transform`, `opacity`, `filter` (and `clip-path` for reveals). Never layout properties.
-- Never animate from `scale(0)`. Enter from `scale(0.96)` plus opacity.
-- UI responses (hover, press, menu) finish in **≤ 300ms**. Only scroll/hero reveals may be longer.
-- Anything seen often (nav, buttons) gets **less** motion than things seen once (hero).
-- Hover effects only under `@media (hover: hover) and (pointer: fine)`.
-- **`prefers-reduced-motion: reduce`** turns all movement off: content appears with a simple opacity fade of ≤ 150ms, the mesh stops drifting, and there is no parallax.
-- Scroll reveals run **once**, trigger at ~15% visibility, and never hide content from no-JS users or crawlers.
+- Animate only `transform`, `opacity`, `filter` and `clip-path`. Never layout properties.
+- **Wheel smoothing (2026-10-06, Samuele: "lo scorrimento non è fluido").** A mouse wheel moves the page in 100px steps; Lenis turns them into one glide, so scenes play like a film. Only the wheel, and only on devices with a mouse (`hover: hover` and `pointer: fine`): touch, keyboard, scrollbar and anchor links stay native, a click on a link to another page stops the glide, and with reduced motion Lenis never loads. It loads when the page is idle.
+- Scroll-linked scenes follow the scroll through a critically damped spring (`SCROLL_SPRING`: stiffness 140, damping 14.5, mass 0.35): about 50ms behind, enough to round off a keyboard jump, never floating behind the page.
+- UI responses (hover, press, menu) finish in **≤ 300ms**. Scenes may take as long as their scroll length.
+- Hover effects only for a fine pointer.
+- **Reduced motion:** every scene renders its final state, unpinned, as an ordinary section; the glow stops; the project rail becomes a row you scroll sideways yourself. A Playwright project checks this.
+- **Accessibility:** text that waits for a scene starts fully transparent, never dimmed, so it never reads as low-contrast text; all text stays real text in the DOM. Decorative 3D pieces are `aria-hidden`.
+- **Small screens:** the opening scene pins everywhere; scenes with a lot of text (MuseTrail, Progmatic) pin from `lg` only, and below that they play as they pass through the viewport, with their copy above in normal flow.
+- **Technology option:** devices are CSS 3D for weight and speed. Real 3D models (three.js / WebGL) were considered and kept as a later option if the CSS devices ever feel too stylised.
 
-### 7.3 Signature moments
+### 7.3 Scenes
 
-These are the only "wow" animations. Don't add more.
-
-1. **Hero entrance.** The name reveals line by line: each line slides up 24px, from `opacity 0, blur(8px)` to sharp, 700ms `--ease-out`, 80ms stagger. The subline and CTAs follow 150ms later. The mesh gradient fades in over 1.2s.
-2. **Living mesh.** The hero gradient drifts slowly (a 20–30s loop of translate/rotate on the blurred blobs) and reacts subtly to the pointer (≤ 20px offset, spring-smoothed). It pauses when off-screen.
-3. **Media reveal.** Project screenshots enter with a `clip-path: inset()` wipe from the bottom plus a 1.04 → 1 scale, 900ms `--ease-out`.
-4. **Card spotlight.** On hover, project cards show a soft radial highlight that follows the cursor (Linear/Vercel style), lift by 2px and switch to `--shadow-card-hover`. 200ms.
-5. **Case study transition.** Opening a project animates the card's image into the case-study header (a shared-element / `layoutId` transition, 500ms spring). Closing reverses it.
-6. **Copy email.** Clicking the email copies it and shows a small toast ("Email copied") in Sonner style, sliding up from the bottom.
+1. **Opening (dark).** The name, in brushed metal with one sweep of light as the page opens, stands over the horizon. Scrolling is a sunrise: the light climbs and swells while the horizon sinks away and the name drifts up. Then the light work section slides up over it as a sheet with rounded top corners, and the opening steps back into the dark. 2.6 screens, the last one shared with the sheet. (Until 2026-10-06 the laptop rose here; Samuele moved it into the work, §7.3.2.)
+2. **Young DCC (light): a MacBook launch.** The first project in *Things I've built.*, on the light page: the headline centred at the top, and under it a closed laptop already peeking in, which rises into place, opens on the hinge (−88° to 8°), wakes up on the platform's home page and leans in a touch. The laptop has a camera in its bezel, a glare across the glass and a soft floor shadow; on a light section it has no glow. Its deck is as wide as the lid at the hinge. Sized by the room the text leaves (a size container), so it always fits the screen. Three screens, pinned everywhere.
+3. **MuseTrail (dark), a tile.** The band is a dark tile on the light page, inset from the edges with large rounded corners, like Apple's product tiles. Two phones (with side buttons, glass sheen and a floor shadow) swing round in 3D to face the visitor, the back one starting far behind so they never pass through each other, part to either side, and the four artworks of the *My Museum* screen float out of the screen to different depths around them. The text column fades in at the start. Then the pitch photo opens up from a smaller window as it scrolls into view (clip-path inset to full, image settling from 1.18 to 1).
+4. **Progmatic (light): exploded view.** The assistant's interface tilts into an isometric view, comes apart into four layers (workspace, sidebar, brief, header), each named in a legend that slides in as its layer lifts, then clicks back together.
+5. **More work: horizontal rail.** The section pins and scrolling slides the remaining project cards sideways. Cards lean towards the pointer (≤ 6°) with a soft light following it. Inside them, the Stedin chart draws itself left to right and the chess pawn plays b7 to b5. Projects without a screenshot yet get a drawn stand-in instead of a placeholder (§10): a city map whose tracked route draws itself (Conneqtech), and the ability scores of a character sheet (D&D).
+6. **Headings and lists.** Section openers rise into focus word by word as they scroll into place. Stack groups and timeline rows rise in, staggered, with CSS scroll-driven animations (no JavaScript; browsers without support just show them). Card screenshots lean in (1.04) on hover.
+7. **Finale (dark).** *Let's talk.* over the same horizon as the opening, closing the page.
+8. **Copy email.** Unchanged: a toast confirms the copy.
 
 ### 7.4 Micro-interactions
 
 - Buttons: `:active` → `scale(0.97)`, 120ms.
-- Links: an underline that grows from the left on hover (`scaleX` 0 → 1, 200ms).
-- Arrow icons in CTAs nudge 2px right on hover.
-- Nav: transparent at the top. After 24px of scroll it gains a `backdrop-blur(12px)`, a canvas background at 80% opacity and a bottom hairline (200ms).
+- Arrow icons in CTAs nudge 2px on hover.
+- Nav: frosted after 24px of scroll; it takes the tone of the band behind it (dark over the opening, MuseTrail and contact).
 
 ---
 
@@ -249,7 +250,8 @@ Geist Mono 12px, `--ink-secondary`, 1px `--hairline` ring, `radius-sm`, 4px × 8
 ### 8.5 Media frame
 Every screenshot sits inside a frame, never loose:
 - **Browser frame** (for web apps): `--surface` with `--shadow-card`, `radius-lg`, and a 36px top bar with three 8px gray dots (`--hairline-strong`, *not* traffic-light colors) plus an optional mono URL pill.
-- **Plain frame** (for photos, such as the award ceremony): `radius-lg`, 1px inner ring `rgba(0,0,0,0.06)`.
+- **Plain frame** (for photos, such as the MuseTrail pitch): `radius-lg`, 1px inner ring `rgba(0,0,0,0.06)`.
+- **Phone frame** (for mobile apps, such as MuseTrail): a dark body drawn in CSS around a 1170 × 2532 screen, with a bezel and corner radii in percentages so it scales from its parent's height, a hairline-strong ring for the edge and a dark island at the top. Always dark, even on a light section. Phones never rotate: two phones stand side by side, the second set back (smaller and lower), like a product shot.
 - Images use `object-fit: cover` and are lazy-loaded (except the hero), in AVIF/WebP format with explicit width and height.
 
 ### 8.6 Image placeholder
@@ -267,13 +269,13 @@ Top: a **sunken tray** (`--surface-sunken`) with the visual. Windows (browser fr
 - `h3` title, plus a 1–2 line `small` description in `--ink-secondary`.
 - A row of tech tags.
 - An arrow icon at the top right that nudges on hover.
-The whole card is one link (it opens the case study), with the card spotlight on hover (§7.3.4).
+The whole card is one link (it opens the case study), with the card spotlight on hover (§7.3.5).
 
 ### 8.8 Terminal block
-For ChessGame, and anywhere code is the product. `--night-surface`, `radius-md`, Geist Mono 14px, `--night-ink`. A 32px top bar with gray dots and a title such as `chess.java`. Content is a board in classic text notation (uppercase white, lowercase black, dots for empty squares; plain ASCII, because Unicode chess glyphs render as emoji on some phones), after `white> e2 e4`, with the moved rank highlighted. It stands in for the game's real output until Samuele provides it. Exposed to screen readers as one image with a description. Optionally it types itself out once when it enters the viewport (respecting reduced motion).
+For ChessGame, and anywhere code is the product. `--night-surface`, `radius-md`, Geist Mono 14px, `--night-ink`. A 32px top bar with gray dots and a title such as `chess.java`. Content is the game's **real output**, copied from Samuele's terminal: the prompts, the `[LOG]` line, the board and the move history after 1. a4 b5 (a debug line in Italian is left out). The game prints Unicode pieces; each square is a fixed 2ch cell so the board stays aligned whatever font draws them, and every piece carries the text variation selector (U+FE0E) so phones don't turn the black pawn into an emoji. The square the last move landed on and the player's typed input are set in `--night-ink`, the rest in `--night-ink-secondary`. The card shows the last move and the board; the case study shows the whole turn. Exposed to screen readers as one image with a description. Optionally it types itself out once when it enters the viewport (respecting reduced motion).
 
 ### 8.9 Diagram
-For Progmatic (research, no UI yet). A **research map, not an architecture**: no architecture has been chosen, so the diagram shows the four areas under investigation (document retrieval, FileMaker integration, access control, data confidentiality) connected to a central ink node, "Knowledge assistant". Mono labels in `radius-sm` boxes, 1.5px `--hairline-strong` lines drawn behind them. Exposed to screen readers as one image listing the areas. Lines draw in on scroll (`stroke-dashoffset`) in the motion pass.
+For Progmatic. **What the assistant is built around**, not a component diagram of the code: the four pieces of the solution (document retrieval, FileMaker integration, access control, data confidentiality) connected to a central ink node, "Knowledge assistant". (Until 2026-10-06 this was framed as a research map; Samuele clarified that IO is the solution his team is building, not only research.) Mono labels in `radius-sm` boxes, 1.5px `--hairline-strong` lines drawn behind them. Exposed to screen readers as one image listing the pieces. Lines draw in on scroll (`stroke-dashoffset`) in the motion pass.
 
 ### 8.10 Timeline row
 For the background/experience list. A 3-column row: mono date (`2024-25`) · role and company (`h3` + `small`) · a one-line outcome. Rows are separated by 1px `--hairline`. No hover state: the rows aren't interactive, and a hover would suggest they are.
@@ -281,15 +283,8 @@ For the background/experience list. A 3-column row: mono date (`2024-25`) · rol
 ### 8.11 Toast
 Bottom center, `--ink` background, white 14px text, `radius-pill`, `--shadow-card-hover`. Enters from `translateY(16px) opacity 0`, 300ms `--ease-drawer`, and auto-dismisses after 2s.
 
-### 8.12 Contact form (on the dark band)
-- Fields: **Name**, **Email**, **Message** (textarea, 5 rows). All are required, with visible `<label>`s above the inputs (never placeholder-only labels).
-- Inputs: `--night-surface` background, `--night-hairline` ring, `radius-md`, 44px minimum height, 16px text (this prevents iOS zoom). Focus: a 2px `--accent-night` ring.
-- Errors: 13px text in `#ff6b6b` (the only non-token color, used for errors only) under the field, linked with `aria-describedby`, and the icon `⚠` in mono. Validate on blur and on submit, never on every keystroke.
-- A character counter on Message in mono `--night-ink-secondary` (`0 / 2000`).
-- Privacy note under the button, 13px: *"Your message is only used to reply to you. See the privacy policy."*
-- Submit: the primary inverted pill `Send message →`. While sending it shows a small spinner and the label `Sending…`, and is disabled.
-- Success: the form is replaced (a 300ms crossfade) by a check icon, *"Message sent. I'll get back to you soon."*, and a `Send another` link. Failure: an inline alert above the button with a friendly message and a suggestion to use email instead.
-- The anti-spam widget (Turnstile) is rendered in its compact form, dark theme, under the Message field.
+### 8.12 Contact form (removed 2026-10-06)
+Samuele chose email only: no form, so there is nothing to fill in, nothing stored, and no mail service, rate limiter or captcha behind the site. The form, its API route and their tests are in the git history if it ever comes back.
 
 ---
 
@@ -299,15 +294,14 @@ One long page plus a case-study view per project. Sections open with a `display`
 
 ### 9.0 Nav (see §8.1)
 
-### 9.1 Hero: light canvas with the mesh gradient
-- Takes about 90svh. Content is left-aligned on desktop, bottom-weighted like an editorial cover.
-- Eyebrow: `SOFTWARE ENGINEER · MIDDELBURG, NL`
-- `display-xl`: **Samuele Poma.** (two lines on mobile: *Samuele* / *Poma.*)
-- `lead`, `--ink-secondary`, max 32ch: *"I build full-stack software, from Go services to React interfaces, and take projects from the first requirement to the final release."*
-- CTAs: **Primary** `View work ↓` · **Secondary** `GitHub ↗` (github.com/SamuelePoma).
-- The mesh sits top-right. Below 768px, where the text is under it, it is masked to fade out by 40% of the hero height, so the small grey eyebrow never sits on a tint.
+### 9.1 Hero: the opening scene (dark)
+- A pinned scene (§7.3.1) on `--night`, pulled up under the nav, over the horizon (§3.2).
+- Eyebrow `SOFTWARE ENGINEER · MIDDELBURG, NL`, `display-xl` **Samuele Poma.** (two lines on mobile), the `lead` line, CTAs **View work ↓** and **GitHub ↗**, bottom-left like an editorial cover.
+- Scrolling is a sunrise over the horizon, then the work slides over it (§7.3.1).
 
 ### 9.2 Selected work
+**Since 2026-10-06:** Young DCC (on the laptop), MuseTrail and Progmatic are scenes (§7.3.2 to §7.3.4); every other project is a card on the horizontal rail (§7.3.5): the veterinary practice system (its component diagram as the card visual, drawn in CSS: lines draw themselves as it scrolls in), Conneqtech, Stedin, ChessGame, the D&D character sheet generator (placeholder until a screenshot arrives) and the tower defense game. Progmatic's case study adds the RAG flow from the project README: eight steps over two rows, each lighting up in turn with an accent ring.
+
 Section opener: `display`, *"Things I've built."*
 
 **a) Featured: MuseTrail (a full-bleed `--night` band)**
@@ -315,39 +309,41 @@ Section opener: `display`, *"Things I've built."*
 - A mono label with the award signal: `GRAND PRIZE · DRAGONS' DEN` in `--accent-night`. This is one of the two places the accent appears as a "signal".
 - Title `display`: *MuseTrail*. Description: a web app encouraging sustainable digital habits in young adults. Role: full-stack development and team lead.
 - Tags: `SvelteKit` `Docker`.
-- Media: a large browser frame with the app design (`IMG-MUSETRAIL-01`), plus an overlapping plain-frame photo of the award ceremony (`IMG-MUSETRAIL-02`), offset and slightly lower, with a parallax difference of ≤ 40px.
+- Media: MuseTrail is designed for phones, so the product is shown on **two phone frames** (§8.5): *My Museum* (`IMG-MUSETRAIL-01`) in front, the progress screen (`IMG-MUSETRAIL-03`) set back to its right. The stage is square on phones and 5:4 from `sm`.
+- Below, a plain-frame photo of the team pitching MuseTrail to professors and investors (`IMG-MUSETRAIL-02`, 16:9) in the media columns, with its caption in the text column, level with the photo's bottom edge (under it on mobile). The caption says what the photo shows; it does not claim it is the Dragons' Den.
 
 **b) Bento grid (light canvas), 12 columns**
 
 | Row | Left | Right |
 |---|---|---|
-| 1 | **Conneqtech**: span 7, browser frame | **Stedin**: span 5, browser frame |
-| 2 | **Progmatic**: span 5, diagram (§8.9) | **ChessGame**: span 7, terminal (§8.8) |
+| 1 | **Progmatic**: span 7, browser frame | **Young DCC**: span 5, browser frame |
+| 2 | **Conneqtech**: span 5, browser frame | **Stedin**: span 7, browser frame |
+| 3 | **ChessGame**: span 7, terminal (§8.8) | **Tower defense**: span 5, browser frame |
 
-On mobile each card spans full width, in the same order.
+On mobile each card spans full width, in the same order. The order is the featured project, then the most recent work first.
 
-Card content (every fact from the résumé; the copy lives in `src/content/projects.ts`):
+Card content (facts from the résumé and from Samuele; the copy lives in `src/content/projects.ts`):
+- **Progmatic**: `PROGMATIC · SINCE 2026` plus an accent `IN PROGRESS` status with a small dot (it signals real status; the pulse comes with the motion pass). *AI knowledge assistant.* IO, the local AI assistant Samuele's team is building for Progmatic: answers from the company's own data with their sources, plus drafts of emails, code and quotations. Tags: `AI` `Document retrieval` `FileMaker`. The diagram of what it is built around (§8.9) is in the case study.
+- **Young DCC**: `DELTA CLIMATE CENTER · 2026`. *Youth climate events platform.* An online platform, built with the Delta Climate Center, to promote and organise events on environmental themes for young people in Zeeland. No tags until the stack is confirmed.
 - **Conneqtech**: `CONNEQTECH · 2024-25`. *GPS monitoring dashboard.* A dashboard to track cars and bicycles and see their GPS data and vehicle details in one place. Built end to end during the internship. Tags: `Go` `Frontend` `Backend`.
 - **Stedin**: `STEDIN · UNIVERSITY PROJECT`. *Grid monitoring.* Software for visualising power usage and monitoring faulty transformers across regions of the Netherlands. Tags: `Laravel` `PHP` `MySQL`.
-- **Progmatic**: `PROGMATIC · SINCE 2026` plus an accent `IN PROGRESS` status with a small dot (it signals real status; the pulse comes with the motion pass). The team size goes in the case study. *AI knowledge assistant.* Researching an internal assistant for technical and organisational knowledge: document retrieval, FileMaker integration, access control and confidentiality. Tags: `AI` `Document retrieval` `FileMaker`.
 - **ChessGame**: `JAVA · 2024-25`. *Chess in the terminal.* A text-based chess game built with object-oriented programming and design patterns. Tags: `Java` `OOP` `Design patterns`.
+- **Tower defense**: `TYPESCRIPT`. *Tower defense game.* A tower defense game built with object-oriented TypeScript. Tags: `TypeScript` `OOP`.
 
 Why not the earlier wording: "live" GPS data, "detecting" transformers, a `RAG` tag and "chess engine" all claimed more than the résumé says.
 
 ### 9.3 Case-study view (one per project)
-Opened from the cards (§7.3.5). The structure is always the same:
-1. Back link (`← All work`), eyebrow with the dates, `display` title, `lead` one-liner.
-2. A meta row of 4 columns in mono: **Role** · **Team** · **Timeline** · **Stack**.
-3. Hero media (the shared element from the card).
-4. **Problem**: 1 paragraph.
-5. **Approach**: 2–3 paragraphs, plus a diagram or secondary media.
-6. **Outcome**: 1 paragraph plus highlights (for example the award).
-7. Gallery: 1–3 extra images (slots in §10).
-8. A next-project link at the bottom (a large `h1`, with an arrow that nudges on hover).
+Opened from the cards (§7.3.5) and the scenes, at `/work/[slug]`. The structure is always the same, and **every part is optional**: a fact that isn't confirmed yet means a shorter page, never a guessed one.
+1. **A dark header over the horizon** (since 2026-10-06), pulled up under the nav: breadcrumbs (`HOME / WORK / MUSETRAIL`, mono, 44px hit areas; `Work` leads back to `/#work`), the card's context line (`TEAM PROJECT · 2024-25`, plus the `IN PROGRESS` status where it applies), the `display-xl` title (the page's only `h1`) and the `lead` one-liner.
+2. **The main visual floats over the header's edge**, half on the dark band and half on the page, like a product on a stage: the browser frame at the slot's ratio, the two phones for MuseTrail, the full terminal transcript for ChessGame. No tray. Preloaded: it is the page's LCP. Projects without one end the header plainly.
+3. A meta row: **Role** · **Team** · **Timeline** (long form, `Nov 2024 to Jan 2025`) · **Stack**, mono labels over values in `body` ink. Unknown values are left out, not shown empty.
+4. Sections in a 4 + 8 column grid (`h2` on the left, staying in view while its section is read on wide screens; `lead`-size prose on the right, at most 60ch), separated by hairlines: **Problem** (1 paragraph, set as a large statement that lights up as it is read), **Approach** (1–3 paragraphs, plus the research map for Progmatic), **Outcome** (1 paragraph, then highlights as accent mono labels), **What I learned** and **Links** (only public repos and demos).
+5. Gallery: 1–3 extra images in the right 8 columns, each caption in the left 4, level with the image's bottom edge. Images whose file is missing are skipped (an optional image never gets a placeholder).
+6. **Next project:** a dark rounded tile over the horizon, inset from the edges like the home tiles: an accent mono `NEXT PROJECT` and the context line, the `display` title and one-liner, `Read the case study →`, and the project's card visual rising from the tile's bottom edge. The whole tile is one link; it loops from the last project back to the first.
 
 ### 9.4 Stack
 Section opener: `display`, *"Tools I reach for."*
-Four columns (2 on tablet, 1 on mobile), each a group with a mono label and a plain list:
+A **spec sheet** (two columns on desktop, one on mobile): each group has a mono label and a hairline list, every tool in `h2` type with, beside it, the projects whose stack lists it, linked to their case studies. Show, don't claim. The groups:
 - **Languages**: Go, TypeScript, JavaScript, Java, PHP, SQL
 - **Frameworks**: React, SvelteKit, Laravel, Tailwind CSS
 - **Tools**: Git, GitHub, Docker, MySQL
@@ -356,7 +352,7 @@ Four columns (2 on tablet, 1 on mobile), each a group with a mono label and a pl
 No logos wall, no progress bars.
 
 ### 9.5 About
-Section opener: `display`, *"About me."* Two columns: a short paragraph (3–4 sentences, first person, `lead` size) on the left, and a **timeline** (§8.10) on the right:
+Section opener: `display`, *"About me."* Then a **statement** in large type (two sentences: who Samuele is and how he works) whose words light up from tertiary to ink as it is read, with a CSS scroll-driven animation (the grey still meets AA; without support it is simply lit). Below it, two columns: short paragraphs (`lead`: the stack, and what he is working on now) on the left, and a **timeline** (§8.10) on the right:
 - `2023-27` · HZ University of Applied Sciences · BSc ICT, Software Engineering
 - `2024-25` · Conneqtech · Software engineering intern
 - `2020-22` · Rondinella & Partners · Web development & marketing
@@ -366,10 +362,10 @@ Below the timeline: a secondary button `Résumé (PDF) ↓` that downloads `/cv/
 Optional portrait: `IMG-PORTRAIT`, 4:5, grayscale, `radius-lg`. Not shown until Samuele provides one (an optional image never gets a placeholder).
 
 ### 9.6 Contact (a `--night` band that merges into the footer)
-- `display`, `--night-ink`: *"Let's talk."*
-- Two columns on desktop, stacked on mobile:
-  - **Left:** the email at `h2` size: a real `mailto:` link that copies on click and confirms with a toast (§7.3.6); without JavaScript or clipboard access it opens the email app. On narrow screens it wraps after the `@`. Then secondary buttons: GitHub ↗ (`github.com/SamuelePoma`) · LinkedIn ↗ (`linkedin.com/in/samuele-poma-547120242`). The résumé stays in About, so no intent is repeated.
-  - **Right:** the contact form (§8.12). It posts to `/api/contact` (never a GET, so a message can't end up in a URL), uses uncontrolled inputs so text typed before hydration survives, and shows a `<noscript>` note offering email.
+- Centred, over the horizon (§3.2): `display-xl`, `--night-ink`: *"Let's talk."*, then one `lead` line: *"Have a project, a question or an idea? Email is the best way to reach me."*
+- The email as the headline act, up to 72px: a real `mailto:` link that copies on click and confirms with a toast (§7.3.8); without JavaScript or clipboard access it opens the email app. On narrow screens it wraps after the `@`.
+- Then three pills: `Write an email ↗` (primary, `mailto:`), GitHub ↗ (`github.com/SamuelePoma`) and LinkedIn ↗ (`linkedin.com/in/samuele-poma-547120242`). The résumé stays in About, so no intent is repeated.
+- **No form** (§8.12) and **no phone number.**
 - **No phone number.**
 
 ### 9.7 Footer (continues the `--night` band)
@@ -378,10 +374,10 @@ Optional portrait: `IMG-PORTRAIT`, 4:5, grayscale, `radius-lg`. Not shown until 
 - On mobile the two groups stack.
 
 ### 9.8 Utility pages
-All utility pages use the nav and footer, the light canvas, and a single reading column (`65ch`).
-- **404:** a mono eyebrow `ERROR 404`, the `display` text *"This page doesn't exist."*, a `lead` line, a primary button `Back home` and a secondary `View work`. A faint mesh gradient at 15% opacity is the only exception to the hero-only rule.
+All utility pages use the nav and footer.
+- **404:** a full dark screen over the horizon, centred: a mono eyebrow `ERROR 404`, the `display-xl` text *"This page doesn't exist."*, a `lead` line, a primary button `Back home` and a secondary `View work`.
 - **Error (500 / runtime):** the same layout, *"Something broke."*, plus a `Try again` button (resets the error boundary) and `Back home`. Never show a stack trace or error message.
-- **Privacy / Legal:** a breadcrumb, a `h1`, a mono `LAST UPDATED 2026-10-01` label, and long-form text styled as `body`, with `h2` sections and anchor links on the headings.
+- **Privacy / Legal:** a short dark header over the horizon (breadcrumb, mono `LAST UPDATED` label, `display` title, `lead` intro), then the text in a `65ch` reading column styled as `body`, with `h2` sections and anchor links on the headings. On wide screens an *On this page* list of the sections stays in view beside it.
 
 ---
 
@@ -391,19 +387,21 @@ Put files in `/public/images/`. Format: **WebP or AVIF**, sRGB, long edge 2400px
 
 | Slot ID | Where | Ratio | What to put there | Status |
 |---|---|---|---|---|
-| `IMG-MUSETRAIL-01` | Featured band plus case-study hero | 16:10 | The main MuseTrail screen (home or trail view), a clean desktop screenshot | Samuele has it (design) |
-| `IMG-MUSETRAIL-02` | Featured band overlap | 4:5 | A photo of the Dragons' Den award ceremony / the team with the prize | Samuele has it |
-| `IMG-MUSETRAIL-03` | Case-study gallery | 16:10 | A second design screen or a mobile view | Optional |
-| `IMG-CONNEQTECH-01` | Card plus case-study hero | 16:10 | The dashboard main view, ideally with the map and vehicles visible. **Blur any customer data or plates.** | Samuele has images |
-| `IMG-CONNEQTECH-02` | Case-study gallery | 16:10 | Vehicle detail / GPS history view | Samuele has images |
-| `IMG-STEDIN-01` | Card plus case-study hero | 16:10 | The product screen: the power-usage map or transformer overview | Samuele has it |
-| `IMG-STEDIN-02` | Case-study gallery | 16:10 | A detail or alert view for a faulty transformer | Optional |
-| `IMG-PROGMATIC-01` | Case-study gallery | 16:10 | Optional: a research board, a whiteboard photo, or an early prototype. The card itself uses the SVG diagram. | Optional |
+| `IMG-MUSETRAIL-01` | Featured band (front phone) plus case-study hero | 9:19.5 | The *My Museum* screen. Straightened from the team's poster | ✅ In place |
+| `IMG-MUSETRAIL-02` | Featured band photo | 16:9 | The team pitching MuseTrail to professors and investors | ✅ In place |
+| `IMG-MUSETRAIL-03` | Featured band (back phone) plus case-study gallery | 9:19.5 | The progress screen (CO2 saved compared with the average user). Cropped from the poster | ✅ In place |
+| `IMG-CONNEQTECH-01` | Card plus case-study hero | 16:10 | The dashboard main view, ideally with the map and vehicles visible. **Blur any customer data or plates.** | Needed |
+| `IMG-CONNEQTECH-02` | Case-study gallery | 16:10 | Vehicle detail / GPS history view | Optional |
+| `IMG-STEDIN-01` | Card plus case-study hero | 16:10 | The voltage chart of one transformer over two weeks, on a white page | ✅ In place |
+| `IMG-STEDIN-02` | Case-study gallery | 16:9 | Samuele's project group at work | ✅ In place |
+| `IMG-PROGMATIC-01` | Card plus case-study hero | 16:9 | The assistant's overview screen. The signed-in user's name and avatar are blurred | ✅ In place |
+| `IMG-YOUNGDCC-01` | Card plus case-study hero | 16:10 | The platform's home page | ✅ In place |
+| `IMG-TOWERDEFENSE-01` | Card plus case-study hero | 16:9 | The game's win screen | ✅ In place |
 | `IMG-PORTRAIT` | About | 4:5 | A professional portrait on a neutral background, shown in grayscale | Optional |
 | `OG-IMAGE` | Social share preview | 1200×630 | Generated from the hero (name plus mesh), not a photo | Built in code |
 | `CV-PDF` | `/public/cv/samuele-poma-cv.pdf` | A4 PDF | The résumé **without the phone number** (it's public) | Samuele to export |
 
-ChessGame needs no images: the terminal block is the visual.
+ChessGame needs no images: the terminal block is the visual. Slots shown on the live site while their file is missing get a drawn stand-in instead of the placeholder (`illustration` in `src/content/media.ts`): `IMG-CONNEQTECH-01` a city map with a tracked route, `IMG-DND-01` the ability scores of a character sheet (the course's standard array). The real image replaces it as soon as the file exists. The source files Samuele sent are kept untracked in `assets-src/`; the exported WebP files are what ships.
 
 ---
 
@@ -432,7 +430,7 @@ ChessGame needs no images: the terminal block is the visual.
 - ❌ Add colors, gradients (outside the hero), glows or colored shadows.
 - ❌ Use weight 700+, all-caps headlines, or mono body text.
 - ❌ Use skill bars, percentages, logo walls, emoji, or stock illustrations.
-- ❌ Use typewriter hero text, cursor trails, particle backgrounds, or scroll-jacking.
+- ❌ Use typewriter hero text, cursor trails, particle backgrounds, or scroll-jacking (wheel smoothing, §7.2, is the one exception: it never changes where the page goes, only how it glides there).
 - ❌ Use bounce easing, `scale(0)` entrances, or animations over 300ms on UI that is used repeatedly.
 - ❌ Use single drop-shadows, or heavy blurred shadows.
 - ❌ Use CV language: "seeking", "hire me", "looking for an internship", phone numbers. (Listing a past internship as experience is fine.)

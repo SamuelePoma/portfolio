@@ -1,14 +1,4 @@
-import { parsePublicEnv, parseServerEnv } from "@/lib/env/schema";
-
-const validServerEnv = {
-  RESEND_API_KEY: "re_test_123",
-  CONTACT_TO_EMAIL: "to@example.com",
-  CONTACT_FROM_EMAIL: "noreply@example.com",
-  TURNSTILE_SECRET_KEY: "1x0000000000000000000000000000000AA",
-  UPSTASH_REDIS_REST_URL: "https://example.upstash.io",
-  UPSTASH_REDIS_REST_TOKEN: "token",
-  IP_HASH_SALT: "a-long-random-salt-value",
-};
+import { assertProductionEnv, parsePublicEnv } from "@/lib/env/schema";
 
 describe("parsePublicEnv", () => {
   it("defaults the site URL to localhost", () => {
@@ -34,34 +24,28 @@ describe("parsePublicEnv", () => {
   });
 });
 
-describe("parseServerEnv", () => {
-  it("accepts a complete configuration", () => {
-    expect(parseServerEnv(validServerEnv)).toEqual(validServerEnv);
+describe("assertProductionEnv", () => {
+  it("accepts a public site URL", () => {
+    expect(() => {
+      assertProductionEnv({ NEXT_PUBLIC_SITE_URL: "https://samuelepoma.com" });
+    }).not.toThrow();
   });
 
-  it("lists every missing variable in one error", () => {
-    expect(() => parseServerEnv({})).toThrow(/RESEND_API_KEY[\s\S]*IP_HASH_SALT/);
+  it("requires the site URL instead of falling back to localhost", () => {
+    expect(() => {
+      assertProductionEnv({});
+    }).toThrow(/NEXT_PUBLIC_SITE_URL/);
   });
 
-  it("rejects a short IP hash salt", () => {
-    expect(() => parseServerEnv({ ...validServerEnv, IP_HASH_SALT: "short" })).toThrow(
-      /at least 16 characters/,
-    );
+  it("refuses localhost", () => {
+    expect(() => {
+      assertProductionEnv({ NEXT_PUBLIC_SITE_URL: "http://localhost:3000" });
+    }).toThrow(/not localhost/);
   });
 
-  it("rejects an invalid contact email", () => {
-    expect(() => parseServerEnv({ ...validServerEnv, CONTACT_TO_EMAIL: "nope" })).toThrow(
-      /CONTACT_TO_EMAIL/,
-    );
-  });
-
-  it("does not echo secret values in error messages", () => {
-    const secret = "super-secret-value";
-    try {
-      parseServerEnv({ ...validServerEnv, UPSTASH_REDIS_REST_URL: secret });
-      expect.unreachable();
-    } catch (error) {
-      expect(String(error)).not.toContain(secret);
-    }
+  it("still rejects a malformed URL", () => {
+    expect(() => {
+      assertProductionEnv({ NEXT_PUBLIC_SITE_URL: "not a url" });
+    }).toThrow(/NEXT_PUBLIC_SITE_URL/);
   });
 });

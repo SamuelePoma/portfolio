@@ -49,6 +49,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm audit --prod --audit-level=high
+      # Fails on copyleft licences and on a stale THIRD_PARTY_LICENSES.md.
+      - run: pnpm licenses:check
       - uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
