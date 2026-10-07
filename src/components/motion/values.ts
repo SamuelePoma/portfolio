@@ -39,6 +39,7 @@ export function useTransform<T>(
   inputOrMap: readonly number[] | ((value: number) => T),
   output?: readonly T[],
 ): MotionValue<T> {
+  // The overloads tie the output type to the track; this body only sees their union.
   const map = useMemo(
     () =>
       typeof inputOrMap === "function"

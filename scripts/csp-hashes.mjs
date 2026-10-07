@@ -1,9 +1,9 @@
 /**
- * Writes the script half of the Content-Security-Policy into every prerendered page
- * (docs/adr/0003-csp-strategy.md): a <meta> tag that allows this origin's scripts and,
- * by their SHA-256 hash, exactly the inline scripts Next.js put in that page. Runs right
- * after `next build` (the `build` script), so pages stay static and no inline script
- * runs unless the build itself wrote it.
+ * Writes the document half of the Content-Security-Policy into every prerendered page
+ * (docs/adr/0003-csp-strategy.md): a <meta> tag with the page's whole policy, which
+ * allows this origin's scripts and, by their SHA-256 hash, exactly the inline scripts
+ * Next.js put in that page. Runs right after `next build` (the `build` script), so
+ * pages stay static and no inline script runs unless the build itself wrote it.
  */
 import { createHash } from "node:crypto";
 import { readdir, readFile, writeFile } from "node:fs/promises";

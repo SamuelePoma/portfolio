@@ -79,7 +79,7 @@ flowchart LR
 | Build output  | html-validate, linkinator  | Valid HTML on every page, no broken links                                               |
 | Performance   | `pnpm size`, Lighthouse CI | First-load JavaScript per page and Lighthouse budgets on mobile                         |
 
-GitHub Actions runs four jobs on every pull request: quality (lint, types, formatting, unit tests with coverage of at least 90% on `src/lib`), security (dependency audit, licence check, gitleaks), end-to-end tests, and the audit of the build output. `main` only changes through squash-merged pull requests with all four green.
+GitHub Actions runs four jobs on every pull request: quality (lint, types, unused code with knip, formatting, unit tests with coverage of at least 90% on `src/lib`), security (dependency audit, licence check, gitleaks), end-to-end tests, and the audit of the build output. `main` only changes through squash-merged pull requests with all four green.
 
 ## Folders
 
@@ -92,5 +92,5 @@ src/
   lib/          Pure logic: env, SEO, security, motion, formatting
 scripts/        Post-build CSP, checks, licences, fonts and icons
 tests/          unit/ and e2e/
-docs/           This page and the ADRs
+docs/           This page, the ADRs and the README screenshots
 ```

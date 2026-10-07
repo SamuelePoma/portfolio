@@ -113,7 +113,7 @@ export const legalNotice = {
   title: "Legal notice",
   seoDescription:
     "Legal notice for this site: who runs it, the terms of use, copyright, the MIT licence of the source code and credits for the third-party software it uses.",
-  updated: "2026-10-06",
+  updated: "2026-10-07",
   intro:
     "The practical details: who runs this site, what you may do with it and whose work it builds on.",
   sections: [
@@ -160,7 +160,7 @@ export const legalNotice = {
         "Tailwind CSS, MIT licence",
         "Lucide icons, ISC licence",
         "Simple Icons (the GitHub logo), CC0 1.0",
-        "Motion, Lenis, Zod and Sonner, MIT licence",
+        "Lenis, Zod and Sonner, MIT licence",
       ],
     },
   ],

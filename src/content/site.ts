@@ -14,7 +14,7 @@ export const site = {
     "I build full-stack software, from Go services to SvelteKit and React interfaces, and take projects from the first requirement to the final release.",
   seoDescription:
     "Samuele Poma is a software engineer in Middelburg, Netherlands, building full-stack software with Go, TypeScript and React. See his projects and case studies.",
-  contentUpdated: "2026-10-06",
+  contentUpdated: "2026-10-07",
   aboutStatement:
     "I'm a software engineer in the final year of a BSc in ICT at HZ University of Applied Sciences. I like to own a problem from start to finish: understanding what people need, turning it into requirements, and delivering software that solves it.",
   about: [

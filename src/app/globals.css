@@ -11,7 +11,6 @@
 :root {
   --canvas: #fafafa;
   /* The light canvas by name, for crossfades out of a dark band (where --canvas is dark). */
-  --canvas-light: #fafafa;
   --surface: #ffffff;
   --surface-sunken: #f2f2f2;
   --ink: #171717;
@@ -20,7 +19,6 @@
   --hairline: #eaeaea;
   --hairline-strong: #d4d4d4;
   --accent: #0062d1;
-  --danger: #c62828;
 
   --night: #0a0a0a;
   --night-surface: #111111;
@@ -29,7 +27,6 @@
   --night-ink-tertiary: #8a8a8a;
   --night-hairline: rgb(255 255 255 / 0.1);
   --accent-night: #3291ff;
-  --danger-night: #ff6b6b;
 
   --mesh-1: #00dfd8;
   --mesh-2: #007cf0;
@@ -41,11 +38,6 @@
     0 0 0 1px rgb(0 0 0 / 0.08), 0 2px 2px rgb(0 0 0 / 0.04), 0 8px 16px -4px rgb(0 0 0 / 0.04);
   --elev-card-hover:
     0 0 0 1px rgb(0 0 0 / 0.1), 0 4px 8px rgb(0 0 0 / 0.04), 0 24px 48px -12px rgb(0 0 0 / 0.1);
-
-  --dur-instant: 120ms;
-  --dur-fast: 200ms;
-  --dur-base: 300ms;
-  --dur-reveal: 700ms;
 
   color-scheme: light;
 }
@@ -62,7 +54,6 @@
     --hairline: var(--night-hairline);
     --hairline-strong: rgb(255 255 255 / 0.18);
     --accent: var(--accent-night);
-    --danger: var(--danger-night);
     --elev-card: 0 0 0 1px var(--night-hairline);
     --elev-card-hover: 0 0 0 1px rgb(255 255 255 / 0.16);
 
@@ -83,7 +74,6 @@
   --color-hairline: var(--hairline);
   --color-hairline-strong: var(--hairline-strong);
   --color-accent: var(--accent);
-  --color-danger: var(--danger);
   --color-white: #ffffff;
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
@@ -139,7 +129,6 @@
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 
   --container-page: 75rem;
   --container-wide: 87.5rem;

@@ -2,11 +2,6 @@ import type { CSSProperties } from "react";
 
 import { cn } from "@/lib/utils/cn";
 
-/**
- * The retrieval-augmented generation flow from the project's own README, as a
- * pipeline that snakes over two rows. Each step lights up in turn, like a request
- * travelling through it; the line draws itself as it scrolls into view.
- */
 const steps = [
   "Employee",
   "Question in everyday language",
@@ -34,6 +29,11 @@ interface RagFlowDiagramProps {
   className?: string;
 }
 
+/**
+ * The retrieval-augmented generation flow from the project's own README, as a
+ * pipeline that snakes over two rows. Each step lights up in turn, like a request
+ * travelling through it; the line draws itself as it scrolls into view.
+ */
 export function RagFlowDiagram({ className }: Readonly<RagFlowDiagramProps>) {
   return (
     // The line is a sibling of the list, not inside it: an <ol> may only hold <li>s.

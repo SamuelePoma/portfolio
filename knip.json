@@ -1,0 +1,6 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": ["src/app/styleguide/page.dev.tsx", "scripts/*.mjs"],
+  "ignore": [".htmlvalidate.mjs"],
+  "ignoreDependencies": ["geist"]
+}

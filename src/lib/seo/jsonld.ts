@@ -30,7 +30,7 @@ interface CaseStudyInput {
 const personId = (siteUrl: string) => absoluteUrl("/#person", siteUrl);
 
 /** Samuele, referenced by `@id` from every other node. */
-export function personJsonLd({ siteUrl, role, github, linkedin, skills }: PersonInput): JsonLd {
+function personJsonLd({ siteUrl, role, github, linkedin, skills }: PersonInput): JsonLd {
   return {
     "@type": "Person",
     "@id": personId(siteUrl),
@@ -53,6 +53,7 @@ export function personJsonLd({ siteUrl, role, github, linkedin, skills }: Person
   };
 }
 
+/** A trail of links from the home page down to the current page. */
 export function breadcrumbJsonLd(crumbs: readonly Crumb[], siteUrl: string): JsonLd {
   return {
     "@type": "BreadcrumbList",
@@ -139,5 +140,5 @@ export function legalPageJsonLd(title: string, path: string, siteUrl: string): J
  * in the data can close the script element early.
  */
 export function serializeJsonLd(data: JsonLd): string {
-  return JSON.stringify(data).replaceAll("<", "\\" + "u003c");
+  return JSON.stringify(data).replaceAll("<", "\\u003c");
 }

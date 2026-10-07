@@ -19,7 +19,7 @@ type Animatable = number | string | MotionValue<number> | MotionValue<string>;
  * A style whose entries may be motion values, with transform shorthands such as `x`,
  * `scale` and `rotateY` (see `buildStyle`).
  */
-export type AnimatedStyle = Partial<Record<keyof CSSProperties | TransformKey, Animatable>>;
+type AnimatedStyle = Partial<Record<keyof CSSProperties | TransformKey, Animatable>>;
 
 /** The style as it is right now: every motion value read. */
 function current(style: AnimatedStyle): Record<string, number | string> {

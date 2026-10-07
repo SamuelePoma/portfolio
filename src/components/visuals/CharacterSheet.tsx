@@ -1,10 +1,6 @@
 import type { CSSProperties } from "react";
 
-/**
- * Stands in for the D&D generator's screenshot until there is one: the heart of a
- * character sheet, typeset. The scores are the course's standard array
- * (15, 14, 13, 12, 10, 8) in order, with the modifiers the SRD derives from them.
- */
+/** The course's standard array, in order. */
 const scores = [
   ["STR", 15],
   ["DEX", 14],
@@ -20,6 +16,10 @@ function modifier(score: number): string {
   return value > 0 ? `+${String(value)}` : value < 0 ? `−${String(-value)}` : "+0";
 }
 
+/**
+ * Stands in for the D&D generator's screenshot until there is one: the heart of a
+ * character sheet, typeset, with the modifiers the SRD derives from the scores.
+ */
 export function CharacterSheet() {
   return (
     <div

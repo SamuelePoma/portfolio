@@ -2,13 +2,6 @@ import type { CSSProperties } from "react";
 
 import { cn } from "@/lib/utils/cn";
 
-/**
- * The component architecture of the veterinary practice system, redrawn from the
- * team's component diagram (users, the two front ends, the shared authorisation
- * layer, the services and the shared database). Positions are percentages of a
- * 16:11 box, so the drawing scales with its container.
- */
-
 type Tone = "default" | "ink" | "external";
 
 interface DiagramNode {
@@ -59,7 +52,6 @@ const edges: readonly (readonly [string, string])[] = [
 
 const byId = new Map(nodes.map((node) => [node.id, node]));
 
-/** A soft S-curve between two node centres; the nodes sit on top of the ends. */
 /** x and y in percent to the drawing's 160 × 110 units (the box is 16:11). */
 const px = (x: number) => x * 1.6;
 const py = (y: number) => y * 1.1;
@@ -82,6 +74,12 @@ interface VetComponentsDiagramProps {
   className?: string;
 }
 
+/**
+ * The component architecture of the veterinary practice system, redrawn from the
+ * team's component diagram (users, the two front ends, the shared authorisation
+ * layer, the services and the shared database). Positions are percentages of a
+ * 16:11 box, so the drawing scales with its container.
+ */
 export function VetComponentsDiagram({ className }: Readonly<VetComponentsDiagramProps>) {
   return (
     <div

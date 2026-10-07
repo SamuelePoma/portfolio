@@ -1,16 +1,11 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
-/**
- * The Open Graph card, rendered by `ImageResponse` (a subset of CSS): the title in
- * Geist 600 on the light canvas, the hero's mesh as soft radial gradients, and a mono
- * line with the context and the URL (DESIGN.md §3.2, §10).
- */
-
 export const OG_SIZE = { width: 1200, height: 630 };
 
 const fontDir = path.join(process.cwd(), "node_modules/geist/dist/fonts");
 
+/** The fonts the card uses, read from the `geist` package at build time. */
 export async function ogFonts() {
   const [sans, mono] = await Promise.all([
     readFile(path.join(fontDir, "geist-sans/Geist-SemiBold.ttf")),
@@ -28,6 +23,11 @@ interface OgCardProps {
   footer: string;
 }
 
+/**
+ * The Open Graph card, rendered by `ImageResponse` (a subset of CSS): the title in
+ * Geist 600 on the light canvas under soft radial gradients in the accent colours, and
+ * mono lines with the context and the URL (DESIGN.md §3.2, §10).
+ */
 export function OgCard({ eyebrow, title, footer }: Readonly<OgCardProps>) {
   return (
     <div

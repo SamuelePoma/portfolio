@@ -8,7 +8,7 @@ import { mediaSlots } from "./media";
  */
 
 /** Visible copy: trimmed, non-empty, and free of the dashes DESIGN.md §12 bans. */
-export const visibleText = z
+const visibleText = z
   .string()
   .trim()
   .min(1)
@@ -19,7 +19,7 @@ export const visibleText = z
 /** A year ("2020") or a year and month ("2024-09"). */
 const yearOrMonth = z.string().regex(/^\d{4}(-(0[1-9]|1[0-2]))?$/, "Use YYYY or YYYY-MM");
 
-export const periodSchema = z
+const periodSchema = z
   .object({ start: yearOrMonth, end: yearOrMonth.optional() })
   .refine((period) => period.end === undefined || period.end >= period.start, {
     message: "A period cannot end before it starts",
@@ -27,6 +27,7 @@ export const periodSchema = z
 
 const httpsUrl = z.url({ protocol: /^https$/ });
 
+// z.enum needs a non-empty tuple, and the registry is never empty.
 const mediaSlotIds = mediaSlots.map((slot) => slot.id) as [
   (typeof mediaSlots)[number]["id"],
   ...(typeof mediaSlots)[number]["id"][],
@@ -34,7 +35,7 @@ const mediaSlotIds = mediaSlots.map((slot) => slot.id) as [
 const mediaSlotId = z.enum(mediaSlotIds);
 
 /** What a project card shows in its media area. */
-export const cardVisualSchema = z.discriminatedUnion("type", [
+const cardVisualSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("screenshot"),
     slot: mediaSlotId,
@@ -154,7 +155,6 @@ export const siteSchema = z.object({
   languages: visibleText,
 });
 
-export type Period = z.infer<typeof periodSchema>;
 export type Project = z.input<typeof projectSchema>;
 export type CardVisual = z.infer<typeof cardVisualSchema>;
 export type TimelineEntry = z.infer<typeof timelineEntrySchema>;

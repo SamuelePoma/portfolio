@@ -187,15 +187,11 @@ No heavy blur shadows, no colored glows.
 ```css
 --ease-out:      cubic-bezier(0.23, 1, 0.32, 1);    /* default for entering / responding */
 --ease-in-out:   cubic-bezier(0.77, 0, 0.175, 1);   /* things moving on-screen A → B */
---ease-drawer:   cubic-bezier(0.32, 0.72, 0, 1);    /* overlays, sheets */
-
---dur-instant: 120ms;  /* press, color */
---dur-fast:    200ms;  /* hover, small UI */
---dur-base:    300ms;  /* overlays, menus */
---dur-reveal:  700ms;  /* reveals */
 ```
 
-Springs for interactive things: `{ type: "spring", duration: 0.5, bounce: 0.15 }`; the glow uses `{ duration: 0.9, bounce: 0 }`. Never bouncy above 0.2.
+Durations are Tailwind's utilities: `duration-120` for a press or a colour, `duration-200` for hover and small UI, `duration-700` for reveals.
+
+Springs (`src/lib/motion/spring.ts`) are written as stiffness and damping: the scroll spring (`SCROLL_SPRING`) is critically damped and trails the scroll by about 50 ms; the glow settles in about 0.9 s without overshooting; the tilt card and the chess piece settle in 0.5 s and 0.9 s with a slight give. Never bouncier than that.
 
 ### 7.2 Rules
 
@@ -281,7 +277,7 @@ For Progmatic. **What the assistant is built around**, not a component diagram o
 For the background/experience list. A 3-column row: mono date (`2024-25`) · role and company (`h3` + `small`) · a one-line outcome. Rows are separated by 1px `--hairline`. No hover state: the rows aren't interactive, and a hover would suggest they are.
 
 ### 8.11 Toast
-Bottom center, `--ink` background, white 14px text, `radius-pill`, `--shadow-card-hover`. Enters from `translateY(16px) opacity 0`, 300ms `--ease-drawer`, and auto-dismisses after 2s.
+Bottom center, `--ink` background, white 14px text, `radius-pill`, `--shadow-card-hover`. It enters and leaves with Sonner's own animation, and auto-dismisses after 2s.
 
 ### 8.12 Contact form (removed 2026-10-06)
 Samuele chose email only: no form, so there is nothing to fill in, nothing stored, and no mail service, rate limiter or captcha behind the site. The form, its API route and their tests are in the git history if it ever comes back.
@@ -359,7 +355,7 @@ Section opener: `display`, *"About me."* Then a **statement** in large type (two
 
 Plus a small line of languages: `ITALIAN (NATIVE), ENGLISH (C1)`.
 Below the timeline: a secondary button `Résumé (PDF) ↓` that downloads `/cv/samuele-poma-cv.pdf`. It renders **only when the file exists** (checked at build time), so there is never a broken link. This is the only résumé link on the page.
-Optional portrait: `IMG-PORTRAIT`, 4:5, grayscale, `radius-lg`. Not shown until Samuele provides one (an optional image never gets a placeholder).
+A portrait (4:5, grayscale, `radius-lg`) is an option for later: it is not built, and gets a slot only when Samuele provides one.
 
 ### 9.6 Contact (a `--night` band that merges into the footer)
 - Centred, over the horizon (§3.2): `display-xl`, `--night-ink`: *"Let's talk."*, then one `lead` line: *"Have a project, a question or an idea? Email is the best way to reach me."*
@@ -398,7 +394,6 @@ Put files in `/public/images/`. Format: **WebP or AVIF**, sRGB, long edge 2400px
 | `IMG-PROGMATIC-01` | Card plus case-study hero | 16:9 | The assistant's overview screen. The signed-in user's name and avatar are blurred | ✅ In place |
 | `IMG-YOUNGDCC-01` | Card plus case-study hero | 16:10 | The platform's home page | ✅ In place |
 | `IMG-TOWERDEFENSE-01` | Card plus case-study hero | 16:9 | The game's win screen | ✅ In place |
-| `IMG-PORTRAIT` | About | 4:5 | A professional portrait on a neutral background, shown in grayscale | Optional |
 | `OG-IMAGE` | Social share preview | 1200×630 | Generated from the hero (name plus mesh), not a photo | Built in code |
 | `CV-PDF` | `/public/cv/samuele-poma-cv.pdf` | A4 PDF | The résumé **without the phone number** (it's public) | Samuele to export |
 

@@ -67,6 +67,8 @@ export function Button(props: Readonly<ButtonProps>) {
     </>
   );
 
+  // TypeScript doesn't narrow `rest` through the `href` check, so each branch says which
+  // of the two prop shapes it has.
   if (rest.href === undefined) {
     const { type = "button", ...buttonProps } = rest as Omit<ButtonAsButton, keyof BaseProps>;
     return (

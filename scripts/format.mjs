@@ -1,7 +1,8 @@
-// Runs Prettier on exactly the files git considers part of the project
-// (tracked + untracked, minus everything git ignores, including local excludes).
-// Usage: node scripts/format.mjs [--check]
-
+/**
+ * Runs Prettier on exactly the files git considers part of the project: tracked and
+ * untracked, minus everything git ignores, including local excludes.
+ * Usage: `pnpm format` (writes) or `pnpm format:check`.
+ */
 import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -9,13 +10,8 @@ import { createRequire } from "node:module";
 const mode = process.argv.includes("--check") ? "--check" : "--write";
 const prettierBin = createRequire(import.meta.url).resolve("prettier/bin/prettier.cjs");
 
-const files = execFileSync(
-  "git",
-  ["ls-files", "--cached", "--others", "--exclude-standard", "-z"],
-  {
-    encoding: "utf8",
-  },
-)
+const listed = ["ls-files", "--cached", "--others", "--exclude-standard", "-z"];
+const files = execFileSync("git", listed, { encoding: "utf8" })
   .split("\0")
   .filter((file) => file && existsSync(file));
 

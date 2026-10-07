@@ -3,7 +3,7 @@ import type { ComponentPropsWithoutRef } from "react";
 import { cn } from "@/lib/utils/cn";
 
 /** Technology tag: mono, hairline ring, no fill (DESIGN.md §8.4). */
-export function Tag({ className, ...props }: Readonly<ComponentPropsWithoutRef<"span">>) {
+function Tag({ className, ...props }: Readonly<ComponentPropsWithoutRef<"span">>) {
   return (
     <span
       className={cn(
@@ -15,7 +15,10 @@ export function Tag({ className, ...props }: Readonly<ComponentPropsWithoutRef<"
   );
 }
 
-/** A list of tags with list semantics, so screen readers announce the count. Renders nothing when empty. */
+/**
+ * A list of tags with list semantics, so screen readers announce the count. Renders
+ * nothing when empty.
+ */
 export function TagList({
   tags,
   className,

@@ -115,17 +115,11 @@ export const mediaSlots = [
     placeholder: "Character sheet page or CLI output",
     illustration: "character-sheet",
   },
-  {
-    id: "IMG-PORTRAIT",
-    file: "portrait.webp",
-    ratio: "4:5",
-    alt: "Portrait of Samuele Poma",
-    placeholder: "Portrait, neutral background",
-  },
 ] as const satisfies readonly MediaSlotDefinition[];
 
 export type MediaSlotId = (typeof mediaSlots)[number]["id"];
 
+/** The slot with this id; ids are a union type, so an unknown one fails the type check first. */
 export function getMediaSlot(id: MediaSlotId): MediaSlotDefinition {
   const slot = mediaSlots.find((candidate) => candidate.id === id);
   if (!slot) throw new Error(`Unknown media slot: ${id}`);
