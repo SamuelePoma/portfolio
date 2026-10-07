@@ -2,7 +2,7 @@ import type { SkillGroup } from "./schema";
 
 /** Only technologies and practices listed on the résumé. */
 export const skillGroups = [
-  { label: "Languages", items: ["Go", "TypeScript", "JavaScript", "Java", "PHP", "SQL"] },
+  { label: "Languages", items: ["Go", "TypeScript", "JavaScript", "Java", "PHP", "Python", "SQL"] },
   { label: "Frameworks", items: ["React", "SvelteKit", "Laravel", "Tailwind CSS"] },
   { label: "Tools", items: ["Git", "GitHub", "Docker", "MySQL"] },
   {
