@@ -4,7 +4,7 @@
  */
 
 /** `9:19.5` is a phone screen (1170 × 2532), shown inside a `PhoneFrame`. */
-export const mediaRatios = ["16:10", "16:9", "4:5", "9:19.5"] as const;
+export const mediaRatios = ["16:10", "16:9", "2:1", "4:5", "9:19.5"] as const;
 export type MediaRatio = (typeof mediaRatios)[number];
 
 export interface MediaSlotDefinition {
@@ -22,7 +22,7 @@ export interface MediaSlotDefinition {
    * A drawn stand-in shown while the file is missing, instead of the placeholder, for
    * slots that appear on the live site. The real image replaces it as soon as it exists.
    */
-  illustration?: "route-map" | "character-sheet";
+  illustration?: "character-sheet";
 }
 
 export const mediaSlots = [
@@ -52,16 +52,16 @@ export const mediaSlots = [
     id: "IMG-CONNEQTECH-01",
     file: "conneqtech-01.webp",
     ratio: "16:10",
-    alt: "GPS monitoring dashboard with a map of tracked vehicles",
-    placeholder: "Dashboard main view with map",
-    illustration: "route-map",
+    alt: "Design of the fleet health dashboard: the share of healthy devices, how many are moving or reported stolen, and charts of device issues and status over the months",
+    placeholder: "Dashboard main view",
   },
   {
     id: "IMG-CONNEQTECH-02",
     file: "conneqtech-02.webp",
     ratio: "16:10",
-    alt: "Vehicle detail view with GPS history",
-    placeholder: "Vehicle detail and GPS history",
+    alt: "Design of the faulty devices table: each vehicle's issue, battery, GPS and GSM connection, status and when it was last seen",
+    placeholder: "Faulty devices table",
+    caption: "The faulty devices view, as designed in Figma.",
   },
   {
     id: "IMG-STEDIN-01",
@@ -77,6 +77,14 @@ export const mediaSlots = [
     alt: "Seven students around a meeting table, most of them giving a thumbs up",
     placeholder: "The project group at work",
     caption: "Working on the Stedin project with my group.",
+  },
+  {
+    id: "IMG-STEDIN-03",
+    file: "stedin-03.webp",
+    ratio: "2:1",
+    alt: "Screen designs for grid monitoring, joined by arrows: a map of transformers with a table of the faulty ones, the table of measurements it opens, and the message shown when no marker is selected",
+    placeholder: "Screen designs and how they connect",
+    caption: "The screens as designed in Figma, and how they lead into each other.",
   },
   {
     id: "IMG-PROGMATIC-01",

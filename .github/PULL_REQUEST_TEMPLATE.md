@@ -16,4 +16,4 @@
 - [ ] `pnpm test:e2e` passes
 - [ ] Follows DESIGN.md (tokens, type scale, motion rules)
 - [ ] Keyboard and screen reader friendly; `prefers-reduced-motion` respected
-- [ ] No secrets, no invented content (missing facts go in CONTENT_TODO.md)
+- [ ] No secrets, no invented content (a fact that isn't confirmed is left out)

@@ -6,12 +6,11 @@ import path from "node:path";
 import Image from "next/image";
 
 import { CharacterSheet } from "@/components/visuals/CharacterSheet";
-import { RouteMap } from "@/components/visuals/RouteMap";
 import { getMediaSlot, type MediaSlotId } from "@/content/media";
 
 import { Placeholder } from "./Placeholder";
 
-const illustrations = { "route-map": RouteMap, "character-sheet": CharacterSheet } as const;
+const illustrations = { "character-sheet": CharacterSheet } as const;
 
 interface MediaSlotProps {
   id: MediaSlotId;
