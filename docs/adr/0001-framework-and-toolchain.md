@@ -2,6 +2,7 @@
 
 - **Status:** accepted
 - **Date:** 2026-09-30
+- **Update (2026-10-07):** the contact form was removed on 2026-10-06 ([ADR 0002](0002-contact-form-pipeline.md)), so the site has no server code and no secrets: every page is static, and the production build checks only that the public site URL is set and isn't localhost. The rest of this record stands.
 
 ## Context
 
