@@ -1,5 +1,5 @@
 {
   "recurse": true,
   "verbosity": "error",
-  "skip": ["linkedin\.com"]
+  "skip": ["linkedin.com"]
 }
