@@ -218,12 +218,12 @@ export const projects = [
       "Player characters in Dungeons & Dragons follow strict rules that keep the game balanced. The course turns the 403-page System Reference Document 5.1 into the requirements, checked by automated tests on CodeGrade.",
     approach: [
       "The scope, set by the course: characters with a name, race, class, level, background and ability scores from the standard array (15, 14, 13, 12, 10, 8) plus racial bonuses, with skill proficiencies and modifiers; weapons, armour and shields; and spells and spell slots for casters.",
-      "Spells and equipment are enriched from the volunteer-run D&D 5e API, at a gentle 5 to 10 requests per second. The sheet works out armour class, initiative, passive perception and, for casters, the spell save DC and spell attack bonus.",
+      "Spells and equipment are enriched from the D&D 5e API. The sheet works out armour class, initiative, passive perception and, for casters, the spell save DC and spell attack bonus.",
       "A command line creates, shows and lists characters, and an HTML page lists every character with a link to its sheet. CodeGrade compiles on one core within two minutes, which keeps external libraries to one or two.",
     ],
     learnings: [
       "A 403-page rulebook turns out to be a very precise specification: reading it closely is half the work.",
-      "Working against automated tests from the first requirement keeps the rules honest, and an API run by volunteers is a reminder to keep requests few and gentle.",
+      "Working against automated tests from the first requirement keeps the rules honest.",
     ],
     // Repository link: add it as `links: { repo: "https://github.com/..." }`.
     media: { hero: "IMG-DND-01" },
@@ -232,11 +232,13 @@ export const projects = [
     slug: "tower-defense-typescript",
     title: "Tower defense game",
     category: "TypeScript",
+    period: { start: "2023", end: "2023" },
     status: "completed",
     seoDescription:
       "Case study: a tower defense game built with object-oriented TypeScript by Samuele Poma, a software engineer based in Middelburg, the Netherlands.",
     tagline: "My first project: a tower defense game built with object-oriented TypeScript.",
     role: "Team leader",
+    team: 3,
     stack: ["TypeScript", "OOP"],
     card: { type: "screenshot", slot: "IMG-TOWERDEFENSE-01" },
     learnings: [
