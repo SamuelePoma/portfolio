@@ -84,15 +84,14 @@ function Board() {
         return (
           <span key={number} className="block">
             {number}|
-            {rank.map((code, file) => (
-              <Cell key={file} strong={`${files[file] ?? ""}${String(number)}` === LAST_MOVE}>
-                {`${files[file] ?? ""}${String(number)}` === LAST_MOVE ? (
-                  <MovingPiece ranks={2}>{piece(code)}</MovingPiece>
-                ) : (
-                  piece(code)
-                )}
-              </Cell>
-            ))}
+            {rank.map((code, file) => {
+              const moved = `${files[file] ?? ""}${String(number)}` === LAST_MOVE;
+              return (
+                <Cell key={file} strong={moved}>
+                  {moved ? <MovingPiece ranks={2}>{piece(code)}</MovingPiece> : piece(code)}
+                </Cell>
+              );
+            })}
             |
           </span>
         );

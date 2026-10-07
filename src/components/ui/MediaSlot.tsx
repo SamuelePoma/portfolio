@@ -24,8 +24,9 @@ interface MediaSlotProps {
 
 /**
  * Renders the image for a slot if its file exists in `public/images/`, otherwise the
- * slot's drawn stand-in if it has one, or else a placeholder. Checked at build time: pages are static, so there is no runtime cost.
- * Place it inside a `MediaFrame`, which provides the positioned, ratio-locked box.
+ * slot's drawn stand-in if it has one, or else a placeholder. Checked at build time:
+ * pages are static, so there is no runtime cost. Place it inside a `MediaFrame`, which
+ * provides the positioned, ratio-locked box.
  */
 export function MediaSlot({
   id,

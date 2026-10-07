@@ -1,8 +1,8 @@
 /**
  * Generates the site icons from the "SP" monogram in Geist Mono: icon.svg with a
- * light/dark swap, apple-icon.png, favicon.ico and the manifest icons. The letters become vector paths, so no icon depends on a font
- * being installed. Run with `pnpm icons` after changing the monogram; the output is
- * committed.
+ * light/dark swap, apple-icon.png, favicon.ico and the manifest icons. The letters
+ * become vector paths, so no icon depends on a font being installed. Run with
+ * `pnpm icons` after changing the monogram; the output is committed.
  */
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -22,7 +22,7 @@ const font = await readFile(
 );
 const fonts = [{ name: "Geist Mono", data: font, weight: 600, style: "normal" }];
 
-/** The monogram on a square; `inset` keeps it inside a maskable icon's safe zone. */
+/** The monogram on a square; a smaller `scale` keeps it inside a maskable icon's safe zone. */
 function monogram({ size, radius = 0, scale = 0.46 }) {
   return createElement(
     "div",

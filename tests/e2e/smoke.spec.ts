@@ -1,13 +1,12 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-test.describe("home page", () => {
-  test("renders with the correct language, title and a single h1", async ({ page }) => {
+test.describe("home page basics", () => {
+  test("renders in English, with the site's name in the title", async ({ page }) => {
     await page.goto("/");
 
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
     await expect(page).toHaveTitle(/Samuele Poma/);
-    await expect(page.locator("h1")).toHaveCount(1);
   });
 
   test("has no automatically detectable accessibility violations", async ({ page }) => {

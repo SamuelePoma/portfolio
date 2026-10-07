@@ -1,7 +1,7 @@
 const config = {
   extends: ["@commitlint/config-conventional"],
   rules: {
-    // Allow long bodies (e.g. bullet lists and co-author trailers).
+    // Long bodies are fine: bullet lists and links rarely fit 100 characters.
     "body-max-line-length": [0],
     "footer-max-line-length": [0],
   },
