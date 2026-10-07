@@ -57,7 +57,7 @@ src/
   content/      Typed site content (single source of truth)
   lib/          Pure logic: env, SEO, security headers, the scroll engine
 tests/
-  unit/  integration/  e2e/
+  unit/  e2e/
 docs/
   adr/          Architecture decision records
 ```
@@ -65,6 +65,7 @@ docs/
 ## Documentation
 
 - [DESIGN.md](DESIGN.md): design system (color, type, motion, components)
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): how content becomes pages, the build, motion, security and tests
 - [docs/adr/](docs/adr/): architecture decisions
 
 ## Contributing workflow
