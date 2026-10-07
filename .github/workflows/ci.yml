@@ -76,3 +76,32 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 14
+
+  audit:
+    name: HTML, bundle size, Lighthouse and links
+    runs-on: ubuntu-24.04
+    needs: quality
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm validate:html
+      - run: pnpm size
+      # Starts its own server; the budgets are the assertions in lighthouserc.json.
+      - run: pnpm lighthouse
+      - name: Check links
+        run: |
+          pnpm start &
+          for attempt in $(seq 1 30); do curl -sf http://localhost:3000 > /dev/null && break; sleep 1; done
+          pnpm links
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/
+          retention-days: 14

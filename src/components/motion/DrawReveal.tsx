@@ -1,40 +1,40 @@
 "use client";
 
-import { m } from "motion/react";
-import type { ReactNode } from "react";
-
-import { usePrefersReducedMotion } from "./useSceneProgress";
-
-const wipe = {
-  hidden: { clipPath: "inset(0% 100% 0% 0%)" },
-  shown: { clipPath: "inset(0% 0% 0% 0%)" },
-};
+import { type ReactNode, useEffect, useRef } from "react";
 
 /**
  * Wipes its content in from left to right once it comes into view: a chart drawing
- * itself (DESIGN.md §7.3.3). The outer box is what is watched, because a fully
+ * itself (DESIGN.md §7.3.3). The wipe is a CSS transition (`.wipe` in globals.css);
+ * this only marks the moment. The outer box is what is watched, because a fully
  * clipped element never counts as visible. With reduced motion the chart is simply
- * there: a wipe is movement too, and Motion's reduced-motion setting only stops
- * transforms.
+ * there.
  */
 export function DrawReveal({ children }: Readonly<{ children: ReactNode }>) {
-  const reduce = usePrefersReducedMotion();
-  if (reduce) return <div className="absolute inset-0">{children}</div>;
+  const box = useRef<HTMLDivElement>(null);
+  const wipe = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = box.current;
+    if (!element) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        observer.disconnect();
+        wipe.current?.setAttribute("data-shown", "");
+      },
+      { threshold: 0.4 },
+    );
+    observer.observe(element);
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   return (
-    <m.div
-      className="absolute inset-0"
-      initial="hidden"
-      whileInView="shown"
-      viewport={{ once: true, amount: 0.4 }}
-    >
-      <m.div
-        data-reveal
-        className="absolute inset-0"
-        variants={wipe}
-        transition={{ duration: 1.8, ease: [0.77, 0, 0.175, 1] }}
-      >
+    <div ref={box} className="absolute inset-0">
+      <div ref={wipe} data-reveal className="wipe absolute inset-0">
         {children}
-      </m.div>
-    </m.div>
+      </div>
+    </div>
   );
 }

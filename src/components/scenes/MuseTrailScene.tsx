@@ -1,11 +1,12 @@
 "use client";
 
-import { m, type MotionValue, useTransform } from "motion/react";
 import { type ReactNode, useRef } from "react";
 
 import { Container } from "@/components/layout/Container";
+import { Animated } from "@/components/motion/Animated";
 import { Scene } from "@/components/motion/Scene";
 import { useSceneProgress } from "@/components/motion/useSceneProgress";
+import { type MotionValue, useTransform } from "@/components/motion/values";
 import { PhoneFrame } from "@/components/ui/PhoneFrame";
 
 /** Where each artwork settles around the phones: offsets in vmin, depth in px. */
@@ -35,12 +36,12 @@ function Art({ progress, index, children }: Readonly<ArtProps>) {
   const opacity = useTransform(progress, [start, start + 0.06], [0, 1]);
 
   return (
-    <m.div
+    <Animated.div
       className="absolute top-1/2 left-1/2 -mt-[8vmin] -ml-[7vmin] w-[14vmin] overflow-hidden rounded-[1.4vmin] shadow-[0_30px_60px_-20px_rgb(0_0_0/0.8)] ring-1 ring-white/15"
       style={{ x, y, z, scale, rotate, opacity }}
     >
       {children}
-    </m.div>
+    </Animated.div>
   );
 }
 
@@ -92,13 +93,13 @@ export function MuseTrailScene({ titleId, copy, front, back, art }: Readonly<Mus
       stageClassName="flex items-center py-24 lg:py-0"
     >
       <Container className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8">
-        <m.div
+        <Animated.div
           data-reveal
           className="relative z-10 flex flex-col gap-6 lg:col-span-4"
           style={still ? {} : { opacity: copyOpacity, y: copyY }}
         >
           {copy}
-        </m.div>
+        </Animated.div>
 
         <div
           className={
@@ -108,16 +109,16 @@ export function MuseTrailScene({ titleId, copy, front, back, art }: Readonly<Mus
           }
         >
           {/* The phones' shadow on the floor, widening as they part. */}
-          <m.div
+          <Animated.div
             aria-hidden
             className="pointer-events-none absolute inset-x-[10%] -bottom-[10%] h-[16%] bg-[radial-gradient(closest-side,rgb(0_0_0/0.9),rgb(0_0_0/0.45)_55%,transparent)]"
             style={still ? { opacity: 0.8 } : { opacity: shadowOpacity, scaleX: shadowScale }}
           />
-          <m.div
+          <Animated.div
             className="absolute inset-0 preserve-3d"
             style={still ? {} : { y: phonesY, rotateX: tilt }}
           >
-            <m.div
+            <Animated.div
               className="absolute top-[8%] left-1/2 h-[84%] -translate-x-1/2 preserve-3d"
               style={
                 still
@@ -128,8 +129,8 @@ export function MuseTrailScene({ titleId, copy, front, back, art }: Readonly<Mus
               <PhoneFrame className="h-full shadow-[0_40px_80px_-30px_rgb(0_0_0/0.9)]">
                 {back}
               </PhoneFrame>
-            </m.div>
-            <m.div
+            </Animated.div>
+            <Animated.div
               className="absolute top-0 left-1/2 h-[92%] -translate-x-1/2 preserve-3d"
               style={
                 still
@@ -140,7 +141,7 @@ export function MuseTrailScene({ titleId, copy, front, back, art }: Readonly<Mus
               <PhoneFrame className="h-full shadow-[0_40px_80px_-30px_rgb(0_0_0/0.9)]">
                 {front}
               </PhoneFrame>
-            </m.div>
+            </Animated.div>
             <div aria-hidden className="pointer-events-none absolute inset-0 preserve-3d">
               {art.map((piece, index) => (
                 <Art key={index} progress={progress} index={index}>
@@ -148,7 +149,7 @@ export function MuseTrailScene({ titleId, copy, front, back, art }: Readonly<Mus
                 </Art>
               ))}
             </div>
-          </m.div>
+          </Animated.div>
         </div>
       </Container>
     </Scene>

@@ -1,11 +1,12 @@
 "use client";
 
-import { m, useTransform } from "motion/react";
 import { type ReactNode, useRef } from "react";
 
 import { Container } from "@/components/layout/Container";
+import { Animated } from "@/components/motion/Animated";
 import { Scene } from "@/components/motion/Scene";
 import { useSceneProgress } from "@/components/motion/useSceneProgress";
+import { useTransform } from "@/components/motion/values";
 import { Laptop } from "@/components/visuals/Laptop";
 
 interface LaptopSceneProps {
@@ -57,7 +58,7 @@ export function LaptopScene({ titleId, copy, screen }: Readonly<LaptopSceneProps
             : "[container-type:size] flex min-h-0 flex-1 items-center justify-center pt-4 pb-[5svh]"
         }
       >
-        <m.div
+        <Animated.div
           className="will-change-transform"
           style={still ? {} : { y: laptopY, scale: laptopScale }}
         >
@@ -67,7 +68,7 @@ export function LaptopScene({ titleId, copy, screen }: Readonly<LaptopSceneProps
             surface="light"
             className={still ? "w-[min(86vw,760px)]" : "w-[min(86vw,820px,134cqh)]"}
           />
-        </m.div>
+        </Animated.div>
       </div>
     </Scene>
   );

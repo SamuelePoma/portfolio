@@ -1,7 +1,11 @@
 "use client";
 
-import { type MotionValue, useMotionValue, useScroll, useSpring } from "motion/react";
 import { type RefObject, useSyncExternalStore } from "react";
+
+import type { ScrollOffset } from "@/lib/motion/scroll";
+import type { SpringConfig } from "@/lib/motion/spring";
+
+import { type MotionValue, useMotionValue, useScrollProgress, useSpring } from "./values";
 
 /**
  * The spring every scene follows the scroll with. Critically damped (damping is
@@ -10,7 +14,12 @@ import { type RefObject, useSyncExternalStore } from "react";
  * like the scene is floating behind the page. Wheel scrolling is already smoothed by
  * Lenis (SmoothScroll).
  */
-export const SCROLL_SPRING = { stiffness: 140, damping: 14.5, mass: 0.35, restDelta: 0.0005 };
+export const SCROLL_SPRING: SpringConfig = {
+  stiffness: 140,
+  damping: 14.5,
+  mass: 0.35,
+  restDelta: 0.0005,
+};
 
 /** A motion value that follows another on the scroll spring. */
 export function useSmooth(value: MotionValue<number>): MotionValue<number> {
@@ -41,9 +50,8 @@ export function useIsLarge(): boolean {
 }
 
 /**
- * True when the visitor asks for reduced motion. Motion's own `useReducedMotion`
- * answers on the very first client render, which differs from the server's and makes
- * React throw away the server HTML (a hydration error); this one waits for hydration.
+ * True when the visitor asks for reduced motion. It answers like the server while
+ * hydrating, so React keeps the server HTML, and gives the real answer right after.
  * Until then the CSS (`motion-reduce:` and the reduced-motion rules) keeps things still.
  */
 export function usePrefersReducedMotion(): boolean {
@@ -53,8 +61,8 @@ export function usePrefersReducedMotion(): boolean {
 export type PinMode = "always" | "large";
 
 /** Scroll offsets: while the stage is pinned, or while the scene passes through the viewport. */
-const PINNED: ["start start", "end end"] = ["start start", "end end"];
-const PASSING: ["start 0.75", "end 0.55"] = ["start 0.75", "end 0.55"];
+const PINNED: ScrollOffset = ["start start", "end end"];
+const PASSING: ScrollOffset = ["start 0.75", "end 0.55"];
 
 /**
  * How far the visitor has scrolled through a scene, from 0 to 1. A pinned scene runs
@@ -72,8 +80,7 @@ export function useSceneProgress(
   const reduce = usePrefersReducedMotion();
   const large = useIsLarge();
   const pinned = !reduce && (mode === "always" || large);
-  const { scrollYProgress } = useScroll({ target, offset: pinned ? PINNED : PASSING });
-  const smooth = useSmooth(scrollYProgress);
+  const smooth = useSmooth(useScrollProgress(target, pinned ? PINNED : PASSING));
   const finished = useMotionValue(1);
   return { progress: reduce ? finished : smooth, still: reduce };
 }

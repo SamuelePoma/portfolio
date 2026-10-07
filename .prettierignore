@@ -4,6 +4,7 @@ build
 coverage
 playwright-report
 test-results
+.lighthouseci
 pnpm-lock.yaml
 next-env.d.ts
 DESIGN.md

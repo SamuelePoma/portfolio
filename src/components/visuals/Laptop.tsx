@@ -1,8 +1,9 @@
 "use client";
 
-import { m, type MotionValue, useTransform } from "motion/react";
 import type { ReactNode } from "react";
 
+import { Animated } from "@/components/motion/Animated";
+import { type MotionValue, useTransform } from "@/components/motion/values";
 import { cn } from "@/lib/utils/cn";
 
 interface LaptopProps {
@@ -41,7 +42,7 @@ export function Laptop({ lid, screen, surface = "night", className }: Readonly<L
       {/* The screen's light on the space behind the laptop. A gradient already fades
           to nothing, so it needs no blur filter (a large one repaints on every frame). */}
       {surface === "night" && (
-        <m.div
+        <Animated.div
           aria-hidden
           className="pointer-events-none absolute inset-x-[4%] top-[8%] -z-10 h-[70%] rounded-[50%] bg-[radial-gradient(closest-side,rgb(64_180_150/0.5),rgb(0_124_240/0.22)_55%,transparent)]"
           style={{ opacity: spill }}
@@ -50,7 +51,7 @@ export function Laptop({ lid, screen, surface = "night", className }: Readonly<L
 
       {/* The camera: a little above the laptop, looking down at the deck. */}
       <div className="relative [transform:rotateX(-5deg)] preserve-3d">
-        <m.div
+        <Animated.div
           className="relative aspect-[16/10.7] w-full origin-bottom preserve-3d"
           style={{ rotateX: lid }}
         >
@@ -60,9 +61,9 @@ export function Laptop({ lid, screen, surface = "night", className }: Readonly<L
             <span className="absolute top-[0.7%] left-1/2 size-[0.55%] min-h-1 min-w-1 -translate-x-1/2 rounded-full bg-[#1d1d20] ring-1 ring-white/5" />
             <div className="bg-black relative h-full overflow-hidden rounded-[0.6%]">
               {screen}
-              <m.div className="bg-black absolute inset-0" style={{ opacity: screenOff }} />
+              <Animated.div className="bg-black absolute inset-0" style={{ opacity: screenOff }} />
               {/* A glare sliding across the glass as the lid opens. */}
-              <m.div
+              <Animated.div
                 className="pointer-events-none absolute inset-y-0 w-[60%] bg-[linear-gradient(105deg,transparent,rgb(255_255_255/0.10)_45%,transparent_70%)]"
                 style={{ x: glare }}
               />
@@ -70,7 +71,7 @@ export function Laptop({ lid, screen, surface = "night", className }: Readonly<L
           </div>
           {/* Lid back: what you see from above when it is closed. */}
           <div className="absolute inset-0 [transform:rotateY(180deg)] rounded-t-[2.4%] bg-[linear-gradient(180deg,#3d3d40,#232325)] ring-1 ring-white/10 backface-hidden" />
-        </m.div>
+        </Animated.div>
 
         {/* Keyboard deck, flat, reaching towards the viewer: as wide as the lid at the
             hinge, like the real thing, so perspective widens only its near edge. */}
