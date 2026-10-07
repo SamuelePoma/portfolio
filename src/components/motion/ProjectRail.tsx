@@ -1,11 +1,12 @@
 "use client";
 
-import { m, useScroll, useTransform } from "motion/react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
 import { Container } from "@/components/layout/Container";
 
+import { Animated } from "./Animated";
 import { usePrefersReducedMotion, useSmooth } from "./useSceneProgress";
+import { useScrollProgress, useTransform } from "./values";
 
 /** Card width and side padding, shared with the cards so the CSS height matches. */
 export const RAIL_CARD_WIDTH = "min(84vw, 620px)";
@@ -47,8 +48,8 @@ export function ProjectRail({ heading, count, children }: Readonly<ProjectRailPr
     };
   }, [reduce]);
 
-  const { scrollYProgress } = useScroll({ target: section, offset: ["start start", "end end"] });
-  const x = useTransform(useSmooth(scrollYProgress), [0, 1], [0, -distance]);
+  const progress = useSmooth(useScrollProgress(section, ["start start", "end end"]));
+  const x = useTransform(progress, [0, 1], [0, -distance]);
 
   if (reduce) {
     return (
@@ -76,14 +77,14 @@ export function ProjectRail({ heading, count, children }: Readonly<ProjectRailPr
     >
       <div className="sticky top-0 flex h-svh flex-col justify-center gap-10 overflow-hidden pt-16">
         <Container>{heading}</Container>
-        <m.div
+        <Animated.div
           ref={track}
           // Composited, so sliding it costs the GPU a move, not a repaint of every card.
           className="flex w-max gap-6 will-change-transform"
           style={{ x, paddingInline: RAIL_PADDING }}
         >
           {children}
-        </m.div>
+        </Animated.div>
       </div>
     </section>
   );

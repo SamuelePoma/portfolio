@@ -180,7 +180,7 @@ No heavy blur shadows, no colored glows.
 
 ## 7. Motion
 
-**Direction (2026-10-05): a product launch.** Samuele asked for the site to move like Apple's iPhone and MacBook pages, not like a page that fades things in. The work is presented as products in **pinned, scroll-driven scenes**: a section several screens tall whose stage sticks to the viewport, so scrolling plays the scene forwards and backwards. Devices are drawn in **CSS 3D** (no WebGL; see the option recorded below) and animated with **Motion** (`motion/react`) scroll-linked values.
+**Direction (2026-10-05): a product launch.** Samuele asked for the site to move like Apple's iPhone and MacBook pages, not like a page that fades things in. The work is presented as products in **pinned, scroll-driven scenes**: a section several screens tall whose stage sticks to the viewport, so scrolling plays the scene forwards and backwards. Devices are drawn in **CSS 3D** (no WebGL; see the option recorded below) and animated by a small scroll engine of our own (`src/lib/motion/`): scroll progress, critically damped springs and interpolated tracks, written straight to `transform` and `opacity` once a frame, without re-rendering React. It replaced the Motion library on 2026-10-07 and cut 40 KB of gzipped JavaScript from the first load.
 
 ### 7.1 Tokens
 

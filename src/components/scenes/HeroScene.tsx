@@ -1,12 +1,13 @@
 "use client";
 
-import { m, useTransform } from "motion/react";
 import { type ReactNode, useRef } from "react";
 
 import { Container } from "@/components/layout/Container";
+import { Animated } from "@/components/motion/Animated";
 import { Glow } from "@/components/motion/Glow";
 import { Scene } from "@/components/motion/Scene";
 import { useSceneProgress } from "@/components/motion/useSceneProgress";
+import { useTransform } from "@/components/motion/values";
 
 interface HeroSceneProps {
   eyebrow: string;
@@ -51,21 +52,21 @@ export function HeroScene({ eyebrow, lead, actions }: Readonly<HeroSceneProps>) 
     >
       {/* Layers that follow the scroll are composited (will-change), so the GPU only
           moves them instead of repainting them on every frame. */}
-      <m.div
+      <Animated.div
         className="absolute inset-0 -z-10 will-change-transform"
         style={still ? {} : { y: lightY, scale: lightScale }}
       >
         <Glow variant="hero" planet={false} />
-      </m.div>
-      <m.div
+      </Animated.div>
+      <Animated.div
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10 will-change-transform"
         style={still ? {} : { y: horizonY }}
       >
         <div className="horizon-planet" />
-      </m.div>
+      </Animated.div>
 
-      <m.div
+      <Animated.div
         className={still ? "" : "absolute inset-x-0 top-[22%] sm:top-[24%]"}
         style={still ? {} : { y: nameY, scale: nameScale }}
       >
@@ -78,10 +79,10 @@ export function HeroScene({ eyebrow, lead, actions }: Readonly<HeroSceneProps>) 
           <p className="mt-8 max-w-[32ch] text-lead text-ink-secondary">{lead}</p>
           <div className="mt-10 flex flex-wrap gap-3">{actions}</div>
         </Container>
-      </m.div>
+      </Animated.div>
 
       {!still && (
-        <m.div
+        <Animated.div
           aria-hidden
           className="bg-black pointer-events-none absolute inset-0 will-change-[opacity]"
           style={{ opacity: dim }}

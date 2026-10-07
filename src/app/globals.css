@@ -541,6 +541,21 @@
   }
 }
 
+/*
+ * Charts wipe in from left to right once they come into view (DrawReveal sets
+ * data-shown). With reduced motion they are simply there.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .wipe {
+    clip-path: inset(0% 100% 0% 0%);
+    transition: clip-path 1.8s var(--ease-in-out);
+  }
+
+  .wipe[data-shown] {
+    clip-path: inset(0% 0% 0% 0%);
+  }
+}
+
 /* The RAG flow: each step's ring lights up in turn, like a request passing through. */
 @keyframes step-glow {
   0%,

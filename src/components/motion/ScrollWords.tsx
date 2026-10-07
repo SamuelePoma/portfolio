@@ -1,9 +1,10 @@
 "use client";
 
-import { m, type MotionValue, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 
+import { Animated } from "./Animated";
 import { usePrefersReducedMotion, useSmooth } from "./useSceneProgress";
+import { type MotionValue, useScrollProgress, useTransform } from "./values";
 
 function Word({
   progress,
@@ -16,12 +17,11 @@ function Word({
   // text, while an invisible one is simply not there yet.
   const opacity = useTransform(progress, [start, start + 0.3], [0, 1]);
   const y = useTransform(progress, [start, start + 0.3], ["0.35em", "0em"]);
-  const blur = useTransform(progress, [start, start + 0.3], [10, 0]);
-  const filter = useTransform(blur, (value) => `blur(${String(value)}px)`);
+  const filter = useTransform(progress, [start, start + 0.3], ["blur(10px)", "blur(0px)"]);
   return (
-    <m.span data-reveal className="inline-block" style={{ opacity, y, filter }}>
+    <Animated.span data-reveal className="inline-block" style={{ opacity, y, filter }}>
       {children}
-    </m.span>
+    </Animated.span>
   );
 }
 
@@ -32,8 +32,7 @@ function Word({
 export function ScrollWords({ text }: Readonly<{ text: string }>) {
   const ref = useRef<HTMLSpanElement>(null);
   const reduce = usePrefersReducedMotion();
-  const { scrollYProgress: raw } = useScroll({ target: ref, offset: ["start 0.92", "start 0.45"] });
-  const scrollYProgress = useSmooth(raw);
+  const progress = useSmooth(useScrollProgress(ref, ["start 0.92", "start 0.45"]));
   const words = text.split(" ");
 
   if (reduce) return <span>{text}</span>;
@@ -42,7 +41,7 @@ export function ScrollWords({ text }: Readonly<{ text: string }>) {
       {words.map((word, index) => (
         <span key={`${word}-${String(index)}`}>
           {index > 0 && " "}
-          <Word progress={scrollYProgress} index={index} count={words.length}>
+          <Word progress={progress} index={index} count={words.length}>
             {word}
           </Word>
         </span>

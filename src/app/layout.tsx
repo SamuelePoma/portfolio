@@ -5,7 +5,6 @@ import type { Metadata, Viewport } from "next";
 import { Analytics } from "@/components/layout/Analytics";
 import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
-import { MotionProvider } from "@/components/motion/MotionProvider";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { LazyToaster } from "@/components/ui/LazyToaster";
 import { site } from "@/content/site";
@@ -49,14 +48,12 @@ export default function RootLayout({ children }: Readonly<LayoutProps<"/">>) {
         >
           Skip to content
         </a>
-        <MotionProvider>
-          <Nav />
-          {/* tabIndex lets the skip link move focus here in every browser. */}
-          <main id="main" tabIndex={-1} className="outline-hidden">
-            {children}
-          </main>
-          <Footer />
-        </MotionProvider>
+        <Nav />
+        {/* tabIndex lets the skip link move focus here in every browser. */}
+        <main id="main" tabIndex={-1} className="outline-hidden">
+          {children}
+        </main>
+        <Footer />
         <LazyToaster />
         <SmoothScroll />
         <Analytics />

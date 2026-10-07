@@ -1,11 +1,12 @@
 "use client";
 
-import { m, type MotionValue, useTransform } from "motion/react";
 import { type ReactNode, useRef } from "react";
 
 import { Container } from "@/components/layout/Container";
+import { Animated } from "@/components/motion/Animated";
 import { Scene } from "@/components/motion/Scene";
 import { useIsLarge, useSceneProgress } from "@/components/motion/useSceneProgress";
+import { type MotionValue, useTransform } from "@/components/motion/values";
 import { cn } from "@/lib/utils/cn";
 
 /** Where each layer sits in the screenshot, in percent of its 1920 × 1080 frame. */
@@ -31,7 +32,7 @@ function Layer({ progress, index, depth, children }: Readonly<LayerProps>) {
   const height = (lift[index] ?? 0) * depth;
   const z = useTransform(progress, [0.38, 0.62, 0.84, 0.98], [0, height, height, 0]);
   return (
-    <m.div
+    <Animated.div
       className={cn(
         "absolute overflow-hidden preserve-3d",
         placement[index],
@@ -40,7 +41,7 @@ function Layer({ progress, index, depth, children }: Readonly<LayerProps>) {
       style={{ z }}
     >
       {children}
-    </m.div>
+    </Animated.div>
   );
 }
 
@@ -58,14 +59,14 @@ function LegendItem({ progress, index, label, text }: Readonly<LegendItemProps>)
   const opacity = useTransform(progress, [start, start + 0.08], [0, 1]);
   const x = useTransform(progress, [start, start + 0.08], [24, 0]);
   return (
-    <m.li
+    <Animated.li
       data-reveal
       className="flex flex-col gap-1 border-t border-hairline pt-3"
       style={{ opacity, x }}
     >
       <span className="font-mono text-mono-label text-ink-tertiary uppercase">{label}</span>
       <span className="text-small text-ink-secondary">{text}</span>
-    </m.li>
+    </Animated.li>
   );
 }
 
@@ -117,7 +118,7 @@ export function ProgmaticScene({ titleId, copy, layers }: Readonly<ProgmaticScen
         </div>
 
         <div className="relative mt-10 mb-6 [perspective:2400px] lg:col-span-8 lg:my-0">
-          <m.div
+          <Animated.div
             className="relative aspect-video w-full overflow-visible rounded-lg preserve-3d"
             style={still ? {} : { rotateX, rotateZ, scale, y }}
           >
@@ -126,7 +127,7 @@ export function ProgmaticScene({ titleId, copy, layers }: Readonly<ProgmaticScen
                 {layer.image}
               </Layer>
             ))}
-          </m.div>
+          </Animated.div>
         </div>
       </Container>
     </Scene>

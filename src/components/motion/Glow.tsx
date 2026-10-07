@@ -1,14 +1,19 @@
 "use client";
 
-import { m, useMotionValue, useSpring } from "motion/react";
 import { useEffect, useRef } from "react";
 
+import type { SpringConfig } from "@/lib/motion/spring";
 import { cn } from "@/lib/utils/cn";
 
+import { Animated } from "./Animated";
 import { usePrefersReducedMotion } from "./useSceneProgress";
+import { useMotionValue, useSpring } from "./values";
 
 /** How far the light follows the pointer, in pixels. */
 const REACH = 40;
+
+/** Critically damped: the light settles in about 0.9s and never overshoots. */
+const FOLLOW: SpringConfig = { stiffness: 105, damping: 20.5 };
 
 interface GlowProps {
   /**
@@ -31,8 +36,8 @@ export function Glow({ variant = "hero", planet = true, className }: Readonly<Gl
   const reduce = usePrefersReducedMotion();
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
-  const x = useSpring(pointerX, { duration: 0.9, bounce: 0 });
-  const y = useSpring(pointerY, { duration: 0.9, bounce: 0 });
+  const x = useSpring(pointerX, FOLLOW);
+  const y = useSpring(pointerY, FOLLOW);
   const follows = variant === "hero";
 
   useEffect(() => {
@@ -67,11 +72,11 @@ export function Glow({ variant = "hero", planet = true, className }: Readonly<Gl
         className,
       )}
     >
-      <m.div className="absolute inset-0" style={follows ? { x, y } : {}}>
+      <Animated.div className="absolute inset-0" style={follows ? { x, y } : {}}>
         <div className="horizon-light horizon-light-a" />
         <div className="horizon-light horizon-light-b" />
         <div className="horizon-light horizon-light-c" />
-      </m.div>
+      </Animated.div>
       {planet && <div className="horizon-planet" />}
       <div className="horizon-grain" />
     </div>
