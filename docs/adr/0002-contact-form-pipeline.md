@@ -1,6 +1,6 @@
 # ADR 0002 — Contact form pipeline
 
-- **Status:** accepted
+- **Status:** superseded on 2026-10-06: the form and its API were removed. Visitors reach Samuele by email (a `mailto:` link that copies the address), so the site has no server code, no input from strangers and no secrets. This record stays as the design of the pipeline, should a form ever come back; the code is in the git history.
 - **Date:** 2026-10-05
 
 ## Context

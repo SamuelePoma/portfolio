@@ -2,6 +2,7 @@ import "./globals.css";
 
 import type { Metadata, Viewport } from "next";
 
+import { Analytics } from "@/components/layout/Analytics";
 import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
 import { MotionProvider } from "@/components/motion/MotionProvider";
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: Readonly<LayoutProps<"/">>) {
         </MotionProvider>
         <LazyToaster />
         <SmoothScroll />
+        <Analytics />
       </body>
     </html>
   );
