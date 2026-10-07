@@ -26,7 +26,7 @@ cp .env.example .env.local   # Windows PowerShell: Copy-Item .env.example .env.l
 pnpm dev                     # http://localhost:3000
 ```
 
-The site runs without any secrets. The contact form's external services (Resend, Upstash, Turnstile) are only needed to actually send messages; see [`.env.example`](.env.example).
+The site needs no secrets: the only variables are the public site URL and an optional analytics id, both described in [`.env.example`](.env.example).
 
 ## Scripts
 
@@ -41,6 +41,10 @@ The site runs without any secrets. The contact form's external services (Resend,
 | `pnpm test` / `pnpm test:coverage`  | Unit and integration tests / with coverage                       |
 | `pnpm test:e2e`                     | End-to-end tests (Chromium, Firefox, WebKit, Pixel 7, iPhone 15) |
 | `pnpm check`                        | Lint, types, formatting and unit tests in one go                 |
+| `pnpm validate:html`                | Validate every prerendered page (after `pnpm build`)             |
+| `pnpm size`                         | First-load JavaScript per page, against its budget               |
+| `pnpm lighthouse`                   | Lighthouse CI with the budgets in `lighthouserc.json`            |
+| `pnpm links`                        | Check every link on a running server (`pnpm start`)              |
 
 First run of the end-to-end tests: `pnpm exec playwright install`.
 
@@ -51,7 +55,7 @@ src/
   app/          Routes (thin: they compose components)
   components/   UI, layout, sections, motion
   content/      Typed site content (single source of truth)
-  lib/          Pure logic: env, SEO, contact pipeline
+  lib/          Pure logic: env, SEO, security headers, the scroll engine
 tests/
   unit/  integration/  e2e/
 docs/
