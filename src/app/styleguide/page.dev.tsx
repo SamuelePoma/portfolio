@@ -25,7 +25,6 @@ const colorTokens = [
   "hairline",
   "hairline-strong",
   "accent",
-  "danger",
 ] as const;
 
 const typeScale = [
@@ -72,7 +71,6 @@ const swatchClass: Record<(typeof colorTokens)[number], string> = {
   hairline: "bg-hairline",
   "hairline-strong": "bg-hairline-strong",
   accent: "bg-accent",
-  danger: "bg-danger",
 };
 
 function Block({

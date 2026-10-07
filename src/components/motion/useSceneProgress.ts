@@ -14,7 +14,7 @@ import { type MotionValue, useMotionValue, useScrollProgress, useSpring } from "
  * like the scene is floating behind the page. Wheel scrolling is already smoothed by
  * Lenis (SmoothScroll).
  */
-export const SCROLL_SPRING: SpringConfig = {
+const SCROLL_SPRING: SpringConfig = {
   stiffness: 140,
   damping: 14.5,
   mass: 0.35,

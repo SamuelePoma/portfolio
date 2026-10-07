@@ -249,5 +249,3 @@ export const projects = [
     media: { hero: "IMG-TOWERDEFENSE-01" },
   },
 ] as const satisfies readonly Project[];
-
-export type ProjectSlug = (typeof projects)[number]["slug"];

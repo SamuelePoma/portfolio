@@ -5,7 +5,7 @@ type Edge = "start" | "center" | "end" | `${number}`;
  * "start end" is the moment the element's top meets the bottom of the viewport.
  * An edge is start, center, end, or a fraction such as 0.75.
  */
-export type ScrollEdge = `${Edge} ${Edge}`;
+type ScrollEdge = `${Edge} ${Edge}`;
 export type ScrollOffset = readonly [ScrollEdge, ScrollEdge];
 
 const named: Record<string, number> = { start: 0, center: 0.5, end: 1 };

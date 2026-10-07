@@ -6,7 +6,7 @@ import { z } from "zod";
  * visitors reach Samuele by email, so there is no form, mail service or captcha.
  */
 
-export const publicEnvSchema = z.object({
+const publicEnvSchema = z.object({
   NEXT_PUBLIC_SITE_URL: z.url().default("http://localhost:3000"),
   NEXT_PUBLIC_UMAMI_WEBSITE_ID: z.uuid().optional(),
 });
@@ -22,6 +22,7 @@ function formatIssues(error: z.ZodError): string {
   return error.issues.map((issue) => `  - ${issue.path.join(".")}: ${issue.message}`).join("\n");
 }
 
+/** Validates the public variables, with defaults filled in; throws a readable list of what is wrong. */
 export function parsePublicEnv(source: Record<string, string | undefined>): PublicEnv {
   const result = publicEnvSchema.safeParse(withoutEmptyStrings(source));
   if (!result.success) {

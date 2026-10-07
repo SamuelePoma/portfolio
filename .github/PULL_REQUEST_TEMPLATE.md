@@ -12,7 +12,7 @@
 
 ## Checklist
 
-- [ ] `pnpm check` passes (lint, types, format, unit tests)
+- [ ] `pnpm check` passes (lint, types, unused code, format, unit tests)
 - [ ] `pnpm test:e2e` passes
 - [ ] Follows DESIGN.md (tokens, type scale, motion rules)
 - [ ] Keyboard and screen reader friendly; `prefers-reduced-motion` respected

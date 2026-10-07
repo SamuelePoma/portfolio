@@ -13,12 +13,12 @@ describe("MediaSlot", () => {
 
   it("renders a labelled placeholder when the file is missing", () => {
     existsSync.mockReturnValue(false);
-    render(<MediaSlot id="IMG-PORTRAIT" sizes="100vw" />);
+    render(<MediaSlot id="IMG-STEDIN-01" sizes="100vw" />);
 
     const placeholder = screen.getByRole("img", {
-      name: "Image coming soon: Portrait, neutral background",
+      name: "Image coming soon: Transformer voltage chart",
     });
-    expect(placeholder).toHaveTextContent("IMG-PORTRAIT · 4:5");
+    expect(placeholder).toHaveTextContent("IMG-STEDIN-01 · 16:10");
   });
 
   it("draws a stand-in for a slot that has one while its file is missing", () => {
@@ -45,7 +45,7 @@ describe("MediaSlot", () => {
 
   it("looks for the file inside public/images", () => {
     existsSync.mockReturnValue(false);
-    render(<MediaSlot id="IMG-PORTRAIT" sizes="100vw" />);
-    expect(existsSync.mock.calls[0]?.[0]).toMatch(/public[\\/]images[\\/]portrait\.webp$/);
+    render(<MediaSlot id="IMG-STEDIN-01" sizes="100vw" />);
+    expect(existsSync.mock.calls[0]?.[0]).toMatch(/public[\\/]images[\\/]stedin-01\.webp$/);
   });
 });
