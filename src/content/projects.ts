@@ -66,7 +66,7 @@ export const projects = [
       "Rather than training a model on all that data, IO uses retrieval-augmented generation (RAG): it first searches Progmatic's knowledge for what is relevant, then hands it to a language model that writes the answer. The model runs internally, so company information never goes to a public AI service.",
       "After client meetings and requirements analysis, our team of five is building it around four pieces: document retrieval, FileMaker integration, access control and data confidentiality. It is developed and tested on dummy Progmatic data first, and its interface brings chat, files, search, email and FileMaker together.",
     ],
-    approachVisuals: ["rag-flow", "research-map"],
+    approachVisuals: ["rag-flow", "assistant-pillars"],
     learnings: [
       "An assistant is only as good as what it can find: most of the work is in making a company's documents and data searchable, not in the language model.",
       "Keeping the model inside the company shapes the backend from the start: who may see which data has to be settled before the first answer is generated.",

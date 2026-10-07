@@ -55,7 +55,7 @@ export function CardMedia({ visual, bare = false }: Readonly<CardMediaProps>) {
     case "diagram":
       return (
         <div className={cn(tray, "flex items-center justify-center px-4 py-8 md:px-6")}>
-          {visual.name === "research-map" ? (
+          {visual.name === "assistant-pillars" ? (
             <ProgmaticDiagram />
           ) : (
             // Sized by the tray's height from md up, so the whole drawing fits.

@@ -97,7 +97,7 @@ export function CaseStudyBody({
               key={visual}
               className="mt-4 flex justify-center rounded-xl bg-surface-sunken px-4 py-10 md:px-8 md:py-12"
             >
-              {visual === "research-map" && <ProgmaticDiagram />}
+              {visual === "assistant-pillars" && <ProgmaticDiagram />}
               {visual === "rag-flow" && <RagFlowDiagram />}
               {visual === "vet-components" && <VetComponentsDiagram />}
             </div>
