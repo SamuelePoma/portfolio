@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 
 import { assertProductionEnv } from "./src/lib/env/schema";
+import { securityHeaders } from "./src/lib/security/headers";
 
 // Fail the production build early if the canonical URL is missing, instead of
 // publishing canonical links, a sitemap and social cards that point at localhost.
@@ -22,12 +23,20 @@ export default function config(phase: string): NextConfig {
         { source: "/cv", destination: "/cv/samuele-poma-cv.pdf", permanent: true },
       ]);
     },
-    // Previews and local builds must never be indexed, even through a shared link.
+    // Security headers on every route; previews and local builds are also kept out of
+    // search engines, even through a shared link.
     headers() {
-      if (process.env.VERCEL_ENV === "production") return Promise.resolve([]);
-      return Promise.resolve([
-        { source: "/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] },
-      ]);
+      // Most of the policy is a <meta> tag that scripts/csp-hashes.mjs writes into each
+      // page after the build, with the hashes of its inline scripts.
+      const security = securityHeaders({
+        https: process.env.VERCEL_ENV !== undefined,
+        enforce: process.env.CSP_REPORT_ONLY !== "1",
+      });
+      const noindex =
+        process.env.VERCEL_ENV === "production"
+          ? []
+          : [{ key: "X-Robots-Tag", value: "noindex, nofollow" }];
+      return Promise.resolve([{ source: "/:path*", headers: [...security, ...noindex] }]);
     },
     reactStrictMode: true,
     // `*.dev.tsx` routes (the styleguide) exist only on the dev server and are
