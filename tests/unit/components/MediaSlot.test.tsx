@@ -21,14 +21,15 @@ describe("MediaSlot", () => {
     expect(placeholder).toHaveTextContent("IMG-PORTRAIT · 4:5");
   });
 
-  it.each([
-    ["IMG-CONNEQTECH-01", /^Illustration: a route tracked across a city map/],
-    ["IMG-DND-01", /^Illustration: the six ability scores of a character sheet/],
-  ] as const)("draws a stand-in for %s while its file is missing", (id, name) => {
+  it("draws a stand-in for a slot that has one while its file is missing", () => {
     existsSync.mockReturnValue(false);
-    render(<MediaSlot id={id} sizes="100vw" />);
-    expect(screen.getByRole("img", { name })).toBeInTheDocument();
-    expect(screen.queryByText(id, { exact: false })).not.toBeInTheDocument();
+    render(<MediaSlot id="IMG-DND-01" sizes="100vw" />);
+    expect(
+      screen.getByRole("img", {
+        name: /^Illustration: the six ability scores of a character sheet/,
+      }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("IMG-DND-01", { exact: false })).not.toBeInTheDocument();
   });
 
   it("renders the image with its alt text when the file exists", () => {
@@ -36,7 +37,7 @@ describe("MediaSlot", () => {
     render(<MediaSlot id="IMG-CONNEQTECH-01" sizes="100vw" />);
 
     const image = screen.getByRole("img", {
-      name: "GPS monitoring dashboard with a map of tracked vehicles",
+      name: /^Design of the fleet health dashboard/,
     });
     expect(image.tagName).toBe("IMG");
     expect(image.getAttribute("src")).toContain("conneqtech-01.webp");

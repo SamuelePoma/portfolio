@@ -215,7 +215,7 @@ Springs for interactive things: `{ type: "spring", duration: 0.5, bounce: 0.15 }
 2. **Young DCC (light): a MacBook launch.** The first project in *Things I've built.*, on the light page: the headline centred at the top, and under it a closed laptop already peeking in, which rises into place, opens on the hinge (−88° to 8°), wakes up on the platform's home page and leans in a touch. The laptop has a camera in its bezel, a glare across the glass and a soft floor shadow; on a light section it has no glow. Its deck is as wide as the lid at the hinge. Sized by the room the text leaves (a size container), so it always fits the screen. Three screens, pinned everywhere.
 3. **MuseTrail (dark), a tile.** The band is a dark tile on the light page, inset from the edges with large rounded corners, like Apple's product tiles. Two phones (with side buttons, glass sheen and a floor shadow) swing round in 3D to face the visitor, the back one starting far behind so they never pass through each other, part to either side, and the four artworks of the *My Museum* screen float out of the screen to different depths around them. The text column fades in at the start. Then the pitch photo opens up from a smaller window as it scrolls into view (clip-path inset to full, image settling from 1.18 to 1).
 4. **Progmatic (light): exploded view.** The assistant's interface tilts into an isometric view, comes apart into four layers (workspace, sidebar, brief, header), each named in a legend that slides in as its layer lifts, then clicks back together.
-5. **More work: horizontal rail.** The section pins and scrolling slides the remaining project cards sideways. Cards lean towards the pointer (≤ 6°) with a soft light following it. Inside them, the Stedin chart draws itself left to right and the chess pawn plays b7 to b5. Projects without a screenshot yet get a drawn stand-in instead of a placeholder (§10): a city map whose tracked route draws itself (Conneqtech), and the ability scores of a character sheet (D&D).
+5. **More work: horizontal rail.** The section pins and scrolling slides the remaining project cards sideways. Cards lean towards the pointer (≤ 6°) with a soft light following it. Inside them, the Stedin chart draws itself left to right and the chess pawn plays b7 to b5. Projects without a screenshot yet get a drawn stand-in instead of a placeholder (§10): the ability scores of a character sheet (D&D).
 6. **Headings and lists.** Section openers rise into focus word by word as they scroll into place. Stack groups and timeline rows rise in, staggered, with CSS scroll-driven animations (no JavaScript; browsers without support just show them). Card screenshots lean in (1.04) on hover.
 7. **Finale (dark).** *Let's talk.* over the same horizon as the opening, closing the page.
 8. **Copy email.** Unchanged: a toast confirms the copy.
@@ -390,10 +390,11 @@ Put files in `/public/images/`. Format: **WebP or AVIF**, sRGB, long edge 2400px
 | `IMG-MUSETRAIL-01` | Featured band (front phone) plus case-study hero | 9:19.5 | The *My Museum* screen. Straightened from the team's poster | ✅ In place |
 | `IMG-MUSETRAIL-02` | Featured band photo | 16:9 | The team pitching MuseTrail to professors and investors | ✅ In place |
 | `IMG-MUSETRAIL-03` | Featured band (back phone) plus case-study gallery | 9:19.5 | The progress screen (CO2 saved compared with the average user). Cropped from the poster | ✅ In place |
-| `IMG-CONNEQTECH-01` | Card plus case-study hero | 16:10 | The dashboard main view, ideally with the map and vehicles visible. **Blur any customer data or plates.** | Needed |
-| `IMG-CONNEQTECH-02` | Case-study gallery | 16:10 | Vehicle detail / GPS history view | Optional |
+| `IMG-CONNEQTECH-01` | Card plus case-study hero | 16:10 | The fleet health dashboard, from Samuele's final Figma design (fake data) | ✅ In place |
+| `IMG-CONNEQTECH-02` | Case-study gallery | 16:10 | The faulty devices table, from the same design | ✅ In place |
 | `IMG-STEDIN-01` | Card plus case-study hero | 16:10 | The voltage chart of one transformer over two weeks, on a white page | ✅ In place |
 | `IMG-STEDIN-02` | Case-study gallery | 16:9 | Samuele's project group at work | ✅ In place |
+| `IMG-STEDIN-03` | Case-study gallery | 2:1 | The Figma screen designs and the flow between them (padded to 2:1, never cropped) | ✅ In place |
 | `IMG-PROGMATIC-01` | Card plus case-study hero | 16:9 | The assistant's overview screen. The signed-in user's name and avatar are blurred | ✅ In place |
 | `IMG-YOUNGDCC-01` | Card plus case-study hero | 16:10 | The platform's home page | ✅ In place |
 | `IMG-TOWERDEFENSE-01` | Card plus case-study hero | 16:9 | The game's win screen | ✅ In place |
@@ -401,7 +402,7 @@ Put files in `/public/images/`. Format: **WebP or AVIF**, sRGB, long edge 2400px
 | `OG-IMAGE` | Social share preview | 1200×630 | Generated from the hero (name plus mesh), not a photo | Built in code |
 | `CV-PDF` | `/public/cv/samuele-poma-cv.pdf` | A4 PDF | The résumé **without the phone number** (it's public) | Samuele to export |
 
-ChessGame needs no images: the terminal block is the visual. Slots shown on the live site while their file is missing get a drawn stand-in instead of the placeholder (`illustration` in `src/content/media.ts`): `IMG-CONNEQTECH-01` a city map with a tracked route, `IMG-DND-01` the ability scores of a character sheet (the course's standard array). The real image replaces it as soon as the file exists. The source files Samuele sent are kept untracked in `assets-src/`; the exported WebP files are what ships.
+ChessGame needs no images: the terminal block is the visual. Slots shown on the live site while their file is missing get a drawn stand-in instead of the placeholder (`illustration` in `src/content/media.ts`): `IMG-DND-01` shows the ability scores of a character sheet (the course's standard array). The real image replaces it as soon as the file exists. The source files Samuele sent are kept untracked in `assets-src/`; the exported WebP files are what ships.
 
 ---
 
