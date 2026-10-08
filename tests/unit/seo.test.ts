@@ -7,6 +7,7 @@ import {
 } from "@/lib/seo/jsonld";
 import {
   absoluteUrl,
+  GOOGLE_SITE_VERIFICATION,
   HOME_TITLE,
   isIndexable,
   pageMetadata,
@@ -58,6 +59,11 @@ describe("rootMetadata", () => {
     expect(metadata.title).toEqual({ default: HOME_TITLE, template: TITLE_TEMPLATE });
     expect(metadata.robots).toEqual({ index: true, follow: true });
     expect(metadata.formatDetection).toEqual({ telephone: false, email: false, address: false });
+  });
+
+  it("carries the Search Console verification on every page", () => {
+    const metadata = rootMetadata({ siteUrl: SITE, description: "d", indexable: true });
+    expect(metadata.verification).toEqual({ google: GOOGLE_SITE_VERIFICATION });
   });
 
   it("keeps previews out of search engines", () => {
