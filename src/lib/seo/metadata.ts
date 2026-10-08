@@ -5,6 +5,13 @@ export const HOME_TITLE = "Samuele Poma | Software Engineer, Go & React";
 export const TITLE_TEMPLATE = `%s | ${SITE_NAME}`;
 
 /**
+ * Proves to Google Search Console that Samuele owns the site (the URL-prefix property
+ * https://samuelepoma.vercel.app/). Public by design: it only works for the site whose
+ * pages carry it. A custom domain would be a new property with a new code.
+ */
+export const GOOGLE_SITE_VERIFICATION = "sUgSwedNzB46bG5UwxYO-9qr-mTjZMFtWvgENu-l4Vk";
+
+/**
  * Only production may be indexed: previews and local builds ask search engines to stay
  * away, in the metadata and in an `X-Robots-Tag` header (next.config.ts).
  */
@@ -39,6 +46,7 @@ export function rootMetadata({ siteUrl, description, indexable }: RootMetadataIn
     formatDetection: { telephone: false, email: false, address: false },
     openGraph: { type: "website", siteName: SITE_NAME, locale: "en_US" },
     twitter: { card: "summary_large_image" },
+    verification: { google: GOOGLE_SITE_VERIFICATION },
   };
 }
 
