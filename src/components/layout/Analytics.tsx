@@ -11,7 +11,9 @@ import { UMAMI_SCRIPT_ORIGIN } from "@/lib/security/headers";
  *   builds and previews never add to the numbers. It loads after the page is
  *   interactive, so it never delays it.
  * - **Vercel Speed Insights** reports Core Web Vitals from real visits. Its script is
- *   served by Vercel itself, so it is rendered only in builds made on Vercel.
+ *   served by Vercel itself, so it is rendered only in the production deployment there:
+ *   previews would mix test visits into the numbers. (`VERCEL_ENV`, unlike `VERCEL`, is
+ *   set while Vercel prerenders the pages.)
  */
 export function Analytics() {
   const websiteId = publicEnv.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
@@ -28,7 +30,7 @@ export function Analytics() {
           strategy="afterInteractive"
         />
       )}
-      {process.env.VERCEL === "1" && <SpeedInsights />}
+      {process.env.VERCEL_ENV === "production" && <SpeedInsights />}
     </>
   );
 }
