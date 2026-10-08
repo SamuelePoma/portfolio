@@ -9,10 +9,10 @@ Samuele wants to know whether the portfolio is visited and whether it is fast fo
 
 ## Decision
 
-- **Umami Cloud** (EU region) counts page views, referrers, device types and countries in aggregate. It sets no cookies, stores no personal data and respects Do Not Track. The script loads only when `NEXT_PUBLIC_UMAMI_WEBSITE_ID` is set, only after the page is interactive, and counts only the site's own domain (`data-domains`), so local builds and previews never add to the numbers.
+- **Umami Cloud** (servers in the EU and the US, GDPR-compliant) counts page views, referrers, device types and countries in aggregate. It sets no cookies, stores no personal data and respects Do Not Track. The script loads only when `NEXT_PUBLIC_UMAMI_WEBSITE_ID` is set, only after the page is interactive, and counts only the site's own domain (`data-domains`), so local builds and previews never add to the numbers.
 - **Vercel Speed Insights** reports Core Web Vitals from real visits, without cookies. Its script is served by Vercel, so it is rendered only in the production deployment there; previews are left out of the numbers.
 - **No cookies at all, so no banner.** The privacy page says so, names both tools, and commits to a proper consent manager (opt-in per category, "reject all" as prominent as "accept all") before any tool that needs one is added.
-- The Content-Security-Policy allows Umami's origin only when analytics are on (ADR 0003).
+- The Content-Security-Policy allows Umami's script origin and the endpoint it sends page views to only when analytics are on (ADR 0003). The site passes that endpoint to the script (`data-host-url`), so the two can't drift apart.
 
 ## Consequences
 

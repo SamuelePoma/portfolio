@@ -36,9 +36,7 @@ describe("documentPolicy", () => {
   it("allows Umami only when analytics are on", () => {
     const policy = documentPolicy({ hashes: [], analytics: true });
     expect(policy).toContain("script-src 'self' https://cloud.umami.is;");
-    expect(policy).toContain(
-      "connect-src 'self' https://cloud.umami.is https://api-gateway.umami.dev",
-    );
+    expect(policy).toContain("connect-src 'self' https://gateway.umami.is;");
   });
 });
 

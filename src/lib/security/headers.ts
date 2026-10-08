@@ -14,9 +14,14 @@
  * Node with type stripping) and the unit tests all use the same code.
  */
 
-/** Umami Cloud: the script and the endpoints it sends page views to. */
+/** Umami Cloud: where its script comes from. */
 export const UMAMI_SCRIPT_ORIGIN = "https://cloud.umami.is";
-const UMAMI_CONNECT = [UMAMI_SCRIPT_ORIGIN, "https://api-gateway.umami.dev"];
+/**
+ * Where the script sends page views. The site passes it to the script as
+ * `data-host-url`, so the endpoint the policy allows is the one the script uses, even if
+ * Umami changes its default.
+ */
+export const UMAMI_SEND_ORIGIN = "https://gateway.umami.is";
 
 type Directives = Record<string, readonly string[]>;
 
@@ -72,7 +77,7 @@ export function documentPolicy({ hashes, analytics }: DocumentPolicyOptions): st
     "style-src": ["'self'", "'unsafe-inline'"],
     "img-src": ["'self'", "data:", "blob:"],
     "font-src": ["'self'"],
-    "connect-src": ["'self'", ...(analytics ? UMAMI_CONNECT : [])],
+    "connect-src": ["'self'", ...(analytics ? [UMAMI_SEND_ORIGIN] : [])],
     "frame-src": ["'none'"],
     "base-uri": ["'self'"],
     "form-action": ["'self'"],
