@@ -1,4 +1,6 @@
-# samuelepoma.com
+# Samuele Poma, portfolio
+
+**Live at [samuelepoma.vercel.app](https://samuelepoma.vercel.app).**
 
 The portfolio of **Samuele Poma**, a software engineer in Middelburg, the Netherlands. It presents nine projects the way Apple presents a product: pinned, scroll-driven scenes in which a laptop opens on the live platform, two phones turn to face you, and an AI assistant's interface comes apart into its layers. Every project then has its own case study.
 
