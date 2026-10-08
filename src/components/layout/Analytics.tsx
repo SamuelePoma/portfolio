@@ -2,7 +2,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 
 import { publicEnv } from "@/lib/env/public";
-import { UMAMI_SCRIPT_ORIGIN } from "@/lib/security/headers";
+import { UMAMI_SCRIPT_ORIGIN, UMAMI_SEND_ORIGIN } from "@/lib/security/headers";
 
 /**
  * Cookieless measurement, as described on the privacy page:
@@ -25,6 +25,7 @@ export function Analytics() {
         <Script
           src={`${UMAMI_SCRIPT_ORIGIN}/script.js`}
           data-website-id={websiteId}
+          data-host-url={UMAMI_SEND_ORIGIN}
           data-domains={domain}
           data-do-not-track="true"
           strategy="afterInteractive"

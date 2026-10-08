@@ -11,7 +11,7 @@ export const privacyPolicy = {
   title: "Privacy policy",
   seoDescription:
     "How this site handles personal data: the emails you send me, the server logs and cookieless analytics. No cookies are set, so there is no cookie banner.",
-  updated: "2026-10-06",
+  updated: "2026-10-08",
   intro:
     "This site is a portfolio. It collects as little personal data as it can, sets no cookies and shows no banner, because there is nothing to consent to. This page explains what happens to the data it does handle.",
   sections: [
@@ -57,7 +57,7 @@ export const privacyPolicy = {
           label: "Google (Gmail, where your emails arrive)",
           href: "https://policies.google.com/privacy",
         },
-        { label: "Umami (analytics, EU region)", href: "https://umami.is/privacy" },
+        { label: "Umami Cloud (analytics)", href: "https://umami.is/privacy" },
       ],
     },
     {
