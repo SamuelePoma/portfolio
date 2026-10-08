@@ -36,12 +36,7 @@ const mediaSlotId = z.enum(mediaSlotIds);
 
 /** What a project card shows in its media area. */
 const cardVisualSchema = z.discriminatedUnion("type", [
-  z.object({
-    type: z.literal("screenshot"),
-    slot: mediaSlotId,
-    /** "draw": the screenshot wipes in left to right, for charts. */
-    effect: z.enum(["draw"]).optional(),
-  }),
+  z.object({ type: z.literal("screenshot"), slot: mediaSlotId }),
   z.object({ type: z.literal("diagram"), name: z.enum(["assistant-pillars", "vet-components"]) }),
   z.object({ type: z.literal("terminal") }),
 ]);

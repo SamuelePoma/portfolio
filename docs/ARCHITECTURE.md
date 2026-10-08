@@ -59,7 +59,7 @@ flowchart LR
 - `src/lib/motion/` is a small engine of pure functions: motion values, interpolation, springs solved exactly, scroll offsets, transform shorthands and one shared animation-frame loop that reads layout, then updates values, then writes styles.
 - `src/components/motion/` binds it to React. Values change outside React, so a scene moves on every frame without re-rendering.
 - The server renders every scene at its starting values; without JavaScript, or with reduced motion, every piece is shown in its final state and nothing is pinned.
-- One-off reveals (a chart wiping in, lines drawing themselves, text lighting up) are CSS transitions and scroll-driven animations. Mouse-wheel scrolling is smoothed by Lenis on desktop only ([ADR 0007](adr/0007-smooth-scrolling.md)).
+- One-off reveals (lines drawing themselves, text lighting up) are CSS scroll-driven animations. Mouse-wheel scrolling is smoothed by Lenis on desktop only ([ADR 0007](adr/0007-smooth-scrolling.md)).
 
 ## Security and privacy
 

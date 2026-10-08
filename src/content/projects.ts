@@ -162,7 +162,7 @@ export const projects = [
       "Software for visualising power usage and monitoring faulty transformers across regions of the Netherlands.",
     role: "Team leader and tracker",
     stack: ["Laravel", "PHP", "MySQL", "Figma"],
-    card: { type: "screenshot", slot: "IMG-STEDIN-01", effect: "draw" },
+    card: { type: "screenshot", slot: "IMG-STEDIN-01" },
     problem:
       "Stedin needed a way to visualise power usage and keep an eye on faulty transformers across regions of the Netherlands.",
     approach: [
